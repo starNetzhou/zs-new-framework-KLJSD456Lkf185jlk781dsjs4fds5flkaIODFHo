@@ -1,1 +1,142 @@
-{}
+{
+    "GAME_START": {},
+    "START_FULL_1": {
+        "banner": {
+            "delay": true
+        }
+    },
+    "START_FULL_2": {
+        "banner": {
+            "delay": true
+        }
+    },
+    "GAME_HOME": {
+        "banner": {},
+        "exporter": [
+            {
+                "type": "export_list",
+                "switch": "zs_game_start_jump_switch",
+                "window": {
+                    "align": "topleft",
+                    "alignoffsety": 300
+                },
+                "base": {
+                    "item": "export_item_2",
+                    "mode": "side",
+                    "width": 300,
+                    "max": 2,
+                    "shaketime": 3000
+                }
+            },
+            {
+                "type": "export_list",
+                "switch": "zs_game_start_jump_switch",
+                "window": {
+                    "align": "topright",
+                    "alignoffsety": 300
+                },
+                "base": {
+                    "item": "export_item_2",
+                    "mode": "side",
+                    "width": 300,
+                    "max": 2,
+                    "shaketime": 3000
+                }
+            },
+            {
+                "type": "export_list",
+                "switch": "zs_game_start_jump_switch",
+                "window": {
+                    "align": "top"
+                },
+                "base": {
+                    "item": "export_item_7",
+                    "mode": "hlist",
+                    "height": 260,
+                    "max": 10,
+                    "marginleft": 10,
+                    "marginright": 10
+                }
+            },
+            {
+                "type": "export_side",
+                "switch": "zs_game_start_jump_switch",
+                "window": {
+                    "align": "left",
+                    "alignoffsety": 200
+                }
+            }
+        ]
+    },
+    "GAME_PREPARE": {},
+    "EXPORT_COMMON_EGG": {
+        "banner": {}
+    },
+    "GAME_PLAY": {
+        "banner": {
+            "switch": "zs_game_banner_show_switch"
+        },
+        "exporter": []
+    },
+    "EXPORT_GAME_EGG": {
+        "banner": {}
+    },
+    "OVER_FULL_1": {
+        "banner": {
+            "delay": true
+        }
+    },
+    "GAME_SETTLE": {
+        "banner": {
+            "delay": true
+        },
+        "exporter": [
+            {
+                "type": "export_list",
+                "window": {
+                    "align": "left",
+                    "alignoffsetx": 288
+                },
+                "base": {
+                    "item": "export_item_2",
+                    "mode": "vlist",
+                    "width": 260,
+                    "max": 10,
+                    "linegap": 10,
+                    "margintop": 20,
+                    "marginbottom": 20,
+                    "background": [
+                        "export/export",
+                        "bg_8"
+                    ]
+                }
+            },
+            {
+                "type": "export_list",
+                "window": {
+                    "align": "right",
+                    "alignoffsetx": -288
+                },
+                "base": {
+                    "item": "export_item_2",
+                    "mode": "vlist",
+                    "width": 260,
+                    "max": 10,
+                    "linegap": 10,
+                    "margintop": 20,
+                    "marginbottom": 20,
+                    "background": [
+                        "export/export",
+                        "bg_8"
+                    ]
+                }
+            }
+        ]
+    },
+    "OVER_FULL_2": {
+        "banner": {
+            "delay": true
+        }
+    },
+    "GAME_END": {}
+}

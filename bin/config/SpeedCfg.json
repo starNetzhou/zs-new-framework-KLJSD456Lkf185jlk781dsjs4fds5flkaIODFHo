@@ -1,0 +1,11 @@
+{
+    "1": {"Level":1, "Speed": 30, "NextGold":100},
+    "2": {"Level":2, "Speed": 32.5, "NextGold":150},
+    "3": {"Level":3, "Speed": 35, "NextGold":200},
+    "4": {"Level":4, "Speed": 37.5, "NextGold":250},
+    "5": {"Level":5, "Speed": 40, "NextGold":300},
+    "6": {"Level":6, "Speed": 42.5, "NextGold":350},
+    "7": {"Level":7, "Speed": 45, "NextGold":400},
+    "8": {"Level":8, "Speed": 47.5, "NextGold":450},
+    "9": {"Level":9, "Speed": 50, "NextGold":500}
+}

@@ -1,0 +1,45 @@
+{
+    "JsonList":
+    [
+        "config/GameDataCfg.json",
+        "config/shopCfg.json",
+        "config/HpCfg.json",
+        "config/SpeedCfg.json"
+    ],
+    "SceneList":
+    [
+        "3dres/Conventional/MainScene.ls"
+    ],
+    "PrefabList":
+    [
+        "3dres/Conventional/stage1_1.lh",
+        "3dres/Conventional/stage1_2.lh",
+        "3dres/Conventional/stage1_3.lh",
+        "3dres/Conventional/stage2.lh",
+        "3dres/Conventional/stage3.lh",
+        "3dres/Conventional/stage4.lh",
+        "3dres/Conventional/stage5.lh",
+        "3dres/Conventional/stage6.lh",
+        "3dres/Conventional/stage7.lh",
+        "3dres/Conventional/stage8.lh",
+        "3dres/Conventional/stage9.lh",
+        "3dres/Conventional/stage10.lh",
+        "3dres/Conventional/stage11.lh",
+        "3dres/Conventional/stage12.lh",
+        "3dres/Conventional/stage13.lh",
+        "3dres/Conventional/stage14.lh",
+        "3dres/Conventional/corpse_1.lh",
+        "3dres/Conventional/corpse_2.lh",
+        "3dres/Conventional/obstacle_explosion1.lh",
+        "3dres/Conventional/obstacle_explosion2.lh",
+        "3dres/Conventional/obstacle_explosion3.lh",
+        "3dres/Conventional/obstacle_explosion4.lh",
+        "3dres/Conventional/ef_oil_explosion.lh",
+        "3dres/Conventional/coin.lh",
+        "3dres/Conventional/win.lh"
+    ],
+    "MaterialList":
+    [
+
+    ]
+}
