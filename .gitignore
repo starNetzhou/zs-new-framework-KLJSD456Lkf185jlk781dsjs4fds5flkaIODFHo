@@ -1,0 +1,5 @@
+.rpt2_cache
+/.vscode
+/bin/js/bundle.js
+/release
+.laya/chrome
