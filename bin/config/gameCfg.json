@@ -84,18 +84,8 @@
     },
     "resources": {
         "configs": {
-            "game": [
-                "config/GameDataCfg.json",
-                "https://res.wqop2018.com/partner/tcjsc/data_wx/config/GameDataCfg.json",
-                true
-            ],
             "nick": [
                 "config/nickname.json",
-                null,
-                true
-            ],
-            "bannerCfg": [
-                "config/bannerCfg.json",
                 null,
                 true
             ]
