@@ -1392,6 +1392,19 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return this;
         }
+        applyConfig(config) {
+            if (config) {
+                let item = null;
+                config.item && (item = zs.fgui.configs.items[config.item]);
+                item && (this.setItem(item));
+                if (config.autosize != null && config.autosize != undefined) {
+                    this.setAutoSize(config.autosize);
+                } else {
+                    config.width && this.setWidth(config.width, config.keepratio);
+                    config.height && this.setHeight(config.height, config.keepratio);
+                }
+            }
+        }
         setDataHandler(handler) {
             if (handler) {
                 handler.once = false;
