@@ -234,6 +234,34 @@ zs.platform.**.js 适配器核心模块，不同平台需要配套使用不同�
                     "width": 300, // 宽度
                     "max": 2, // 导出最大展示数量
                     "shaketime": 3000 // 甩动效果间隔
+                    // adaptscale 布尔值，适应缩放
+                    // listfit
+                    // keepratio
+                    // align
+                    // linecount
+                    // linegap
+                    // columcount
+                    // columngap
+                    // layout
+                    // cellwidth
+                    // cellheight
+                    // x 
+                    // y
+                    // snapwidth
+                    // snapheight
+                    // marginleft
+                    // maringright
+                    // margintop
+                    // marginbottom
+                    // background
+                    // scrolltype
+                    // autoscrollspeed
+                    // dragrecovertime
+                    // fit
+                    // loop
+                    // virtual
+                    // bounce
+                    // shaketime
                 }
             },
             {
