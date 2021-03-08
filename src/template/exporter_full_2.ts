@@ -2,6 +2,13 @@ import FGUI_full_2 from "./export/FGUI_full_2";
 
 export default class exporter_full_2 extends zs.exporter.full {
 
+    static readonly buttonOffsetTime = 1500;
+    static readonly checkScrollDistance = 30;
+    static readonly autoScrollTime = 3000;
+    static readonly dragRecoverTime = 3;
+    static readonly autoScrollSpeed = 50;
+    static readonly mistakenOffset = 350;
+
     rankData: ExporterData[];
 
     viewName: string;
@@ -105,7 +112,7 @@ export default class exporter_full_2 extends zs.exporter.full {
             view.btn_continue.touchable = false;
             this.bClickContinue = true;
             let moveY = view.btn_continue.y - this.mistakenMoveY;
-            Laya.Tween.to(view.btn_continue, { y: moveY }, 1500, null, Laya.Handler.create(this, () => {
+            Laya.Tween.to(view.btn_continue, { y: moveY }, exporter_full_2.buttonOffsetTime, null, Laya.Handler.create(this, () => {
                 view.btn_continue.touchable = true;
             }), Number(delayTime))
             // 展示banner
@@ -127,11 +134,11 @@ export default class exporter_full_2 extends zs.exporter.full {
                 this.rankData = data;
                 view.list.numItems = this.rankData ? this.rankData.length : 0;
                 this.enterJumpExport();
-                this.setMistaken(350);
-                this._dragRecoverTime = 3;
-                this._autoScrollSpeed = 50;
+                this.setMistaken(exporter_full_2.mistakenOffset);
+                this._dragRecoverTime = exporter_full_2.dragRecoverTime;
+                this._autoScrollSpeed = exporter_full_2.autoScrollSpeed;
                 Laya.timer.clearAll(this);
-                Laya.timer.once(3000, this, () => {
+                Laya.timer.once(exporter_full_2.autoScrollTime, this, () => {
                     Laya.timer.frameLoop(1, this, this.onAutoScroll);
                     this._isAutoScrolling = true;
                 })
@@ -152,7 +159,7 @@ export default class exporter_full_2 extends zs.exporter.full {
     }
     scrollJumpExport(event) {
         // 滑动跳出
-        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, 30)) {
+        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, exporter_full_2.checkScrollDistance)) {
             var bScrollJump = zs.product.get("zs_slide_jump_switch");
             if (bScrollJump) {
                 this.randomJumpExport();

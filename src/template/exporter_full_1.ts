@@ -2,6 +2,12 @@ import FGUI_full_1 from "./export/FGUI_full_1";
 
 export default class exporter_full_1 extends zs.exporter.full {
 
+    static readonly checkScrollDistance = 30;
+    static readonly autoScrollTime = 3000;
+    static readonly dragRecoverTime = 3;
+    static readonly autoScrollSpeed = 50;
+    static readonly mistakenOffset = 350;
+
     maxList_1: number;
     maxList_2: number;
 
@@ -140,12 +146,12 @@ export default class exporter_full_1 extends zs.exporter.full {
                 this.list_1.numItems = this._datas_1 ? this._datas_1.length : 0;
                 this.list_2.numItems = this._datas_2 ? this._datas_2.length : 0;
                 this.enterJumpExport();
-                this.setMistaken(350);
+                this.setMistaken(exporter_full_1.mistakenOffset);
                 this.doSpecialEffect();
-                this._dragRecoverTime = 3;
-                this._autoScrollSpeed = 50;
+                this._dragRecoverTime = exporter_full_1.dragRecoverTime;
+                this._autoScrollSpeed = exporter_full_1.autoScrollSpeed;
                 Laya.timer.clearAll(this);
-                Laya.timer.once(3000, this, () => {
+                Laya.timer.once(exporter_full_1.autoScrollTime, this, () => {
                     Laya.timer.frameLoop(1, this, this.onAutoScroll);
                     this._isAutoScrolling = true;
                 })
@@ -257,7 +263,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     }
     scrollJumpExport() {
         // 滑动跳出
-        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, 30)) {
+        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, exporter_full_1.checkScrollDistance)) {
             var bScrollJump = zs.product.get("zs_slide_jump_switch");
             console.log("滑动跳转开关", bScrollJump)
             if (bScrollJump) {
