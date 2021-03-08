@@ -1255,7 +1255,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
         scrollJumpExport() {
             // 滑动跳出
-            if (utils.checkScroll(this.touchX, this.touchY)) {
+            if (utils.checkScroll(this.touchX, this.touchY, list.checkScrollDistance)) {
                 var bScrollJump = zs.product.get("zs_slide_jump_switch");
                 console.log("滑动跳转开关", bScrollJump)
                 if (bScrollJump) {
@@ -1269,6 +1269,7 @@ window.zs.exporter = window.zs.exporter || {};
             utils.navigateToMiniProgram(data);
         }
     }
+    list.checkScrollDistance = 30;
     list.AlignTop = 'top';
     list.AlignBottom = 'bottom';
     list.AlignMiddle = 'middle';
@@ -1445,7 +1446,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
         scrollJumpExport() {
             // 滑动跳出
-            if (utils.checkScroll(this.touchX, this.touchY)) {
+            if (utils.checkScroll(this.touchX, this.touchY, full.checkScrollDistance)) {
                 var bScrollJump = zs.product.get("zs_slide_jump_switch");
                 console.log("滑动跳转开关", bScrollJump)
                 if (bScrollJump) {
@@ -1456,6 +1457,8 @@ window.zs.exporter = window.zs.exporter || {};
         randomJumpExport() { }
         apply() { return this; }
     }
+    full.checkScrollDistance = 30;
+
     exports.utils = utils;
     exports.dataMgr = dataMgr;
     exports.list = list;
