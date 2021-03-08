@@ -8,6 +8,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     static readonly autoScrollingDelay = 3000;
     static readonly contentHeight = 313;
     static readonly dragRecoverTime = 3;
+    static readonly checkScrollDistance = 30;
     static readonly autoScrollSpeed = 50;
 
     maxList_1: number;
@@ -307,7 +308,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     }
     scrollJumpExport() {
         // 滑动跳出
-        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, 30)) {
+        if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, exporter_full_1.checkScrollDistance)) {
             var bScrollJump = zs.product.get("zs_slide_jump_switch");
             console.log("滑动跳转开关", bScrollJump)
             if (bScrollJump) {
