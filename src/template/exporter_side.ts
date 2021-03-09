@@ -5,6 +5,8 @@ export default class exporter_side extends zs.fgui.base {
 
     content: FGUI_hot_game;
     adList: fairygui.GList;
+    btnPopCtrl: fairygui.Controller;
+
 
     bHide: boolean;
     adData: ExporterData[];
@@ -17,6 +19,7 @@ export default class exporter_side extends zs.fgui.base {
 
             this.content = component.content;
             this.adList = component.content.getChild("adList") as fairygui.GList;
+            this.btnPopCtrl = component.content.btnPop.c1;
             component.content.getChild("btnPop").onClick(this, this.onBtnPopClick);
             this.adList.itemRenderer = Laya.Handler.create(this, this.onAdListRender, null, false);
             this.adList.on(fgui.Events.CLICK_ITEM, this, this.onAdListItemClick);
@@ -50,6 +53,7 @@ export default class exporter_side extends zs.fgui.base {
     updatePos() {
         // this.content.x = this.bHide ? -600 : 0;
         var dt = 300;
+        this.btnPopCtrl.selectedIndex = (this.bHide ? 0 : 1);
         Laya.Tween.to(this.content, { x: this.bHide ? -600 : 0 }, dt);
     }
 
