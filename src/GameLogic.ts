@@ -83,37 +83,6 @@ export default class GameLogic extends Laya.Script {
                     .show();
             }
         }));
-
-        // zs.core.onWorkflow(zs.base.workflow.GAME_HOME, Laya.Handler.create(this, () => {
-        //     console.log("State GAME_HOME");
-        //     if (this.gameExporter) {
-        //         this.gameExporter.show();
-        //     } else {
-        //         this.gameExporter = zs.fgui.window.create()
-        //             .attach(zs.exporter.list)
-        //             .update<zs.exporter.list>(zs.exporter.list, (unit) => {
-        //                 unit
-        //                     .setHorizontalList(zs.ui.FGUI_item_2, 300, 10, false)
-        //                     .apply();
-        //             })
-        //             .align(zs.fgui.AlignType.Top)
-        //             .attach(mainPage)
-        //             .fit()
-        //             .update<mainPage>(mainPage, (unit) => {
-        //                 console.log(unit);
-        //             })
-        //             .show();
-        //     }
-        // }));
-
-        // zs.core.onWorkflow(zs.base.workflow.GAME_PLAY, Laya.Handler.create(this, () => {
-        //     console.log("State GAME_PLAY");
-        // }));
-
-        // zs.core.onWorkflow(zs.base.workflow.GAME_END, Laya.Handler.create(this, () => {
-        //     console.log("State GAME_END");
-        // }));
-
         zs.core.init(ProductKey);
     }
 }
