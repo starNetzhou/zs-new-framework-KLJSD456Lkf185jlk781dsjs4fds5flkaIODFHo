@@ -1453,7 +1453,7 @@ declare module zs.platform {
          * 显示横幅广告
          * @param params 
          */
-        static showBanne(params?: any): any;
+        static showBanner(params?: any): any;
         /**
          * 隐藏横幅广告
          * @param params 
