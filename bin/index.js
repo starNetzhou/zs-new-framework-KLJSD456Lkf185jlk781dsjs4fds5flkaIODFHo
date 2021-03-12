@@ -17,6 +17,7 @@ if (typeof wx !== "undefined") {
     loadLib("zsLibs/adapter/zs.wx.banner.js")
     loadLib("zsLibs/adapter/zs.platform.wx.js")
 }
+loadLib("zsLibs/adapter/zs.platform.config.js")
 loadLib("zsLibs/framework/zs.log.js")
 loadLib("zsLibs/framework/zs.resource.js")
 loadLib("zsLibs/framework/zs.utils.js")

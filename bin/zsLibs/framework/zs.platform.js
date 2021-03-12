@@ -2,7 +2,7 @@ window.zs = window.zs || {};
 window.zs.platform = window.zs.platform || {};
 (function (exports) {
     const proxy = window["platform"];
-    const syncList = ['mark', 'share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable', 'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'showBanner', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause', 'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight', 'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip', 'recorderShare', 'showFavoriteGuide', 'setDefaultShare'];
+    const syncList = ['share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable', 'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'showBanner', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause', 'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight', 'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip', 'recorderShare', 'showFavoriteGuide', 'setDefaultShare'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage', 'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut', 'openAwemeUserProfile', 'checkFollowAwemeState'];
 
     function init() {

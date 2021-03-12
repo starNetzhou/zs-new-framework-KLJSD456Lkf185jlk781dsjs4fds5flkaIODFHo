@@ -570,7 +570,7 @@ window.zs = window.zs || {};
         // data 数据
         static async update(key, data, mode) {
             let params = {
-                gid: (zs.platform.proxy ? zs.platform.sync.mark : 'wx_') + zs.configs.gameCfg.gameId,
+                gid: zs.platform.config.platformMark + zs.configs.gameCfg.gameId,
                 uid: zs.core.userId,
                 key: key,
                 data: data
@@ -583,7 +583,7 @@ window.zs = window.zs || {};
         // key 关键词
         static async download(key, mode) {
             let params = {
-                gid: (zs.platform.proxy ? zs.platform.sync.mark : 'wx_') + zs.configs.gameCfg.gameId,
+                gid: zs.platform.config.platformMark + zs.configs.gameCfg.gameId,
                 uid: zs.core.userId,
                 key: key
             };
