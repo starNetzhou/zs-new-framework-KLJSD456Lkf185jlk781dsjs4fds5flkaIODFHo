@@ -56,10 +56,6 @@ window.platform = (function () {
         });
     }
 
-    platform.mark = function () {
-        return 'wx_';
-    }
-
     platform.share = function (params) {
         if (params.title == null) {
             zs.log.warn('方法（ share ）缺少必要参数（ title ）', 'Platform');
