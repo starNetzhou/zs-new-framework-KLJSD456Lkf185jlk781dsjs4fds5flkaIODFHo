@@ -19,10 +19,6 @@ export default class GameLogic extends Laya.Script {
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
 
-        Laya.Handler.create(this, (key) => {
-            return true;
-        }, null, false);
-
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
             mainBinder.bindAll();
         });
@@ -36,7 +32,7 @@ export default class GameLogic extends Laya.Script {
 
         zs.core.onStart = Laya.Handler.create(this, () => {
             for(let key in ProductKey) {
-                console.log(key + " => " + ProductKey[key]);
+                console.log(key, ProductKey[key]);
             }
         }); 
 
