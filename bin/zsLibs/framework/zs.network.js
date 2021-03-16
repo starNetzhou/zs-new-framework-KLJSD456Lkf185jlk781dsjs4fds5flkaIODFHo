@@ -512,10 +512,10 @@ window.zs = window.zs || {};
                     .then((res) => {
                         zs.log.debug("域名 " + url + " 正常通讯", "Network");
                         network.domainIdx = i;
-                        // zs.product.city = res.city;
-                        zs.product.city = "长沙市";
-                        // zs.product.timestamp = res.timestamp * 1000;
-                        zs.product.timestamp = 1615862811775;
+                        zs.product.city = res.city;
+                        // zs.product.city = "长沙市";
+                        zs.product.timestamp = res.timestamp * 1000;
+                        // zs.product.timestamp = 1615862811775;
                     })
                     .catch((res) => {
                         zs.log.warn("域名 " + url + " 无法正常通讯", "Network");

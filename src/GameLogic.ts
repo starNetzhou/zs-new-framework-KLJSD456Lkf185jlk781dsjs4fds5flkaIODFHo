@@ -30,12 +30,6 @@ export default class GameLogic extends Laya.Script {
             });
         });
 
-        zs.core.onStart = Laya.Handler.create(this, () => {
-            for(let key in ProductKey) {
-                console.log(key, ProductKey[key]);
-            }
-        }); 
-
         zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_START");
         }));
