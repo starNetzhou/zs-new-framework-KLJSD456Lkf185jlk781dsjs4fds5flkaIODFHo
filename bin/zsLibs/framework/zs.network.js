@@ -512,6 +512,10 @@ window.zs = window.zs || {};
                     .then((res) => {
                         zs.log.debug("域名 " + url + " 正常通讯", "Network");
                         network.domainIdx = i;
+                        zs.product.city = res.city;
+                        // zs.product.city = "长沙市";
+                        zs.product.timestamp = res.timestamp * 1000;
+                        // zs.product.timestamp = 1615862811775;
                     })
                     .catch((res) => {
                         zs.log.warn("域名 " + url + " 无法正常通讯", "Network");
@@ -535,7 +539,7 @@ window.zs = window.zs || {};
         // is_new 是否为新玩家
         static async login(params, mode) {
             if (params == null) { params = {}; }
-            params.gid = (zs.platform.proxy ? zs.platform.sync.mark : 'wx_') + zs.configs.gameCfg.gameId;
+            params.gid = window.zs.platform.config.platformMark + zs.configs.gameCfg.gameId;
             zs.log.debug("登录参数：", "Network", params);
             return network.request('login', params, mode);
         }
@@ -547,7 +551,7 @@ window.zs = window.zs || {};
         // version 配置版本（online 线上 test 测试）默认线上
         static async config(isSwitch, module, table, mode) {
             let params = {
-                gid: (zs.platform.proxy ? zs.platform.sync.mark : 'wx_') + zs.configs.gameCfg.gameId,
+                gid: window.zs.platform.config.platformMark + zs.configs.gameCfg.gameId,
                 type: isSwitch ? 'switch' : 'module',
                 pt: zs.configs.gameCfg.packgeTime
             };
@@ -592,14 +596,17 @@ window.zs = window.zs || {};
     }
     network.version = 'v1';
     network.domainIdx = -1;
+    network.city = null;
+    network.timestamp = null;
     network.defaultData = {};
     network.listDomain = [
-        "https://gamesapi.zxmn2018.com",
+        // "http://test-gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com"
     ];
     network.mapWebApi = {
         "ping": "game/ping",
+        // "ping": "game/clientInfo",
         "login": "game/login",
         "config": "game/config",
         "update": "game/update",

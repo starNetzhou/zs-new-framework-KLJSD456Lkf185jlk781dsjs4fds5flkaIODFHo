@@ -46,6 +46,7 @@ window.zs.platform = window.zs.platform || {};
     class sync { }
 
     exports.init = init;
+    exports.proxy = proxy;
     exports.async = async;
     exports.sync = sync;
 }(window.zs.platform = window.zs.platform || {}));
