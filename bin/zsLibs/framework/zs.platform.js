@@ -13,7 +13,7 @@ window.zs.platform = window.zs.platform || {};
         for (let key in proxy) {
             let func = proxy[key];
             if (func != null && typeof func === 'function') {
-                if (func.name == '_async') {
+                if (asyncList.indexOf(func.name) >= 0) {
                     async[key] = proxy[key];
                 } else {
                     sync[key] = proxy[key];
@@ -46,6 +46,7 @@ window.zs.platform = window.zs.platform || {};
     class sync { }
 
     exports.init = init;
+    exports.proxy = proxy;
     exports.async = async;
     exports.sync = sync;
 }(window.zs.platform = window.zs.platform || {}));
