@@ -602,6 +602,7 @@ window.zs = window.zs || {};
     network.listDomain = [
         // "http://test-gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com",
+        "https://gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com"
     ];
     network.mapWebApi = {
