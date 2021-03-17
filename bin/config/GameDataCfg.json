@@ -1,7 +1,0 @@
-{
-    "maxWheelRotation": 30,
-    "maxMoveSpeedZ": 0.5,
-    "printPool": false,
-    "moveEndPointTime": 3000,
-    "testWin": false
-}
