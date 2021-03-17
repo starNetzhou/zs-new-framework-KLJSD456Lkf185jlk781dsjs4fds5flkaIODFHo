@@ -81,7 +81,5 @@ export default class GameLogic extends Laya.Script {
         }));
 
         zs.core.init(ProductKey);
-
-        zs.log.info("test", "Test", this.workflow);
     }
 }
