@@ -17,10 +17,10 @@ export default class FGUI_common_msg extends fgui.GComponent {
 	}
 
 	protected onConstruct():void {
-		this.c1 = this.getController("c1");
-		this.btnComfire = <FGUI_btnComfire>(this.getChild("btnComfire"));
-		this.lblTitle = <fgui.GTextField>(this.getChild("lblTitle"));
-		this.lblContent = <fgui.GTextField>(this.getChild("lblContent"));
-		this.btnCancel = <FGUI_btnCancel>(this.getChild("btnCancel"));
+		this.c1 = this.getControllerAt(0);
+		this.btnComfire = <FGUI_btnComfire>(this.getChildAt(2));
+		this.lblTitle = <fgui.GTextField>(this.getChildAt(3));
+		this.lblContent = <fgui.GTextField>(this.getChildAt(4));
+		this.btnCancel = <FGUI_btnCancel>(this.getChildAt(5));
 	}
 }

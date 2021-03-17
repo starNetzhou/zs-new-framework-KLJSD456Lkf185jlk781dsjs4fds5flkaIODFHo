@@ -1,8 +1,8 @@
 export default class ProductKey {
-    static readonly zs_version = 1;
+    static readonly zs_version = 0;
     static readonly zs_switch = 0;
     static readonly zs_start_game_video_switch = 0; // 开局看视频
-    static readonly zs_banner_vertical_enable = 0; //按钮上移开关 暂s时没用上 用的zs_button_delay_time
+    static readonly zs_banner_vertical_enable = 0; //按钮上移开关 暂时没用上 用的zs_button_delay_time
     static readonly zs_jump_switch = 0; // 导出总开关
     static readonly zs_full_screen1_jump = 0;
     static readonly zs_full_screen2_jump = 0;
@@ -31,11 +31,42 @@ export default class ProductKey {
     static readonly zs_revive_num = 0; //复活次数
     static readonly zs_system = "";
     static readonly zs_city = "上海市|广州市|深圳市|成都市|北京市";
-    static readonly zs_time = "";
-    static readonly zs_city_switch = 1;
+    static readonly zs_time = 0;
     static readonly zs_banner_banner_time = 1000
     static readonly zs_full_screen_banner_time = 3
     static readonly zs_banner_refresh_time = 30000
     static readonly zs_game_start_jump_switch = 0; // 首页导出位开关
-    static readonly zs_full_screen_button_switch = 0;
+    static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
+
+    static readonly zs_native_click_switch = 0;
+    static readonly zs_jump_time = 0;
+    static readonly zs_start_video_switch = 0;
+    static readonly zs_native_touch_switch = 0;
+    static readonly zs_native_btn_text = "";
+    static readonly zs_native_delay = 0;
+    static readonly zs_native_close_switch = 0;
+    static readonly zs_native_next_limit = 0;
+    static readonly test_touch_switch = 0;
+    static readonly zs_full_screen_jump = 0;
+    static readonly zs_before_finsh_jump_switch = 0;
+    static readonly zs_Fakerjump = 0;
+    static readonly zs_finish_full_screen_switch = 0;
+    static readonly zs_native_adunit = "";
+    static readonly zs_native_newer_times = 0;
+    static readonly zs_native_show_time = 0;
+    static readonly zs_unmiss_text_time = 0;
+    static readonly zs_native_limit = 1;
+    static readonly zs_native_limit_time = 0;
+    static readonly zs_native_touch_time = 0;
+    static readonly zs_native_timeout = 0;
+    static readonly zs_native_adunit_icon = "";
+    static readonly zs_native_limit_10 = 0;
+    static readonly zs_native_end_before_num = -1;
+    static readonly zs_gamePortalAd_id = "";
+    static readonly zs_quit_ad_id = "";
+    static readonly zs_gameBannerAd_id = "";
+    static readonly zs_onemin_show_ad_switch = 0;
+    static readonly zs_show_banner_time = 0;
+    static readonly zs_open_adunit = "";
+    static readonly zs_native_adunit2 = ""
 }

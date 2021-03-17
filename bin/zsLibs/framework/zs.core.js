@@ -310,6 +310,27 @@ window.zs = window.zs || {};
             if (window.zs.wx && window.zs.wx.banner) {
                 zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"))
             }
+            else if (zs.platform.config.platformMark == 'op_') {
+                let zs_onemin_show_ad_switch = zs.product.get("zs_onemin_show_ad_switch");
+                let zs_show_banner_time = zs.product.get("zs_show_banner_time");
+                if (zs_onemin_show_ad_switch) {
+                    zs.platform.sync.setIsInOneMin(true);
+                    Laya.timer.once(60000, this, () => {
+                        zs.platform.sync.setIsInOneMin(false);
+                        zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
+                    });
+                } else {
+                    if (zs_show_banner_time > 0) {
+                        Laya.timer.once(zs_show_banner_time, this, () => {
+                            zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
+                        });
+                    } else {
+                        zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
+                    }
+                }
+                zs.platform.sync.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
+            }
+
             zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
             this.progress = 85;
 

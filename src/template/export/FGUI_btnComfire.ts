@@ -10,6 +10,6 @@ export default class FGUI_btnComfire extends fgui.GButton {
 	}
 
 	protected onConstruct():void {
-		this.lblComfire = <fgui.GTextField>(this.getChild("lblComfire"));
+		this.lblComfire = <fgui.GTextField>(this.getChildAt(2));
 	}
 }

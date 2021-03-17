@@ -10,6 +10,6 @@ export default class FGUI_btnCancel extends fgui.GButton {
 	}
 
 	protected onConstruct():void {
-		this.lblCancel = <fgui.GTextField>(this.getChild("lblCancel"));
+		this.lblCancel = <fgui.GTextField>(this.getChildAt(2));
 	}
 }
