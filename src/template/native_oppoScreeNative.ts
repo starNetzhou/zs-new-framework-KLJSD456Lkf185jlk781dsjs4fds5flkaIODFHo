@@ -74,7 +74,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
         if (zs_native_click_switch) {
             btnText = zs.product.get('zs_native_btn_text') ? zs.product.get('zs_native_btn_text') : adData.clickBtnTxt;
         } else {
-            btnText = "уѓ╣тЄ╗Уи│У┐Є";
+            btnText = "点击跳过";
         }
         this.owner.btnConfirm.title = btnText;
 
