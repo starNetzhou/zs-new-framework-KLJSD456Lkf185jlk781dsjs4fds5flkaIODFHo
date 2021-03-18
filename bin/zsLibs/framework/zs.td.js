@@ -3,6 +3,7 @@ window.zs = window.zs || {};
     'use strict';
     class td {
         static init() {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.tdAppSdk == null || GameGlobal.tdInit == null) {
                 zs.log.warn("无法初始化TD SDK", 'Talking Data');
                 return;
@@ -23,6 +24,7 @@ window.zs = window.zs || {};
             this.TDSDK = GameGlobal.tdAppSdk;
         }
         static registeInfo(evt, info) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.tdAppSdk == null || GameGlobal.tdInit == null) {
                 zs.log.warn("TD SDK不存在，无法注册配置", 'Talking Data');
                 return;
@@ -38,6 +40,7 @@ window.zs = window.zs || {};
             }
         }
         static async registeConfig(cfg) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.tdAppSdk == null || GameGlobal.tdInit == null) {
                 zs.log.warn("TD SDK不存在，无法注册配置表", 'Talking Data');
                 return;
@@ -105,6 +108,7 @@ window.zs = window.zs || {};
             }
         }
         static get appKey() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取appKey", 'Talking Data');
                 return null;
@@ -112,6 +116,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.appKey;
         }
         static set appKey(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置appKey", 'Talking Data');
                 return;
@@ -119,6 +124,7 @@ window.zs = window.zs || {};
             GameGlobal.appInfo.app.appKey = value;
         }
         static get appName() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取appName", 'Talking Data');
                 return null;
@@ -126,6 +132,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.displayName;
         }
         static set appName(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置appName", 'Talking Data');
                 return;
@@ -133,6 +140,7 @@ window.zs = window.zs || {};
             GameGlobal.appInfo.app.displayName = value;
         }
         static get appId() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取appId", 'Talking Data');
                 return null;
@@ -140,6 +148,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.uniqueId;
         }
         static set appId(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置appId", 'Talking Data');
                 return;
@@ -147,6 +156,7 @@ window.zs = window.zs || {};
             GameGlobal.appInfo.app.uniqueId = value;
         }
         static get versionName() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取versionName", 'Talking Data');
                 return null;
@@ -154,6 +164,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.versionName;
         }
         static set versionName(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置appKey", 'Talking Data');
                 return;
@@ -161,6 +172,7 @@ window.zs = window.zs || {};
             GameGlobal.appInfo.app.versionName = value;
         }
         static get versionCode() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取versionCode", 'Talking Data');
                 return null;
@@ -168,6 +180,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.versionCode;
         }
         static set versionCode(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置appKey", 'Talking Data');
                 return;
@@ -175,6 +188,7 @@ window.zs = window.zs || {};
             GameGlobal.appInfo.app.versionCode = value;
         }
         static get channel() {
+            if (typeof wx === 'undefined') { return null; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法获取channel", 'Talking Data');
                 return null;
@@ -182,6 +196,7 @@ window.zs = window.zs || {};
             return GameGlobal.appInfo.app.channel;
         }
         static set channel(value) {
+            if (typeof wx === 'undefined') { return; }
             if (typeof GameGlobal === 'undefined' || GameGlobal.appInfo == null) {
                 zs.log.warn("TD SDK不存在，无法设置channel", 'Talking Data');
                 return;

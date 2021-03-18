@@ -1393,6 +1393,30 @@ declare module zs.platform {
          * @param params 
          */
         static playVideo(params?: any): any;
+        /**
+         * oppo 加载原生
+         */
+        static loadNativeAd(): Promise<any>;
+        /**
+         * oppo 是否在游戏之前展示
+         */
+        static isBeforeGameAccount(): Promise<any>;
+        /**
+         * oppo 获取上报状态
+         */
+        static getAdReporteStatus(adUnit): Promise<any>;
+        /**
+         * oppo 显示原生更多好玩
+         */
+        static showGamePortalAd(): Promise<any>;
+        /**
+         * 判断是否有桌面图标
+         */
+        static hasDesktopIcon(): Promise<any>;
+        /**
+         * 创建桌面图标
+         */
+        static createDesktopIcon(): Promise<any>;
     }
 
     /**
@@ -1549,6 +1573,48 @@ declare module zs.platform {
          * @param params 
          */
         static setDefaultShare(params?: any): any;
+        /**
+         * 
+         * @param type 
+         */
+        static updateReviveTypeInfo(type);
+        /**
+         * 设置原生最后显示的时间
+         * @param time 
+         */
+        static setNativeLastShowTime(time: Number);
+        /**
+        * oppo 初始化原生
+        */
+        static initNativeAd({ id: any });
+        /**
+        * oppo 原生请求显示上报
+        * @param adIcon 
+        * @param adId 
+        */
+        static sendReqAdShowReport(adIcon, adId);
+        /**
+         * oppo 原生请求点击上报
+         * @param adIcon 
+         * @param adId 
+         */
+        static sendReqAdClickReport(adIcon, adId);
+        /**
+         * 原生平台弹窗
+         * @param val 
+         * @param time 
+         */
+        static showToast(val, time?);
+        /**
+         * oppo 设置一分钟内展不展示广告
+         * @param val 
+         */
+        static setIsInOneMin(val);
+        /**
+         * oppo 获取一分钟之内展示不展示广告
+         * @returns bool = true 不展示广告 false 正常展示广告
+         */
+        static getIsInOneMin(): boolean;
     }
 }
 
