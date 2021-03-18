@@ -1,6 +1,6 @@
 import FGUI_ScreeNative from "./export/FGUI_ScreeNative";
 
-/*тЁет▒ЈтјЪућЪт»╝тЄ║
+/*
 * @ Author: yangcheng
 * @ Data: 2021-03-11 15:48
 */
