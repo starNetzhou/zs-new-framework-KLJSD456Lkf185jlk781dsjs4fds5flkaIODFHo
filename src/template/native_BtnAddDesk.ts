@@ -43,7 +43,7 @@ export default class native_BtnAddDesk extends zs.fgui.base {
             //添加成功 隐藏当前按钮
             this.owner.visible = false;
         }).catch(() => {
-            console.log("🐑 : --- >>> ", "....");
+            zs.log.debug("🐑 : --- >>> ", "AddDesk");
         });
     }
 

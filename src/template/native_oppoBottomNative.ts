@@ -33,7 +33,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
     }
     closed = false;
     apply() {
-        console.log("🐑 : --- >>> 手动隐藏 ", "bottonNativeUI");
+        zs.log.debug("🐑 : --- >>> 手动隐藏 ", "bottonNativeUI");
         this.owner.visible = false;
         this.closed = false;
         zs.platform.async.isBeforeGameAccount().then(() => {
@@ -45,7 +45,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
                 this.onAdError(err);
             })
         }).catch(() => {
-            console.log("🐑 : --- >>> ", "????????????");
+            zs.log.debug("🐑 : --- >>> ??? ", "bottonNativeUI");
             this.closeView();
         })
         return this;
@@ -55,14 +55,12 @@ export default class native_oppoBottomNative extends zs.fgui.base {
     onAdLoaded(data) {
         var adData = data.adList[0];
         var url = adData.imgUrlList[0];
-        console.log("🐑 : --- >>> ", data);
+        zs.log.debug("🐑 : --- >>> ", "bottonNativeUI", data);
         this.adId = adData.adId;
         let zs_native_click_switch = zs.product.get('zs_native_click_switch');
         let zs_jump_time = zs.product.get('zs_jump_time');
         let zs_native_adunit = zs.product.get('zs_native_adunit');
         let zs_native_touch_switch = zs.product.get('zs_native_touch_switch');
-
-        console.log("🐑 : --- >>> ",);
 
         //icon
         this.owner.btnAdImg.icon = url;
@@ -105,7 +103,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
     }
 
     onAdError(err) {
-        console.warn(err);
+        zs.log.warn(err);
         if (this.closed == false) {
             this.closed = true;
             this.closeView();
