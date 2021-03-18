@@ -1,6 +1,6 @@
 import FGUI_ScreeNative from "./export/FGUI_ScreeNative";
 
-/*全屏原生导出
+/*тЁет▒ЈтјЪућЪт»╝тЄ║
 * @ Author: yangcheng
 * @ Data: 2021-03-11 15:48
 */
@@ -31,9 +31,16 @@ export default class native_oppoScreeNative extends zs.fgui.base {
     }
     closed = false;
     apply() {
-        console.log("🐑 : --- >>> 手动隐藏 ", "ScreeNative");
+        console.log("­ЪљЉ : --- >>> ТЅІтіежџљУЌЈ ", "ScreeNative");
         this.owner.visible = false;
         this.closed = false;
+
+        let zs_native_limit = zs.product.get('zs_native_limit');
+        console.log("🐑 下一关开始/重新开始原生广告开关 : --- >>> ", zs_native_limit);
+        if (!zs_native_limit) {
+            this.closeView();
+        }
+
         zs.platform.async.isBeforeGameAccount().then(() => {
             this.adUnit = zs.product.get("zs_native_adunit")
             zs.platform.sync.initNativeAd({ id: this.adUnit });
@@ -43,7 +50,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
                 this.onAdError(err);
             })
         }).catch(() => {
-            console.log("🐑 : --- >>> ", "????????????");
+            console.log("­ЪљЉ : --- >>> ", "????????????");
             this.closeView();
         })
         return this;
@@ -53,7 +60,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
     onAdLoaded(data) {
         var adData = data.adList[0];
         var url = adData.imgUrlList[0];
-        console.log("🐑 : --- >>> ", data);
+        console.log("­ЪљЉ : --- >>> ", data);
         this.adId = adData.adId;
         let zs_native_click_switch = zs.product.get('zs_native_click_switch');
         let zs_jump_time = zs.product.get('zs_jump_time');
@@ -67,7 +74,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
         if (zs_native_click_switch) {
             btnText = zs.product.get('zs_native_btn_text') ? zs.product.get('zs_native_btn_text') : adData.clickBtnTxt;
         } else {
-            btnText = "点击跳过";
+            btnText = "уѓ╣тЄ╗Уи│У┐Є";
         }
         this.owner.btnConfirm.title = btnText;
 
