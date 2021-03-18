@@ -100,12 +100,8 @@ export default class workflow extends zs.workflow {
             .registe(workflow.OVER_FULL_1, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.OVER_FULL_2, 0, false, this, this.onOverFull2)
             .registe(workflow.OVER_FULL_2, workflow.GAME_END, 0, false, this, this.onGameEnd)
-            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this, this.onGameHome);
-    }
-
-    start() {
-        super.start();
-        this.fsm.init(workflow.GAME_START, true);
+            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+            .setDefault(workflow.GAME_START, true);
     }
 
     onStartFull1(complete) {

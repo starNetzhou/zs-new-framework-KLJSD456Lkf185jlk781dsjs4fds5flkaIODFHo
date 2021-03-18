@@ -69,7 +69,7 @@
     "EXPORT_COMMON_EGG": {
         "banner": {}
     },
-    "GAME_PLAY": {
+    "GAME_PLAY.PLAY": {
         "banner": {
             "switch": "zs_game_banner_show_switch"
         },

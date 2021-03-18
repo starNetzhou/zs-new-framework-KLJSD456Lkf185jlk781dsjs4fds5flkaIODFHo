@@ -12,6 +12,25 @@ window.zs = window.zs || {};
             }
             return this._exportWindow;
         }
+        get fsmList() {
+            if (this._fsmList == null) {
+                this._fsmList = {};
+            }
+            return this._fsmList;
+        }
+        get state() {
+            if (this.fsm) {
+                return this.fsm.current;
+            }
+            return null;
+        }
+        get childState() {
+            if (this.fsm && this.fsmList[this.fsm.current]) {
+                return this.fsmList[this.fsm.current].current;
+            }
+
+            return null;
+        }
         constructor() {
             this.exporterPack = null;
         }
@@ -24,6 +43,10 @@ window.zs = window.zs || {};
             zs.fgui.configs.registeBase(workflow.exporterList, zs.exporter.list);
             zs.fgui.configs.registeBase(workflow.exporterCard, zs.exporter.card);
             core.addAppShow(Laya.Handler.create(this, this.clearDelayBanner, null, false));
+            this.fsm.init();
+        }
+        setFSM(key, fsm) {
+            this.fsmList[key] = fsm;
         }
         on(key, handler, isBefore) {
             if (key == null || key.length <= 0 || handler == null) { return; }
@@ -90,10 +113,22 @@ window.zs = window.zs || {};
             }
         }
         next(target) {
+            if (this.fsm == null) { return; }
             if (target) {
-                this.fsm && this.fsm.runTransition(target);
+                this.fsm.runTransition(target);
             } else {
-                this.fsm && this.fsm.runNext();
+                this.fsm.runNext();
+            }
+        }
+        childNext(target) {
+            if (this.fsm == null) { return; }
+            let childFSM = this.fsmList[this.fsm.current];
+            if (childFSM) {
+                if (target) {
+                    childFSM.runTransition(target);
+                } else {
+                    childFSM.runNext();
+                }
             }
         }
         onBeforeChange(target, current) {
@@ -134,8 +169,62 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            zs.product.get(workflow.switchExporter) && this.checkExporter(current);
-            this.checkBanner(current);
+            let childFSM = this.fsmList[current];
+            if (childFSM) {
+                childFSM.onBeforeChange = Laya.Handler.create(this, this.onChildFSMBeforeChanged, null, false);
+                childFSM.onChanged = Laya.Handler.create(this, this.onChildFSMChanged, null, false);
+                childFSM.init();
+            } else {
+                zs.product.get(workflow.switchExporter) && this.checkExporter(current);
+                this.checkBanner(current);
+            }
+        }
+        onChildFSMBeforeChanged(target, current) {
+            if (this.fsm == null) { return; }
+            let childKey = this.fsm.current + '.' + target;
+            if (this.preListeners != null && this.preListeners[childKey] != null) {
+                let list = this.preListeners[childKey];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
+            // TODO Check Exporter Banner
+            this.exportWindow.clear();
+            // banner销毁
+            if (window.zs && window.zs.wx) {
+                let data = zs.configs.productCfg[current];
+                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
+                wxBannerMgr.hideAll();
+                if (data && data.banner) {
+                    this.clearDelayBanner();
+                }
+            }
+        }
+        onChildFSMChanged(current) {
+            if (this.fsm == null) { return; }
+            let childKey = this.fsm.current + '.' + current;
+            zs.td.justTrack(zs.td.workflowKey + childKey, zs.td.workflowDesc + childKey);
+            if (this.listeners != null && this.listeners[childKey] != null) {
+                let list = this.listeners[childKey];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
+            zs.product.get(workflow.switchExporter) && this.checkExporter(childKey);
+            this.checkBanner(childKey);
+            // TODO Check Exporter Banner
         }
         checkBanner(current) {
             if (window.zs == null) { return; }

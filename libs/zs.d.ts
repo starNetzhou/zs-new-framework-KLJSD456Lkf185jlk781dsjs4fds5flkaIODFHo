@@ -201,6 +201,14 @@ declare module zs {
          */
         exporterPack: string;
         /**
+         * 获取工作流状态
+         */
+        get state(): string;
+        /**
+         * 获取工作流子状态
+         */
+        get childState(): string;
+        /**
          * 注册方法（无需主动调用），虚方法，用于自定义工作流
          */
         registe();
@@ -208,6 +216,12 @@ declare module zs {
          * 开始方法（无需主动调用）
          */
         start();
+        /**
+         * 设置
+         * @param key 
+         * @param fsm 
+         */
+        setFSM(key: string, fsm: zs.fsm);
         /**
          * 注册工作流监听，用于监听工作流状态改变
          * @param key 状态名
@@ -227,6 +241,11 @@ declare module zs {
          * @param target （可选）目标状态名，默认自动跳转
          */
         next(target?: string);
+        /**
+         * 子状态跳转 
+         * @param target （可选）目标状态名，默认自动跳转
+         */
+        childNext(target?: string);
     }
 
     /**
@@ -370,6 +389,12 @@ declare module zs {
          * @param canBreak （可选）状态是否可被中途打断
          */
         registe(from: string, to: string, priority?: number, auto?: boolean, thisObj?: any, transition?: (complete: Laya.Handler) => void, condition?: () => boolean, canBreak?: boolean): fsm;
+        /**
+         * 设置状态机默认值
+         * @param state 默认状态
+         * @param auto 默认自动状态
+         */
+        setDefault(state: string, auto?: boolean): fsm;
         /**
          * 注销状态
          * @param from 开始状态名

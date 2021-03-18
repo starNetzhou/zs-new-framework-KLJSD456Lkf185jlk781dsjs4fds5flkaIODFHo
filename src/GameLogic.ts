@@ -19,6 +19,15 @@ export default class GameLogic extends Laya.Script {
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
 
+        zs.core.workflow.setFSM(workflow.GAME_PLAY,
+            new zs.fsm()
+                .registe("START", "READY")
+                .registe("READY", "PLAY")
+                .registe("PLAY", "SETTLE")
+                .registe("SETTLE", "END")
+                .setDefault("START")
+        );
+
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
             mainBinder.bindAll();
         });
@@ -49,6 +58,23 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
         }));
+
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY START");
+        }));
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY READY");
+        }));
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY PLAY");
+        }));
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.SETTLE', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY SETTLE");
+        }));
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY END");
+        }));
+
         zs.core.onWorkflow(workflow.EXPORT_GAME_EGG, Laya.Handler.create(this, () => {
             console.log("Workflow ====== EXPORT_GAME_EGG");
         }));
