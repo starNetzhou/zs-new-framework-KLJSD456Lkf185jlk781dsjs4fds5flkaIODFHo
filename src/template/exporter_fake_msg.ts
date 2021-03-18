@@ -5,22 +5,16 @@ export default class exporter_fake_msg extends zs.fgui.base {
     static nickList: string[];
     static soundShow: string;
 
-    title: string;
     desc: fairygui.GTextField;
-
     adData: ExporterData;
-
     callback: Laya.Handler;
 
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_fake_msg) {
-            this.title = component.title;
             this.desc = component.desc;
             component.onClick(this, this.onMsgClick);
-            // console.log("onClick");
         }
-        // console.log(component);
     }
     static make() {
         let view = FGUI_fake_msg.createInstance();
@@ -40,17 +34,18 @@ export default class exporter_fake_msg extends zs.fgui.base {
         return false;
     }
     setTitle(title) {
-        if (title && this.title) {
-            this.title = title;
-        } else if (this.title) {
-            this.title = "";
+        let view = this.view as FGUI_fake_msg;
+        if (title) {
+            view.title = title;
+        } else {
+            view.title = "";
         }
         return this;
     }
     setDesc(desc) {
         if (desc && this.desc) {
             this.desc.text = desc;
-        } else if (this.desc) {
+        } else {
             this.desc.text = "";
         }
         return this;
