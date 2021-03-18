@@ -13,7 +13,7 @@ window.zs.platform = window.zs.platform || {};
         for (let key in proxy) {
             let func = proxy[key];
             if (func != null && typeof func === 'function') {
-                if (asyncList.indexOf(func.name) >= 0) {
+                if (asyncList.indexOf(key) >= 0) {
                     async[key] = proxy[key];
                 } else {
                     sync[key] = proxy[key];
