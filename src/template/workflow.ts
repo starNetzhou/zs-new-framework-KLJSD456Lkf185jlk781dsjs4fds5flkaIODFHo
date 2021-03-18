@@ -23,16 +23,6 @@ export default class workflow extends zs.workflow {
 
     static readonly OPEN_SCREE_NATIVE = 'OPEN_SCREE_NATIVE';
 
-    static readonly exporterSide = "export_side";
-    static readonly exporterKnock = "export_knock";
-
-    static readonly exportItem1 = "export_item_1";
-    static readonly exportItem2 = "export_item_2";
-    static readonly exportItem3 = "export_item_3";
-    static readonly exportItem4 = "export_item_4";
-    static readonly exportItem5 = "export_item_5";
-    static readonly exportItem6 = "export_item_6";
-    static readonly exportItem7 = "export_item_7";
     static readonly bottomNative = "bottomNative";
 
     exporterPack = "export/export";
@@ -57,7 +47,6 @@ export default class workflow extends zs.workflow {
 
     registe() {
         exportBinder.bindAll();
-
         zs.fgui.configs.registeItem(workflow.bottomNative, FGUI_BottomNative);
 
         this.fsm = new zs.fsm()

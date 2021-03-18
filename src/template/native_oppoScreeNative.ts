@@ -31,7 +31,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
     }
     closed = false;
     apply() {
-        console.log("🐑 : --- >>> 手动隐藏 ", "ScreeNative");
+        zs.log.debug("🐑 : --- >>> 手动隐藏 ", "ScreeNative");
         this.owner.visible = false;
         this.closed = false;
         zs.platform.async.isBeforeGameAccount().then(() => {
@@ -43,7 +43,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
                 this.onAdError(err);
             })
         }).catch(() => {
-            console.log("🐑 : --- >>> ", "????????????");
+            zs.log.debug("🐑 : --- >>> ??? ", "ScreeNative");
             this.closeView();
         })
         return this;
@@ -53,7 +53,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
     onAdLoaded(data) {
         var adData = data.adList[0];
         var url = adData.imgUrlList[0];
-        console.log("🐑 : --- >>> ", data);
+        zs.log.debug("🐑 : --- >>> ", "ScreeNative", data);
         this.adId = adData.adId;
         let zs_native_click_switch = zs.product.get('zs_native_click_switch');
         let zs_jump_time = zs.product.get('zs_jump_time');
@@ -102,7 +102,7 @@ export default class native_oppoScreeNative extends zs.fgui.base {
     }
 
     onAdError(err) {
-        console.warn(err);
+        zs.log.warn(err);
         if (this.closed == false) {
             this.closed = true;
             this.closeView();
