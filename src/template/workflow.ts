@@ -22,8 +22,6 @@ export default class workflow extends zs.workflow {
 
     static readonly OPEN_SCREE_NATIVE = 'OPEN_SCREE_NATIVE';
 
-    static readonly bottomNative = "bottomNative";
-
     exporterPack = "export/export";
 
     windowFull: zs.fgui.window;
@@ -46,7 +44,6 @@ export default class workflow extends zs.workflow {
 
     registe() {
         exportBinder.bindAll();
-        zs.fgui.configs.registeItem(workflow.bottomNative, FGUI_BottomNative);
 
         this.fsm = new zs.fsm()
             .registe(workflow.GAME_START, workflow.GAME_HOME, 0, false, this, this.onGameHome)
