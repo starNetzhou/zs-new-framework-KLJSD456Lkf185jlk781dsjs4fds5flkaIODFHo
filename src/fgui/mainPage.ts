@@ -1,3 +1,4 @@
+import workflow from "src/template/workflow";
 import fgui_entity from "./fgui_entity";
 
 export default class mainPage extends zs.fgui.base {
@@ -28,7 +29,11 @@ export default class mainPage extends zs.fgui.base {
             console.log("img click");
         });
         view.loader.onClick(this, () => {
-            zs.core.workflow.next();
+            if (zs.core.workflow.state != workflow.GAME_PLAY || zs.core.workflow.childState == "END") {
+                zs.core.workflow.next();
+            } else {
+                zs.core.workflow.childNext();
+            }
             console.log("loader click");
         });
     }

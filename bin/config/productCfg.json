@@ -69,27 +69,11 @@
     "EXPORT_COMMON_EGG": {
         "banner": {}
     },
-    "GAME_PLAY": {
+    "GAME_PLAY.PLAY": {
         "banner": {
             "switch": "zs_game_banner_show_switch"
         },
-        "exporter": [
-            {
-                "type": "export_list",
-                "window": {
-                    "align": "top",
-                    "alignoffsety": 140
-                },
-                "base": {
-                    "item": "export_item_7",
-                    "mode": "hlist",
-                    "height": 270,
-                    "max": 10,
-                    "marginleft": 10,
-                    "marginright": 10
-                }
-            }
-        ]
+        "exporter": []
     },
     "EXPORT_GAME_EGG": {
         "banner": {}

@@ -10,10 +10,12 @@ window.zs = window.zs || {};
             return this._list;
         }
         init(state, auto) {
-            this.current = state;
+            this.current = state || this.defaultState;
             this.target = null;
-            this.onChanged && this.onChanged.runWith(this.current);
-            if (auto) { this.runNext(); }
+            if (this.current) {
+                this.onChanged && this.onChanged.runWith(this.current);
+                if (auto || this.defaultAuto) { this.runNext(); }
+            }
         }
         registe(from, to, priority, auto, thisObj, transition, condition, canBreak) {
             if (this.list[from] == null) {
@@ -24,6 +26,12 @@ window.zs = window.zs || {};
                     this.list[from][state].auto = null;
                 }
             }
+            if (thisObj == null) {
+                thisObj = this;
+            }
+            if (!transition) {
+                transition = (complete) => { complete.run(); }
+            }
             this.list[from][to] = {
                 priority: priority,
                 thisObj: thisObj,
@@ -32,6 +40,11 @@ window.zs = window.zs || {};
                 auto: auto,
                 canBreak: canBreak
             };
+            return this;
+        }
+        setDefault(state, auto) {
+            this.defaultState = state;
+            this.defaultAuto = auto;
             return this;
         }
         unregiste(from, to) {
@@ -118,7 +131,6 @@ window.zs = window.zs || {};
                 let condition = transition.condition ? transition.condition.call(transition.thisObj) : true;
                 if (!condition) { continue; }
                 this.target = keys[i];
-                zs.log.debug('runNext: ' + this.current + ' - ' + this.target);
                 this.onBeforeChange && this.onBeforeChange.runWith([this.target, this.current]);
                 transition.transition.call(transition.thisObj, Laya.Handler.create(this, this.onTransitionComplete));
                 return this.target;

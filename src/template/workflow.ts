@@ -1,5 +1,4 @@
 import exportBinder from "./export/exportBinder";
-import ProductKey from "./ProductKey";
 import native_oppoBottomNative from "./native_oppoBottomNative";
 import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import native_oppoScreeNative from "./native_oppoScreeNative";
@@ -56,12 +55,8 @@ export default class workflow extends zs.workflow {
             .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
             .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
-            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome);
-    }
-
-    start() {
-        super.start();
-        this.fsm.init(workflow.GAME_START, true);
+            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+			.setDefault(workflow.GAME_START, true);
     }
 
     onGameHome(complete) {
