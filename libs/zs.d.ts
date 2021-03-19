@@ -217,9 +217,9 @@ declare module zs {
          */
         start();
         /**
-         * 设置
-         * @param key 
-         * @param fsm 
+         * 设置子状态机
+         * @param key 父状态名
+         * @param fsm 子状态机
          */
         setFSM(key: string, fsm: zs.fsm);
         /**
