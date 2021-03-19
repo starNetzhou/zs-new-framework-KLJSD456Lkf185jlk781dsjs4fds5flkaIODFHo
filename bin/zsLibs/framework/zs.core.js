@@ -174,6 +174,10 @@ window.zs = window.zs || {};
                 childFSM.onBeforeChange = Laya.Handler.create(this, this.onChildFSMBeforeChanged, null, false);
                 childFSM.onChanged = Laya.Handler.create(this, this.onChildFSMChanged, null, false);
                 childFSM.init();
+                let productData = zs.configs.productCfg[current];
+                if (productData) {
+                    zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
+                }
             } else {
                 zs.product.get(workflow.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
@@ -194,7 +198,6 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            // TODO Check Exporter Banner
             this.exportWindow.clear();
             // banner销毁
             if (window.zs && window.zs.wx) {
@@ -224,7 +227,6 @@ window.zs = window.zs || {};
             }
             zs.product.get(workflow.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
-            // TODO Check Exporter Banner
         }
         checkBanner(current) {
             if (window.zs == null) { return; }
