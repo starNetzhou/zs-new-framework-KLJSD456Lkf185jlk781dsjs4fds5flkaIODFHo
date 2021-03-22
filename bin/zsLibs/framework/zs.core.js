@@ -32,6 +32,7 @@ window.zs = window.zs || {};
             return null;
         }
         constructor() {
+            this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
         }
         registe() { }
@@ -173,7 +174,7 @@ window.zs = window.zs || {};
                     zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
                 }
             } else {
-                zs.product.get(workflow.switchExporter) && this.checkExporter(current);
+                zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
         }
@@ -213,15 +214,27 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            zs.product.get(workflow.switchExporter) && this.checkExporter(childKey);
+            zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
         }
         checkBanner(current) {
             let data = zs.configs.productCfg[current];
-            data && (zs.platform.sync.checkBanner({data: data}));
+            if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
+                if (data && data.banner) {
+                    zs.log.warn("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
+                }
+                return;
+            }
+            data && (zs.platform.sync.checkBanner({ data: data }));
         }
         checkExporter(current) {
             let data = zs.configs.productCfg[current];
+            if (this.exporterIgnoreList && this.exporterIgnoreList.indexOf(current) >= 0) {
+                if (data && data.exporter && data.exporter.length > 0) {
+                    zs.log.warn("状态 " + current + " 在导出忽略列表中，无法自动生成，请自主管理导出展示或将该状态移出忽略列表", "Workflow");
+                }
+                return;
+            }
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
@@ -246,7 +259,6 @@ window.zs = window.zs || {};
             }
         }
     }
-    workflow.switchExporter = "zs_jump_switch";
     workflow.exporterList = "export_list";
     workflow.exporterCard = "export_card";
 

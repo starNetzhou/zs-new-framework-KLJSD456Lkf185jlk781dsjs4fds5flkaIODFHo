@@ -1,14 +1,10 @@
 {
     "GAME_START": {},
     "START_FULL_1": {
-        "banner": {
-            
-        }
+        "banner": {}
     },
     "START_FULL_2": {
-        "banner": {
-            
-        }
+        "banner": {}
     },
     "GAME_HOME": {
         "banner": {},
@@ -95,9 +91,7 @@
         "banner": {}
     },
     "OVER_FULL_1": {
-        "banner": {
-            
-        }
+        "banner": {}
     },
     "GAME_SETTLE": {
         "banner": {
@@ -115,9 +109,7 @@
         ]
     },
     "OVER_FULL_2": {
-        "banner": {
-            
-        }
+        "banner": {}
     },
     "GAME_END": {}
 }

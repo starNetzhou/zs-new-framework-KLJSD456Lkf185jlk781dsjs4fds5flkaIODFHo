@@ -12,13 +12,11 @@ window.zs.platform = window.zs.platform || {};
         'setIsInOneMin', 'getIsInOneMin'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
-        'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus', 'showGamePortalAd',
-        'hasDesktopIcon', 'createDesktopIcon'];
+        'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon'];
 
     function init() {
-        if (proxy) {
-            proxy.init();
-        }
+        if (proxy) { proxy.init(); }
         for (let key in proxy) {
             let func = proxy[key];
             if (func != null && typeof func === 'function') {

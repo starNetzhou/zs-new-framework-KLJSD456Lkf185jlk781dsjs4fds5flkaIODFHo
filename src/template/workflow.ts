@@ -43,6 +43,7 @@ export default class workflow extends zs.workflow {
     static readonly exportItem7 = "export_item_7";
 
     exporterPack = "export/export";
+    bannerIgnoreList = ['START_FULL_1', 'START_FULL_2', 'OVER_FULL_1', 'OVER_FULL_2'];
 
     windowFull: zs.fgui.window;
 
@@ -67,6 +68,7 @@ export default class workflow extends zs.workflow {
     commonMsgList: zs.fgui.window[];
 
     registe() {
+
         exportBinder.bindAll();
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);

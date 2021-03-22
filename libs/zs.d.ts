@@ -197,6 +197,26 @@ declare module zs {
      */
     class workflow {
         /**
+         * 列表导出位模板名称
+         */
+        static readonly exporterList: string;
+        /**
+         * 卡片导出位模板名称
+         */
+        static readonly exporterCard: string;
+        /**
+         * 导出位忽略列表
+         */
+        exporterIgnoreList: string[];
+        /**
+         *  横幅广告忽略列表
+         */
+        bannerIgnoreList: string[];
+        /**
+         * 导出开关名称
+         */
+        switchExporter: string;
+        /**
          * 状态机实例
          */
         fsm: zs.fsm;
