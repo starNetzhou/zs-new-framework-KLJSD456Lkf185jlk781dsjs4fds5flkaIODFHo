@@ -233,7 +233,6 @@ export default class exporter_full_1 extends zs.exporter.full {
             }
             item.data = data;
         }
-        // console.log("list3", index)
     }
 
     refreshSingleItem(index, id, datas) {
@@ -242,7 +241,6 @@ export default class exporter_full_1 extends zs.exporter.full {
             // 防止自己换自己
             return this.refreshSingleItem(index, id, datas);
         }
-        // console.log("新的随机数是：", newIdx)
         var newData = datas[newIdx];
         var oldData = datas[index];
         if (newData) {

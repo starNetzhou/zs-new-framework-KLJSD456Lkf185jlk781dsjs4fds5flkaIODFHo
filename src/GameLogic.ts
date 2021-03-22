@@ -18,7 +18,7 @@ export default class GameLogic extends Laya.Script {
 
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
-
+        
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")

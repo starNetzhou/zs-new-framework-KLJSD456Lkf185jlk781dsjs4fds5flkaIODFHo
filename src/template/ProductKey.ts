@@ -32,7 +32,6 @@ export default class ProductKey {
     static readonly zs_system = "";
     static readonly zs_city = "上海市|广州市|深圳市|成都市|北京市";
     static readonly zs_time = "";
-    static readonly zs_city_switch = 1;
     static readonly zs_banner_banner_time = 1000
     static readonly zs_full_screen_banner_time = 3
     static readonly zs_banner_refresh_time = 30000

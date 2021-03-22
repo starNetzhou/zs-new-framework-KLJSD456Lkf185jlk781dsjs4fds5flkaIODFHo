@@ -353,7 +353,7 @@ window.platform = (function () {
                     switchShow = false;
                 }
             }
-            if (!switchShow || config.switch != null) {
+            if (!switchShow) {
                 wxBannerMgr.isWait = true;
                 return;
             }
