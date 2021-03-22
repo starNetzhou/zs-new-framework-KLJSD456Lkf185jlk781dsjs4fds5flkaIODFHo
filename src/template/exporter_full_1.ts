@@ -75,13 +75,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     init() {
         super.init();
         this.viewName = "FULL_1"
-        this.closeBanner();
-    }
-    closeBanner() {
-        if (window.zs["wx"] && window.zs["wx"].banner) {
-            let wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-            wxBannerMgr.hideAll();
-        }
+        zs.platform.sync.hideBanner();
     }
     dispose() {
         super.dispose();
@@ -89,7 +83,7 @@ export default class exporter_full_1 extends zs.exporter.full {
         Laya.Tween.clearAll(view.btn_continue);
         clearTimeout(this.delayTime1);
         clearTimeout(this.delayTime2);
-        this.closeBanner();
+        zs.platform.sync.hideBanner();
     }
     check(component: FGUI_full_1) {
         if (component instanceof FGUI_full_1) {
@@ -125,16 +119,12 @@ export default class exporter_full_1 extends zs.exporter.full {
             view.btn_continue.touchable = false;
             this.bClickContinue = true;
             // 展示banner
-            let wxBannerMgr = null;
-            if (window.zs["wx"] && window.zs["wx"].banner) {
-                wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-                wxBannerMgr.updateBanner(true);
-            }
+            zs.platform.sync.updateBanner({isWait: true});
             this.delayTime1 = setTimeout(() => {
-                wxBannerMgr && wxBannerMgr.updateBanner(false);
+                zs.platform.sync.updateBanner({isWait: false});
             }, exporter_full_1.updateBannerDelay)
             this.delayTime2 = setTimeout(() => {
-                this.closeBanner();
+                zs.platform.sync.hideBanner();
                 view.btn_continue.touchable = true;
             }, zs_full_screen_banner_time * 1000)
             return;

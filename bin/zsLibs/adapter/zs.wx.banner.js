@@ -69,25 +69,23 @@ window.zs.wx = window.zs.wx || {};
             if (this.bannerAd == null || !this.isLoad) return;
             this.isShow = true;
             var s = this;
-            toTouch ? this.updateTouchPos() : this.updatePosition();
+            this.updatePosition(toTouch);
             this.bannerAd.show().then(function () {
                 var zs_full_screen_banner_time = zs.product.get("zs_full_screen_banner_time")
                 var time = zs_full_screen_banner_time ? (zs_full_screen_banner_time * 1000) : 0;
                 s.showTime = setTimeout(function () { s.showEd = true }, Math.max(2000, time));
             });
         }
-        //移到用户上次点击位置  top
-        updateTouchPos() {
-            if (!this.bannerAd || !this.realSize || Laya.stage.mouseY == null || Laya.stage.mouseX == null) return;
-            // this.bannerAd.style.left = Laya.stage.mouseX * window.screen.availWidth / Laya.stage.width - this.realSize.w / 2;
-            this.bannerAd.style.top = Laya.stage.mouseY * window.screen.availHeight / Laya.stage.height - this.realSize.h / 2;
-        }
 
-        //正常展示位置
-        updatePosition() {
+        updatePosition(toTouch) {
             if (!this.bannerAd || !this.realSize) return;
-            this.bannerAd.style.left = this.left ? this.left : ((window.screen.availWidth - this.realSize.w) / 2);
-            this.bannerAd.style.top = window.screen.availHeight - this.realSize.h - this.bottom - this.getOffsetY() / 2;
+            if(toTouch) {
+                if(Laya.stage.mouseX == null || Laya.stage.mouseY == null) return;
+                this.bannerAd.style.top = Laya.stage.mouseY * window.screen.availHeight / Laya.stage.height - this.realSize.h / 2;
+            } else {
+                this.bannerAd.style.left = this.left ? this.left : ((window.screen.availWidth - this.realSize.w) / 2);
+                this.bannerAd.style.top = window.screen.availHeight - this.realSize.h - this.bottom - this.getOffsetY() / 2;
+            }
         }
 
         hide() {
@@ -272,26 +270,13 @@ window.zs.wx = window.zs.wx || {};
             }
         }
 
-        toTouch() {
-            // 移动到上次点击位置
-            let num = 0;
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
-                if (banner.isLoad && banner.isShow) {
-                    banner.updateTouchPos();
-                    num++;
-                }
-            }
-            if (num == 0) console.log("没有正在展示的banner");
-        }
-
-        updatePos() {
+        updatePosition(toTouch) {
             // 移动到正常展示的位置  底部
             let num = 0;
             for (let i = 0; i < this.wxbannerArray.length; i++) {
                 let banner = this.wxbannerArray[i];
                 if (banner.isLoad && banner.isShow) {
-                    banner.updatePosition();
+                    banner.updatePosition(toTouch);
                     num++;
                 }
             }

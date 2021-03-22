@@ -69,8 +69,8 @@
     "useMinJsLibs": true,
     "es6toes5": false,
     "projectType": "ts",
-    "pubTime": 1616029906228,
-    "uesEnginePlugin": false,
+    "pubTime": 1616391312373,
+    "uesEnginePlugin": true,
     "wxOptimize": {
         "useOptimizeOpen": false,
         "preloadRes": false,

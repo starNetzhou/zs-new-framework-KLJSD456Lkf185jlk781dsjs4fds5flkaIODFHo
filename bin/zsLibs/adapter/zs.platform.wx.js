@@ -2,6 +2,7 @@ window.platform = (function () {
     function platform() { };
     platform.loginCount = 0;
     platform.systemInfo = null;
+    platform.delayBanner = null;
 
     platform.init = function () {
         wx.showShareMenu({
@@ -324,46 +325,50 @@ window.platform = (function () {
         });
     }
 
-    platform.initBanner = function (params) {
-        if (params.id == null || params.id.length <= 0) {
-            zs.log.warn('方法（ initBanner ）缺少必要参数（ id ）', 'Platform');
-            platform.bannerAd = null;
+    platform.initBanner = function () {
+        zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"));
+    }
+
+    platform.checkBanner = function (params) {
+        if (params.data == null) {
+            zs.log.warn('方法（ checkBanner ）缺少必要参数（ data ）', 'Platform');
             return;
         }
-        if (params.keepTime == null) {
-            zs.log.warn('方法（ initBanner ）缺少必要参数（ keepTime ）', 'Platform');
-            return;
-        }
-        if (params.onError == null) {
-            zs.log.warn('方法（ initBanner ）缺少必要参数（ onError ）', 'Platform');
-            return;
-        }
-        platform.bannerId = params.id;
-        platform.keepTime = params.keepTime;
-        let bannerAdScale = 0.7;
-        let slideScale = (1 - bannerAdScale) * 0.5;
-        let systemInfo = platform.systemInfo;
-        platform.bannerAd = wx.createBannerAd({
-            adUnitId: platform.bannerId,
-            adIntervals: platform.keepTime,
-            style: {
-                left: systemInfo.windowWidth * slideScale,
-                top: systemInfo.windowHeight - 100,
-                width: systemInfo.windowWidth * bannerAdScale
+
+        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
+        wxBannerMgr.hideAll();
+        let data = params.data;
+        if (data && data.banner) {
+            let config = data.banner;
+            let switchShow = true;
+            if (config.switch) {
+                if (Array.isArray(config.switch)) {
+                    for (let i = 0, n = config.switch.length; i < n; i++) {
+                        if (!zs.product.get(config.switch[i])) {
+                            switchShow = false;
+                            break;
+                        }
+                    }
+                } else if (!zs.product.get(config.switch)) {
+                    switchShow = false;
+                }
             }
-        });
-        if (platform.bannerAd == null) { return; }
-        platform.bannerAd.onResize((size) => {
-            platform.bannerStyle = size;
-            if (platform.bannerAd) {
-                platform.bannerAd.style.top = window.screen.availHeight - size.height - 3;
-                platform.bannerAd.style.left = (window.screen.availWidth - size.width) * 0.5;
+            if (!switchShow || config.switch != null) {
+                wxBannerMgr.isWait = true;
+                return;
             }
-        });
-        platform.bannerAd.onError((error) => {
-            platform.bannerAd = null;
-            params.onError && params.onError.run(error);
-        });
+            wxBannerMgr.updateBanner(config.delay || !config.auto, config.left, config.bottom, config.length);
+            if (config.delay && zs.product.get("zs_banner_banner_time")) {
+                platform.delayBanner = setTimeout(function () { wxBannerMgr.showBanner(config.left, config.bottom, config.length) }, zs.product.get("zs_banner_banner_time"));
+            }
+        } else {
+            wxBannerMgr.isWait = true;
+        }
+    }
+
+    platform.clearDelayBanner = function () {
+        platform.delayBanner && clearTimeout(platform.delayBanner);
+        platform.delayBanner = null;
     }
 
     platform.showBanner = function (params) {
@@ -384,8 +389,19 @@ window.platform = (function () {
         }
     }
 
+    platform.updateBanner = function (params) {
+        zs.wx.banner.WxBannerMgr.Instance.updateBanner(params.isWait, params.left, params.bottom, params.length);
+    }
+
     platform.hideBanner = function () {
-        platform.bannerAd && platform.bannerAd.hide();
+        // platform.bannerAd && platform.bannerAd.hide();
+        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
+        wxBannerMgr.hideAll();
+    }
+
+    platform.updateBannerPos = function (params) {
+        zs.wx.banner.WxBannerMgr.Instance.updatePosition(params.toTouch);
+        return true;
     }
 
     platform.navigateToOther = function _async(params) {

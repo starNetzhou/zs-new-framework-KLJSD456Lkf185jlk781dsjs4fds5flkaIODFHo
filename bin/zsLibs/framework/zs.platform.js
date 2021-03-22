@@ -3,10 +3,11 @@ window.zs.platform = window.zs.platform || {};
 (function (exports) {
     const proxy = window["platform"];
     const syncList = ['share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable',
-        'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'showBanner', 'hideBanner', 'recorderStart',
-        'recorderStop', 'recorderPause', 'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder',
-        'statusBarHeight', 'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide',
-        'recorderClip', 'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
+        'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'checkBanner', 'clearDelayBanner', 'showBanner',
+        'updateBanner', 'updateBannerPos', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause',
+        'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight',
+        'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
+        'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
         'setIsInOneMin', 'getIsInOneMin'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
@@ -15,7 +16,6 @@ window.zs.platform = window.zs.platform || {};
         'hasDesktopIcon', 'createDesktopIcon'];
 
     function init() {
-        // proxy = window["platform"];
         if (proxy) {
             proxy.init();
         }

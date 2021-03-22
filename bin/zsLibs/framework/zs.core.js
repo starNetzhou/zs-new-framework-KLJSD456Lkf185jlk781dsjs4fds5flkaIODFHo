@@ -42,7 +42,7 @@ window.zs = window.zs || {};
             }
             zs.fgui.configs.registeBase(workflow.exporterList, zs.exporter.list);
             zs.fgui.configs.registeBase(workflow.exporterCard, zs.exporter.card);
-            core.addAppShow(Laya.Handler.create(this, this.clearDelayBanner, null, false));
+            core.addAppShow(Laya.Handler.create(this, zs.platform.sync.clearDelayBanner, null, false));
             this.fsm.init();
         }
         setFSM(key, fsm) {
@@ -146,14 +146,8 @@ window.zs = window.zs || {};
             }
             this.exportWindow.clear();
             // banner销毁
-            if (window.zs && window.zs.wx) {
-                let data = zs.configs.productCfg[current];
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                if (data && data.banner) {
-                    this.clearDelayBanner();
-                }
-            }
+            zs.platform.sync.hideBanner();
+            zs.platform.sync.clearDelayBanner();
         }
         onChanged(current) {
             zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
@@ -200,14 +194,8 @@ window.zs = window.zs || {};
             }
             this.exportWindow.clear();
             // banner销毁
-            if (window.zs && window.zs.wx) {
-                let data = zs.configs.productCfg[current];
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                if (data && data.banner) {
-                    this.clearDelayBanner();
-                }
-            }
+            zs.platform.sync.hideBanner();
+            zs.platform.sync.clearDelayBanner();
         }
         onChildFSMChanged(current) {
             if (this.fsm == null) { return; }
@@ -229,39 +217,8 @@ window.zs = window.zs || {};
             this.checkBanner(childKey);
         }
         checkBanner(current) {
-            if (window.zs == null) { return; }
-            if (window.zs.wx) {
-                if (!window.zs.wx.banner) { return; }
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                let data = zs.configs.productCfg[current];
-                if (data && data.banner) {
-                    let config = data.banner;
-                    let switchShow = true;
-                    if (config.switch) {
-                        if (Array.isArray(config.switch)) {
-                            for (let i = 0, n = config.switch.length; i < n; i++) {
-                                if (!zs.product.get(config.switch[i])) {
-                                    switchShow = false;
-                                    break;
-                                }
-                            }
-                        } else if (!zs.product.get(config.switch)) {
-                            switchShow = false;
-                        }
-                    }
-                    if (!switchShow || config.switch != null) {
-                        wxBannerMgr.isWait = true;
-                        return;
-                    }
-                    wxBannerMgr.updateBanner(config.delay || !config.auto, config.left, config.bottom, config.length);
-                    if (config.delay && zs.product.get("zs_banner_banner_time")) {
-                        this.delayBanner = setTimeout(function () { wxBannerMgr.showBanner(config.left, config.bottom, config.length) }, zs.product.get("zs_banner_banner_time"));
-                    }
-                } else {
-                    wxBannerMgr.isWait = true;
-                }
-            }
+            let data = zs.configs.productCfg[current];
+            data && (zs.platform.sync.checkBanner({data: data}));
         }
         checkExporter(current) {
             let data = zs.configs.productCfg[current];
@@ -287,10 +244,6 @@ window.zs = window.zs || {};
                         .front();
                 }
             }
-        }
-        clearDelayBanner() {
-            this.delayBanner && clearTimeout(this.delayBanner);
-            this.delayBanner = null;
         }
     }
     workflow.switchExporter = "zs_jump_switch";
@@ -398,9 +351,7 @@ window.zs = window.zs || {};
             zs.product.sync(switchs);
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
-            if (window.zs.wx && window.zs.wx.banner) {
-                zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"))
-            }
+            zs.platform.sync.initBanner();
             zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
             this.progress = 85;
 
@@ -465,9 +416,7 @@ window.zs = window.zs || {};
             });
         }
         static onAppShow(result) {
-            if (window.zs.wx && window.zs.wx.banner) {
-                zs.wx.banner.WxBannerMgr.Instance.updateBanner();
-            }
+            zs.platform.sync.updateBanner();
 
             if (this.appShowListeners == null || this.appShowListeners.length <= 0) { return; }
             for (let i = 0, n = this.appShowListeners.length; i < n; i++) {
