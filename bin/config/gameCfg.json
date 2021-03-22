@@ -1,5 +1,6 @@
 {
     "debug": true,
+    "pure": false,
     "packgeTime": 20210224000000,
     "appName": "开车撞僵尸",
     "gameId": "kczjs",

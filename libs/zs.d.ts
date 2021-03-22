@@ -50,6 +50,10 @@ declare module zs {
          */
         debug: boolean,
         /**
+         * 纯净模式开关
+         */
+        pure: boolean,
+        /**
          * 项目名称
          */
         appName: string,
