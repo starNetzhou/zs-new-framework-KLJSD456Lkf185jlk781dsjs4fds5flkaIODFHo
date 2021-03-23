@@ -1,8 +1,6 @@
-import value from "*.glsl";
 import mainBinder from "./fgui/mainBinder";
 import mainPage from "./fgui/mainPage";
 import GameNode from "./GameNode";
-import network from "./network";
 import ProductKey from "./template/ProductKey";
 import workflow from "./template/workflow";
 
@@ -17,12 +15,10 @@ export default class GameLogic extends Laya.Script {
     }
 
     async init() {
-        // zs.network.listDomain = [
-        //     "http://test-gamesapi.zxmn2018.com"
-        // ];
+
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
-
+        
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")

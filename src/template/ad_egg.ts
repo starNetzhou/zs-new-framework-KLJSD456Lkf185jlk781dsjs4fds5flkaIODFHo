@@ -108,14 +108,10 @@ export default class ad_egg extends zs.fgui.base {
 
             this.updateRepairPorgress(this.repairProgress + this.click_add_percent);
             if (this.repairProgress >= this.showBannerRange && !this.isOpenAd) {
-                if (window.zs["wx"] && window.zs["wx"].banner) {
-                    this.isOpenAd = true;
-                    var wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-                    wxBannerMgr.toTouch();
-                    Laya.timer.once(1000, this, function () {
-                        wxBannerMgr.updatePos();
-                    });
-                }
+                this.isOpenAd = zs.platform.sync.updateBannerPos({toTouch: true});
+                Laya.timer.once(1000, this, function () {
+                    zs.platform.sync.updateBannerPos({toTouch: false});
+                });
             }
         } else {
             this.updateRepairPorgress(this.repairProgress + this.click_add_percent);

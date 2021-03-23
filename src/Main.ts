@@ -1,7 +1,6 @@
 import GameConfig from "./GameConfig";
 import GameLogic from "./GameLogic";
 import Loading from "./Loading";
-import network from "./network";
 
 class Main {
 	constructor() {

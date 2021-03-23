@@ -1,6 +1,6 @@
 {
     "debug": true,
-    "packgeTime": 202103021105,
+    "pure": false,
     "appName": "撞死僵尸",
     "gameId": "zsjs",
     "appId": "wx48ea429984b50fa5",

@@ -21,13 +21,7 @@ export default class exporter_friend_challenge extends zs.fgui.base {
     }
     init() {
         super.init();
-        this.closeBanner();
-    }
-    closeBanner() {
-        if (window.zs["wx"] && window.zs["wx"].banner) {
-            let wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-            wxBannerMgr.hideAll();
-        }
+        zs.platform.sync.hideBanner();
     }
     check(component) {
         if (component instanceof FGUI_friend_challenge) {

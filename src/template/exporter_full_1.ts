@@ -79,19 +79,13 @@ export default class exporter_full_1 extends zs.exporter.full {
     init() {
         super.init();
         this.viewName = "FULL_1";
-        this.closeBanner();
-    }
-    closeBanner() {
-        if (window.zs["wx"] && window.zs["wx"].banner) {
-            let wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-            wxBannerMgr.hideAll();
-        }
+        zs.platform.sync.hideBanner();
     }
     dispose() {
         super.dispose();
         let view = this.view as FGUI_full_1;
         Laya.Tween.clearAll(view.btn_continue);
-        this.closeBanner();
+        zs.platform.sync.hideBanner();
     }
     check(component) {
         if (component instanceof FGUI_full_1) {
@@ -125,10 +119,7 @@ export default class exporter_full_1 extends zs.exporter.full {
                 view.btn_continue.touchable = true;
             }), Number(delayTime))
             // 展示banner
-            if (window.zs["wx"] && window.zs["wx"].banner) {
-                let wxBannerMgr = zs["wx"].banner.WxBannerMgr.Instance;
-                wxBannerMgr.updateBanner(false);
-            }
+            zs.platform.sync.updateBanner({isWait: false});
             return;
         }
         this._clickContinue && this._clickContinue.run();
