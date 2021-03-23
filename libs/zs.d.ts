@@ -50,6 +50,10 @@ declare module zs {
          */
         debug: boolean,
         /**
+         * 纯净模式开关
+         */
+        pure: boolean,
+        /**
          * 项目名称
          */
         appName: string,
@@ -192,6 +196,26 @@ declare module zs {
      * 工作流
      */
     class workflow {
+        /**
+         * 列表导出位模板名称
+         */
+        static readonly exporterList: string;
+        /**
+         * 卡片导出位模板名称
+         */
+        static readonly exporterCard: string;
+        /**
+         * 导出位忽略列表
+         */
+        exporterIgnoreList: string[];
+        /**
+         *  横幅广告忽略列表
+         */
+        bannerIgnoreList: string[];
+        /**
+         * 导出开关名称
+         */
+        switchExporter: string;
         /**
          * 状态机实例
          */
@@ -1499,10 +1523,30 @@ declare module zs.platform {
          */
         static initBanner(params?: any): any;
         /**
+         * 检查横幅广告
+         * @param params 
+         */
+        static checkBanner(params?: any): any;
+        /**
+         * 清理延迟展示横幅广告
+         * @param params 
+         */
+        static clearDelayBanner(params?: any): any;
+        /**
          * 显示横幅广告
          * @param params 
          */
         static showBanner(params?: any): any;
+        /**
+         * 更新横幅广告
+         * @param params 
+         */
+        static updateBanner(params?: any): any;
+        /**
+         * 更新横幅广告位置
+         * @param params 
+         */
+        static updateBannerPos(params?: any): any;
         /**
          * 隐藏横幅广告
          * @param params 

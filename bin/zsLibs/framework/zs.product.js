@@ -13,17 +13,19 @@ window.zs = window.zs || {};
             if (productDef == null) { return; }
             this._defines = productDef;
             for (let key in productDef) {
-                this.keys[key] = productDef[key];
+                if (zs.configs.gameCfg.pure) {
+                    this.keys[key] = null;
+                    this._defines[key] = null;
+                } else {
+                    this.keys[key] = productDef[key];
+                }
             }
         }
         static sync(switchs) {
-            if (switchs == null) { return; }
+            if (switchs == null || zs.configs.gameCfg.pure) { return; }
             for (let key in switchs) {
                 this.registe(key, switchs[key]);
             }
-
-            let lenCityMark = this.cityMark.length;
-            let lenTimeMark = this.timeMark.length;
 
             for (let key in this.keys) {
                 if (!this.keys[key]) { continue; }
@@ -136,7 +138,6 @@ window.zs = window.zs || {};
             }
         }
     }
-
     product.city = null;
     product.timestamp = null;
     product.cityMark = '(city)';
