@@ -11,7 +11,7 @@ window.platform = (function () {
         })
         platform.systemInfo = wx.getSystemInfoSync();
         if (typeof wx.getUpdateManager === 'function') { // 请在使用前先判断是否支持
-            var updateManager = wx.getUpdateManager()
+            var updateManager = wx.getUpdateManager();
             updateManager.onCheckForUpdate((res) => {
                 zs.log.debug("微信系统更新检测" + (res.hasUpdate ? "成功" : "失败"), "Platform");
             })
@@ -394,7 +394,6 @@ window.platform = (function () {
     }
 
     platform.hideBanner = function () {
-        // platform.bannerAd && platform.bannerAd.hide();
         let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
         wxBannerMgr.hideAll();
     }
