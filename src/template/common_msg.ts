@@ -21,15 +21,15 @@ export default class msgbox extends zs.fgui.base {
                 .update<msgbox>(msgbox, (unit) => {
                     unit.setTitle(params.title)
                         .setContent(params.content)
-                        .setComfireText(params.comfireText)
+                        .setComfireText(params.confirmText)
                         .setCancelText(params.cancelText)
                         .setComfireHandler(Laya.Handler.create(this, () => {
+                            params.confirmHandler && params.confirmHandler.run();
                             msgbox.hideMsgBox();
-                            params.comfireHandler && params.comfireHandler.run();
                         }))
                         .setCancelHandler(Laya.Handler.create(this, () => {
-                            msgbox.hideMsgBox();
                             params.cancelHandler && params.cancelHandler.run();
+                            msgbox.hideMsgBox();
                         }))
                         .hideCancel(params.hideCancel)
                         .apply();

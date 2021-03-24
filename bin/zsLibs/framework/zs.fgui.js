@@ -546,6 +546,134 @@ window.zs.fgui = window.zs.fgui || {};
             return false;
         }
     }
+
+    class msgbox extends base {
+        static get msgList() {
+            if (this._msgList == null) {
+                this._msgList = [];
+            }
+            return this._msgList;
+        }
+        static get windowInst() {
+            if (this._windowInst == null) {
+                this._windowInst = window.create()
+                    .attach(msgbox)
+                    .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
+                    .block(true);
+            }
+            return this._windowInst;
+        }
+        static show(params) {
+            if (msgbox.windowInst.isShowing()) {
+                msgbox.msgList.push(params);
+            } else {
+                msgbox.windowInst
+                    .update(msgbox, (unit) => {
+                        unit.setTitle(params.title)
+                            .setContent(params.content)
+                            .setConfirmText(params.confirmText)
+                            .setCancelText(params.cancelText)
+                            .setConfirmHandler(params.confirmHandler)
+                            .setCancelHandler(params.cancelHandler)
+                            .switchCancel(params.hideCancel)
+                            .apply();
+                    })
+                    .align(AlignType.Center)
+                    .show()
+                    .front();
+            }
+        }
+        static hide() {
+            msgbox.windowInst.hide();
+            if (msgbox.msgList.length > 0) {
+                msgbox.show(msgbox.msgList.pop());
+            }
+        }
+        static clear() {
+            msgbox._msgList = [];
+        }
+        constructor(component) {
+            super(component);
+            if (component && component instanceof zs.ui.FGUI_msgbox) {
+                component.btn_confirm.onClick(this, this.onConfirmClick);
+                component.btn_cancel.onClick(this, this.onCancelClick);
+            }
+        }
+        static make() {
+            let view = zs.ui.FGUI_msgbox.createInstance();
+            return view;
+        }
+        static type() {
+            return zs.ui.FGUI_msgbox;
+        }
+        check(component) {
+            if (component instanceof zs.ui.FGUI_msgbox) {
+                return true;
+            }
+            return false;
+        }
+        setTitle(title) {
+            if (title) {
+                this.view.title.text = title;
+            } else {
+                this.view.title.text = "提示";
+            }
+            return this;
+        }
+        setContent(content) {
+            if (content) {
+                this.view.content.text = content;
+            } else {
+                this.view.content.text = "";
+            }
+            return this;
+        }
+        setConfirmText(value) {
+            if (value) {
+                this.view.btn_confirm.title = value;
+            } else {
+                this.view.btn_confirm.title = "确定";
+            }
+            return this;
+        }
+        setCancelText(value) {
+            if (value) {
+                this.view.btn_cancel.title = value;
+            } else {
+                this.view.btn_cancel.title = "取消";
+            }
+            return this;
+        }
+        switchCancel(isHide) {
+            return isHide ? this.hideCancel() : this.showCancel();
+        }
+        showCancel() {
+            this.view.state.selectedIndex = 1;
+            return this;
+        }
+        hideCancel() {
+            this.view.state.selectedIndex = 0;
+            return this;
+        }
+        setConfirmHandler(handler) {
+            console.log("set confirm handler");
+            this.confirmHandler = handler;
+            return this;
+        }
+        setCancelHandler(handler) {
+            this.cancelHandler = handler;
+            return this;
+        }
+        onConfirmClick() {
+            this.confirmHandler && this.confirmHandler.run();
+            msgbox.hide();
+        }
+        onCancelClick() {
+            this.cancelHandler && this.cancelHandler.run();
+            msgbox.hide();
+        }
+    }
+
     exports.AlignType = AlignType;
     exports.configs = configs;
     exports.init = init;
@@ -553,4 +681,5 @@ window.zs.fgui = window.zs.fgui || {};
     exports.loadPacks = loadPacks;
     exports.base = base;
     exports.window = window;
+    exports.msgbox = msgbox;
 }(window.zs.fgui = window.zs.fgui || {}));

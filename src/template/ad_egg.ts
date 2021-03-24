@@ -2,31 +2,47 @@ import FGUI_btn_egg from "./export/FGUI_btn_egg";
 import FGUI_common_egg from "./export/FGUI_common_egg";
 
 export default class ad_egg extends zs.fgui.base {
+    // 横幅广告偏移延迟
+    static readonly bannerOffsetDelay = 1000;
+    // 砸金蛋奖励延迟
+    static readonly awardDelay = 1000;
+    // 砸金蛋关闭延迟
+    static readonly closeDelay = 1000;
+    //每次点击增加的百分比
+    static readonly click_add_percent = 0.14;
+    //每帧后退百分比
+    static readonly zs_click_award_back = 0.01;
+    //显示广告 随机区间
+    static readonly repair_click_num = [0.3, 0.7];
+    // 回退间隔时间
+    static readonly cutBackInterval = 20;
 
+
+    // 砸金蛋进度条
     progressBar: fairygui.GProgressBar;
-    btnClick: FGUI_btn_egg;
+    // 砸金蛋按钮
+    btnKnock: FGUI_btn_egg;
 
+    // 显示名称
     viewName: string;
+    // 关闭事件回调
     callback: Laya.Handler;
 
-    awardDelay: number;
-    closeDelay: number;
-    repairProgress: number;
-    click_add_percent: number;
-    zs_click_award_back: number;
+    // 砸金蛋进度
+    progress: number;
+    //是否已经打开广告
     isOpenAd: boolean;
-    repair_click_num: number[];
-    showBannerRange: number;
+    // 是否已经获取奖励
     isGetAward: boolean;
-
-    btn_repair: boolean;
+    // 显示Banner区间
+    showBannerRange: number;
 
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_common_egg) {
             this.progressBar = component.bar;
-            this.btnClick = component.btn_click;
-            this.btnClick.onClick(this, this.onBtnClick);
+            this.btnKnock = component.btn_click;
+            this.btnKnock.onClick(this, this.onBtnClick);
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
         }
@@ -57,22 +73,12 @@ export default class ad_egg extends zs.fgui.base {
         return this;
     }
     apply() {
-        this.awardDelay = 1000;
-        this.closeDelay = 1000;
-        //进度
-        this.repairProgress = 0;
-        //每次点击增加的百分比
-        this.click_add_percent = 0.14;
-        //每帧后退百分比
-        this.zs_click_award_back = 0.01;
-        //是否已经打开广告
+        this.progress = 0;
         this.isOpenAd = false;
-        //显示广告 随机区间
-        this.repair_click_num = [0.3, 0.7];
-        /**显示Banner区间 */
-        this.showBannerRange = this.random(Number(this.repair_click_num[0]) * 100, Number(this.repair_click_num[1]) * 100) * 0.01;
         this.isGetAward = false;
-        Laya.timer.loop(20, this, this.cutBack);
+        this.showBannerRange = this.random(Number(ad_egg.repair_click_num[0]) * 100, Number(ad_egg.repair_click_num[1]) * 100) * 0.01;
+
+        Laya.timer.loop(ad_egg.cutBackInterval, this, this.cutBack);
         return this;
     }
 
@@ -84,9 +90,7 @@ export default class ad_egg extends zs.fgui.base {
         Laya.timer.clear(this, this.cutBack);
         zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
         zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
-        if (this.btn_repair) {
-            this.btnClick.offClick(this, this.onBtnClick);
-        }
+        this.btnKnock.offClick(this, this.onBtnClick);
     }
 
     onAppShow() {
@@ -96,25 +100,23 @@ export default class ad_egg extends zs.fgui.base {
 
     onAppHide() {
         if (!this.isOpenAd) return;
-        if (this.btn_repair) {
-            this.btnClick.offClick(this, this.onBtnClick);
-        }
+        this.btnKnock.offClick(this, this.onBtnClick);
         this.isOpenAd = true;
         Laya.timer.clear(this, this.cutBack);
     }
 
     onBtnClick() {
-        if (this.repairProgress + this.click_add_percent <= 1) {
+        if (this.progress + ad_egg.click_add_percent <= 1) {
 
-            this.updateRepairPorgress(this.repairProgress + this.click_add_percent);
-            if (this.repairProgress >= this.showBannerRange && !this.isOpenAd) {
-                this.isOpenAd = zs.platform.sync.updateBannerPos({toTouch: true});
-                Laya.timer.once(1000, this, function () {
-                    zs.platform.sync.updateBannerPos({toTouch: false});
+            this.updateRepairPorgress(this.progress + ad_egg.click_add_percent);
+            if (this.progress >= this.showBannerRange && !this.isOpenAd) {
+                this.isOpenAd = zs.platform.sync.updateBannerPos({ toTouch: true });
+                Laya.timer.once(ad_egg.bannerOffsetDelay, this, function () {
+                    zs.platform.sync.updateBannerPos({ toTouch: false });
                 });
             }
         } else {
-            this.updateRepairPorgress(this.repairProgress + this.click_add_percent);
+            this.updateRepairPorgress(this.progress + ad_egg.click_add_percent);
             Laya.timer.clear(this, this.cutBack);
             this.onFinish();
         }
@@ -129,23 +131,23 @@ export default class ad_egg extends zs.fgui.base {
         Laya.LocalStorage.setItem(appId + "open_award_num", (Number(open_award_num) + 1).toString());
         this.isGetAward = true;
 
-        Laya.timer.once(this.awardDelay, this, function () {
+        Laya.timer.once(ad_egg.awardDelay, this, function () {
             Laya.stage.event("EGG_GET_AWARD");
             console.log("派发获得砸金蛋奖励消息")
         });
-        Laya.timer.once(Math.max(this.closeDelay, this.awardDelay + 40), this, this.onClose);
+        Laya.timer.once(Math.max(ad_egg.closeDelay, ad_egg.awardDelay + 40), this, this.onClose);
 
     }
 
     updateRepairPorgress(val) {
-        this.repairProgress = Math.min(1, Math.max(0, val));
-        this.progressBar.value = this.repairProgress * 100;
+        this.progress = Math.min(1, Math.max(0, val));
+        this.progressBar.value = this.progress * 100;
     }
 
-    //修车进度回退
+    // 进度回退
     cutBack() {
-        this.repairProgress -= this.zs_click_award_back;
-        this.updateRepairPorgress(this.repairProgress);
+        this.progress -= ad_egg.zs_click_award_back;
+        this.updateRepairPorgress(this.progress);
     }
 
     onClose() {

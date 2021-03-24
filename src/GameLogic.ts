@@ -1,6 +1,7 @@
 import mainBinder from "./fgui/mainBinder";
 import mainPage from "./fgui/mainPage";
 import GameNode from "./GameNode";
+import msgbox from "./template/common_msg";
 import ProductKey from "./template/ProductKey";
 import workflow from "./template/workflow";
 
@@ -58,8 +59,8 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
         }));
-
         zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
+
             console.log("Workflow ===== GAME_PLAY START");
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
