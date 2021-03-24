@@ -60,7 +60,6 @@ export default class GameLogic extends Laya.Script {
             console.log("Workflow ===== GAME_PLAY");
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
-
             console.log("Workflow ===== GAME_PLAY START");
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
@@ -75,7 +74,6 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY END");
         }));
-
         zs.core.onWorkflow(workflow.EXPORT_GAME_EGG, Laya.Handler.create(this, () => {
             console.log("Workflow ====== EXPORT_GAME_EGG");
         }));
