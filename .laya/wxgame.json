@@ -47,7 +47,7 @@
         ""
     ],
     "packfile": false,
-    "keepPlatformFile": true,
+    "keepPlatformFile": false,
     "packfileFilter": [
         ""
     ],
@@ -69,8 +69,8 @@
     "useMinJsLibs": true,
     "es6toes5": false,
     "projectType": "ts",
-    "pubTime": 1616391312373,
-    "uesEnginePlugin": true,
+    "pubTime": 1616658768857,
+    "uesEnginePlugin": false,
     "wxOptimize": {
         "useOptimizeOpen": false,
         "preloadRes": false,

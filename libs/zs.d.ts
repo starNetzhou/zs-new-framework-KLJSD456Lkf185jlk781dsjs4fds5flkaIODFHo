@@ -1693,6 +1693,10 @@ declare module zs.platform {
          * @returns bool = true 不展示广告 false 正常展示广告
          */
         static getIsInOneMin(): boolean;
+        /**
+         * 获取平台登陆信息
+         */
+        static getLaunchOptions() : any;
     }
 }
 
