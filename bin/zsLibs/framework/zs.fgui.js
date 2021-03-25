@@ -132,6 +132,7 @@ window.zs.fgui = window.zs.fgui || {};
             return win;
         }
         attach(ctr, index) {
+            this.lastBase = null;
             if (ctr == null || this.window == null) {
                 return this;
             }
@@ -160,7 +161,11 @@ window.zs.fgui = window.zs.fgui || {};
             return this;
         }
         setBase(ctr) {
-            ctr && ctr.view && (this.lastBase = ctr);
+            if (ctr && ctr.view) {
+                this.lastBase = ctr;
+            } else {
+                this.lastBase = null;
+            }
             return this;
         }
         clearBase() {
