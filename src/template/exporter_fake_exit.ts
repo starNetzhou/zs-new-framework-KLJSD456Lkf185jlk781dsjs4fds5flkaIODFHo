@@ -2,6 +2,7 @@ import FGUI_fake_exit from "./export/FGUI_fake_exit";
 
 export default class exporter_fake_exit extends zs.fgui.base {
 
+    // 事件回调
     callback: Laya.Handler;
 
     constructor(component) {
@@ -31,7 +32,6 @@ export default class exporter_fake_exit extends zs.fgui.base {
         this.callback = callback;
     }
     onBtnExitClick() {
-        console.log("点击了")
         this.callback && this.callback.run();
     }
 }

@@ -68,11 +68,12 @@ export default class workflow extends zs.workflow {
     commonMsgList: zs.fgui.window[];
 
     registe() {
-
+        // 绑定工作流FGUI组件
         exportBinder.bindAll();
+        // 注册模块
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
-
+        // 注册控件
         zs.fgui.configs.registeItem(workflow.exportItem1, FGUI_item_1);
         zs.fgui.configs.registeItem(workflow.exportItem2, FGUI_item_2);
         zs.fgui.configs.registeItem(workflow.exportItem3, FGUI_item_3);
@@ -80,16 +81,18 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem5, FGUI_item_5);
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
-
+        // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "sound/wechat.mp3";
+        // 导出错误事件回调
         zs.exporter.utils.navigateErrorHandler = Laya.Handler.create(this, () => {
             this.showFull1(false);
         }, null, false);
+        // 读取假消息昵称列表
         zs.configs.load("fake_msg_nick", "config/nickname.json").then((res) => {
             exporter_fake_msg.nickList = res;
             exporter_friend_challenge.nickList = res;
         });
-
+        // 注册工作流状态
         this.fsm = new zs.fsm()
             .registe(workflow.GAME_START, workflow.START_FULL_1, 0, false, this, this.onStartFull1)
             .registe(workflow.START_FULL_1, workflow.START_FULL_2, 0, false, this, this.onStartFull2)

@@ -1,7 +1,6 @@
 import mainBinder from "./fgui/mainBinder";
 import mainPage from "./fgui/mainPage";
 import GameNode from "./GameNode";
-import msgbox from "./template/common_msg";
 import ProductKey from "./template/ProductKey";
 import workflow from "./template/workflow";
 

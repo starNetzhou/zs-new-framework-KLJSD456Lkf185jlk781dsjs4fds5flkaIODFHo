@@ -2,41 +2,71 @@ import FGUI_full_1 from "./export/FGUI_full_1";
 import FGUI_full_1_content from "./export/FGUI_full_1_content";
 
 export default class exporter_full_1 extends zs.exporter.full {
-
+    // 更新横幅广告延迟
     static readonly updateBannerDelay = 500;
+    // 误触偏移
     static readonly mistakenOffset = 300;
+    // 自动滚动延迟
     static readonly autoScrollingDelay = 3000;
+    // 导出内容高度
     static readonly contentHeight = 313;
+    // 拖拽恢复时间
     static readonly dragRecoverTime = 3;
+    // 拖拽自动弹导出生效距离
     static readonly checkScrollDistance = 30;
+    // 自动滚动速度
     static readonly autoScrollSpeed = 50;
 
+    // 列表一长度
     maxList_1: number;
+    // 列表二长度
     maxList_2: number;
 
+    // 列表一
     list_1: fairygui.GList;
+    // 列表二
     list_2: fairygui.GList;
+    // 列表三
     list_3: fairygui.GList;
+    // 导出容器
     full_1_content: FGUI_full_1_content;
 
+    // 控件名称
     viewName: string;
 
+    // 列表一数据
     _datas_1: ExporterData[];
+    // 列表二数据
     _datas_2: ExporterData[];
+    // 列表三数据
     _datas_3: ExporterData[];
+    // 点击事件回调
     _clickHandler: Laya.Handler;
+    // 拖拽恢复时间
     _dragRecoverTime: number;
+    // 自动滚动速度
     _autoScrollSpeed: number;
+    // 是否自动滚动中
     _isAutoScrolling: boolean;
+    // 是否准备拖拽
     _readyDrag: boolean;
+    // 拖拽计时
     _dragStopCount: number;
+    // 整体是否向前滚动
     _autoScrollForward: boolean;
+    // 局部是否向前滚动
     _autoScrollForward2: boolean;
+    // 屏幕触摸位置X
     touchX: number;
+    // 屏幕触摸位置Y
     touchY: number;
+    // 是否点击继续
     bClickContinue: boolean;
-    delayTime1: number;
-    delayTime2: number;
+    // 延迟计时器一
+    delayTimer1: number;
+    // 延迟计时器二
+    delayTimer2: number;
+    // 点击继续事件回调
     _clickContinue: Laya.Handler;
 
     constructor(component: FGUI_full_1) {
@@ -81,8 +111,8 @@ export default class exporter_full_1 extends zs.exporter.full {
         super.dispose();
         let view = this.view as FGUI_full_1;
         Laya.Tween.clearAll(view.btn_continue);
-        clearTimeout(this.delayTime1);
-        clearTimeout(this.delayTime2);
+        clearTimeout(this.delayTimer1);
+        clearTimeout(this.delayTimer2);
         zs.platform.sync.hideBanner();
     }
     check(component: FGUI_full_1) {
@@ -119,11 +149,11 @@ export default class exporter_full_1 extends zs.exporter.full {
             view.btn_continue.touchable = false;
             this.bClickContinue = true;
             // 展示banner
-            zs.platform.sync.updateBanner({isWait: true});
-            this.delayTime1 = setTimeout(() => {
-                zs.platform.sync.updateBanner({isWait: false});
+            zs.platform.sync.updateBanner({ isWait: true });
+            this.delayTimer1 = setTimeout(() => {
+                zs.platform.sync.updateBanner({ isWait: false });
             }, exporter_full_1.updateBannerDelay)
-            this.delayTime2 = setTimeout(() => {
+            this.delayTimer2 = setTimeout(() => {
                 zs.platform.sync.hideBanner();
                 view.btn_continue.touchable = true;
             }, zs_full_screen_banner_time * 1000)

@@ -1,8 +1,11 @@
 import FGUI_friend_challenge from "./export/FGUI_friend_challenge";
 
 export default class exporter_friend_challenge extends zs.fgui.base {
+    // 昵称列表
     static nickList: string[];
+    // 导出数据
     adData: ExporterData;
+    // 事件回调
     callback: Laya.Handler;
 
     constructor(component) {

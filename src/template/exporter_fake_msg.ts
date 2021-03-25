@@ -2,11 +2,16 @@ import FGUI_fake_msg from "./export/FGUI_fake_msg";
 
 export default class exporter_fake_msg extends zs.fgui.base {
 
+    // 昵称列表
     static nickList: string[];
+    // 音效路径
     static soundShow: string;
 
+    // 描述文本
     desc: fairygui.GTextField;
+    // 导出数据
     adData: ExporterData;
+    // 事件回调
     callback: Laya.Handler;
 
     constructor(component) {
