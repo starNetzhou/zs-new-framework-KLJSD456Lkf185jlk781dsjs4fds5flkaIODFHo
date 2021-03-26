@@ -1,6 +1,5 @@
 import exportBinder from "./export/exportBinder";
 import native_oppoBottomNative from "./native_oppoBottomNative";
-import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import native_oppoScreeNative from "./native_oppoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 import native_BtnMoreGame from "./native_BtnMoreGame";
@@ -8,23 +7,15 @@ import native_BtnMoreGame from "./native_BtnMoreGame";
 export default class workflow extends zs.workflow {
 
     static readonly GAME_START = 'GAME_START';
-    static readonly START_FULL_1 = 'START_FULL_1';
-    static readonly START_FULL_2 = 'START_FULL_2';
     static readonly GAME_HOME = 'GAME_HOME';
     static readonly GAME_PREPARE = 'GAME_PREPARE';
-    static readonly EXPORT_COMMON_EGG = 'EXPORT_COMMON_EGG';
+    static readonly GAME_START_NATIVE = 'GAME_START_NATIVE'
     static readonly GAME_PLAY = 'GAME_PLAY';
-    static readonly EXPORT_GAME_EGG = 'EXPORT_GAME_EGG';
-    static readonly OVER_FULL_1 = 'OVER_FULL_1';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
-    static readonly OVER_FULL_2 = 'OVER_FULL_2';
     static readonly GAME_END = 'GAME_END';
-
     static readonly OPEN_SCREE_NATIVE = 'OPEN_SCREE_NATIVE';
 
     exporterPack = "export/export";
-
-    windowFull: zs.fgui.window;
 
     _windowExport: zs.fgui.window;
 
@@ -38,22 +29,25 @@ export default class workflow extends zs.workflow {
         return this._windowExport;
     }
 
-    commonMsgList: zs.fgui.window[];
-
-    fullStack = [];
-
     registe() {
+        // 绑定导出UI
         exportBinder.bindAll();
 
+        // 工作流注册
         this.fsm = new zs.fsm()
             .registe(workflow.GAME_START, workflow.GAME_HOME, 0, false, this, this.onGameHome)
             .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
-            .registe(workflow.GAME_PREPARE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
+            .registe(workflow.GAME_PREPARE, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
+            .registe(workflow.GAME_START_NATIVE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
             .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
             .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
-            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
-			.setDefault(workflow.GAME_START, true);
+            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome);
+    }
+
+    start() {
+        super.start();
+        this.fsm.init(workflow.GAME_START, true);
     }
 
     onGameHome(complete) {
@@ -73,6 +67,7 @@ export default class workflow extends zs.workflow {
     onGamePlay(complete) {
         complete.run();
         zs.platform.sync.showBanner();
+        this.hideScreeNative();
     }
 
     onGameSettle(complete) {
@@ -191,12 +186,9 @@ export default class workflow extends zs.workflow {
                 .block(true)
                 .update<native_oppoScreeNative>(native_oppoScreeNative, (unit) => {
                     this._screeNative = unit;
-                    unit.closeHandler = Laya.Handler.create(this, () => {
-                        console.log("🐑 : --- >>> ","workflow");
-                        zs.core.workflow.next();
-                    })
                     unit.apply();
                 })
+                .setBase(this._screeNative)
                 .align(zs.fgui.AlignType.Center)
                 .front();
         }
@@ -209,6 +201,4 @@ export default class workflow extends zs.workflow {
         }
     }
     //#endregion
-
-
 }
