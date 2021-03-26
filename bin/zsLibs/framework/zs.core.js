@@ -3,6 +3,15 @@ window.zs = window.zs || {};
 (function (exports) {
     'use strict';
 
+    function showMsgBox(params) {
+        zs.fgui.msgbox.show(params);
+    }
+
+    function hideMsgBox(isClear) {
+        if (isClear) { zs.fgui.msgbox.clear(); }
+        zs.fgui.msgbox.hide();
+    }
+
     class workflow {
         get exportWindow() {
             if (this._exportWindow == null) {
@@ -322,6 +331,7 @@ window.zs = window.zs || {};
             this.progress = 15;
             zs.log.debug("初始化广告与导出组件", 'Core');
             let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic_exporter);
+            zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
             zs.ui.FGUI_card.bind(basicExportPack);
             this.progress = 20;
@@ -509,6 +519,8 @@ window.zs = window.zs || {};
     core.workflow = null;
     core.loadingPage = null;
 
+    exports.showMsgBox = showMsgBox;
+    exports.hideMsgBox = hideMsgBox;
     exports.workflow = workflow;
     exports.core = core;
 

@@ -76,12 +76,6 @@ window.zs.wx = window.zs.wx || {};
                 s.showTime = setTimeout(function () { s.showEd = true }, Math.max(2000, time));
             });
         }
-        //移到用户上次点击位置  top
-        updateTouchPos() {
-            if (!this.bannerAd || !this.realSize || Laya.stage.mouseY == null || Laya.stage.mouseX == null) return;
-            // this.bannerAd.style.left = Laya.stage.mouseX * window.screen.availWidth / Laya.stage.width - this.realSize.w / 2;
-            this.bannerAd.style.top = Laya.stage.mouseY * window.screen.availHeight / Laya.stage.height - this.realSize.h / 2;
-        }
 
         updatePosition(toTouch) {
             if (!this.bannerAd || !this.realSize) return;

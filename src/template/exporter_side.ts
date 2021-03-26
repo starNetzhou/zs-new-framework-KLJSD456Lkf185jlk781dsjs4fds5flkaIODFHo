@@ -2,14 +2,17 @@ import FGUI_hot_game from "./export/FGUI_hot_game";
 import FGUI_Side from "./export/FGUI_Side";
 
 export default class exporter_side extends zs.fgui.base {
-
+    // 导出容器
     content: FGUI_hot_game;
+    // 导出列表
     adList: fairygui.GList;
+    // 弹出控制器
     btnPopCtrl: fairygui.Controller;
-
+    // 是否隐藏侧栏
     bHide: boolean;
+    // 导出数据
     adData: ExporterData[];
-
+    // 延迟回调句柄
     delayHandler: number;
 
     constructor(component) {

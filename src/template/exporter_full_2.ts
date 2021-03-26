@@ -2,30 +2,50 @@ import FGUI_full_2 from "./export/FGUI_full_2";
 
 export default class exporter_full_2 extends zs.exporter.full {
 
+    // 按钮偏移时间
     static readonly buttonOffsetTime = 1500;
+	// 拖拽自动弹导出生效距离
     static readonly checkScrollDistance = 30;
+	// 自动滚动时间
     static readonly autoScrollTime = 3000;
+	// 拖拽恢复时间
     static readonly dragRecoverTime = 3;
+	// 自动滚动速度
     static readonly autoScrollSpeed = 50;
+	// 误触偏移
     static readonly mistakenOffset = 350;
 
+    // 排位导出数据
     rankData: ExporterData[];
 
+    // 控件名称
     viewName: string;
 
+    // 点击事件回调
     _clickHandler: Laya.Handler;
+    // 拖拽恢复时间
     _dragRecoverTime: number;
+    // 自动滚动速度
     _autoScrollSpeed: number;
+    // 是否自动滚动中
     _isAutoScrolling: boolean;
+    // 是否准备拖拽
     _readyDrag: boolean;
+    // 拖拽计时
     _dragStopCount: number;
+    // 是否向前滚动
     _autoScrollForward: boolean;
+    // 屏幕触摸位置X
     touchX: number;
+    // 屏幕触摸位置Y
     touchY: number;
-
+    // Y轴误触移动
     mistakenMoveY: number;
+    // 是否点击继续
     bClickContinue: boolean;
+    // 是否被销毁
     disposed: boolean;
+    // 点击继续事件回调
     _clickContinue: Laya.Handler;
 
     constructor(component) {

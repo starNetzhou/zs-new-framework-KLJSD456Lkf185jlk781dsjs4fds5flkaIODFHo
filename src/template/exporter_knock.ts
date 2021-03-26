@@ -2,13 +2,17 @@ import FGUI_donhua from "./export/FGUI_donhua";
 import FGUI_knock_export from "./export/FGUI_knock_export";
 
 export default class exporter_knock extends zs.fgui.base {
-
+    // 导出列表
     listAd: fairygui.GList;
+    // 锤子节点
     nodeHammer: FGUI_donhua;
+    // 锤子动画
     aniHammer: fairygui.Transition;
-
+    // 锤子导出数据
     adData: ExporterData[];
+    // 导出展示列表
     adShowArr: ExporterData[];
+    // 砸锤子索引
     knockIndex: number;
 
     constructor(component) {

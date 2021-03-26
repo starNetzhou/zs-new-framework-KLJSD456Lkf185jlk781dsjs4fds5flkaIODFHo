@@ -1,40 +1,67 @@
 import FGUI_full_1 from "./export/FGUI_full_1";
 
 export default class exporter_full_1 extends zs.exporter.full {
-
+	// 拖拽自动弹导出生效距离
     static readonly checkScrollDistance = 30;
+	// 自动滚动时间
     static readonly autoScrollTime = 3000;
+	// 拖拽恢复时间
     static readonly dragRecoverTime = 3;
+	// 自动滚动速度
     static readonly autoScrollSpeed = 50;
+	// 误触偏移
     static readonly mistakenOffset = 350;
 
+    // 列表一长度
     maxList_1: number;
+    // 列表二长度
     maxList_2: number;
 
+    // 列表一
     list_1: fairygui.GList;
+    // 列表二
     list_2: fairygui.GList;
+    // 列表三
     list_3: fairygui.GList;
 
+    // 控件名称
     viewName: string;
 
+    // 列表一数据
     _datas_1: ExporterData[];
+    // 列表二数据
     _datas_2: ExporterData[];
+    // 列表三数据
     _datas_3: ExporterData[];
+    // 点击事件回调
     _clickHandler: Laya.Handler;
+    // 拖拽恢复时间
     _dragRecoverTime: number;
+    // 自动滚动速度
     _autoScrollSpeed: number;
+    // 是否自动滚动中
     _isAutoScrolling: boolean;
+    // 是否准备拖拽
     _readyDrag: boolean;
+    // 拖拽计时
     _dragStopCount: number;
+    // 整体是否向前滚动
     _autoScrollForward: boolean;
+    // 局部是否向前滚动
     _autoScrollForward2: boolean;
+    // 屏幕触摸位置X
     touchX: number;
+    // 屏幕触摸位置Y
     touchY: number;
-
+    // Y轴误触移动
     mistakenMoveY: number;
+    // 是否点击继续
     bClickContinue: boolean;
+    // 是否被销毁
     disposed: boolean;
+    // 点击继续事件回调
     _clickContinue: Laya.Handler;
+    // 导出数据
     _datas: ExporterData[];
 
     constructor(component) {

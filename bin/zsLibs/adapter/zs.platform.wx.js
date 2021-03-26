@@ -1,6 +1,7 @@
 window.platform = (function () {
     function platform() { };
     platform.loginCount = 0;
+    platform.launchOptions = null;
     platform.systemInfo = null;
     platform.delayBanner = null;
 
@@ -37,6 +38,13 @@ window.platform = (function () {
                 }
             });
         });
+    }
+
+    platform.getLaunchOptions = function () {
+        if (!platform.launchOptions) {
+            platform.launchOptions = wx.getLaunchOptionsSync();
+        }
+        return platform.launchOptions;
     }
 
     platform.getLoginParams = function _async() {

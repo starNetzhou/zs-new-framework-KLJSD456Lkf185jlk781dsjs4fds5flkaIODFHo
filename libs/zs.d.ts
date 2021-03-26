@@ -191,7 +191,16 @@ declare module zs {
          */
         Sync = 2
     }
-
+    /**
+     * 显示消息提示框
+     * @param params 提示框信息
+     */
+    function showMsgBox(params: msgboxParams);
+    /**
+     * 隐藏消息提示框
+     * @param isClear 清空消息队列
+     */
+    function hideMsgBox(isClear?: boolean);
     /**
      * 工作流
      */
@@ -1017,11 +1026,11 @@ declare module zs.base {
 }
 
 interface msgboxParams {
-    title?: string,
-    content?: string,
-    comfireText?: string,
+    title: string,
+    content: string,
+    confirmText?: string,
     cancelText?: string,
-    comfireHandler?: Laya.Handler,
+    confirmHandler?: Laya.Handler,
     cancelHandler?: Laya.Handler,
     hideCancel?: boolean
 }
@@ -1684,6 +1693,10 @@ declare module zs.platform {
          * @returns bool = true 不展示广告 false 正常展示广告
          */
         static getIsInOneMin(): boolean;
+        /**
+         * 获取平台登陆信息
+         */
+        static getLaunchOptions() : any;
     }
 }
 

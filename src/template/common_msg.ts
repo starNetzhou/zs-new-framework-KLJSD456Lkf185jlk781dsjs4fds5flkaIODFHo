@@ -2,15 +2,24 @@ import FGUI_common_msg from "./export/FGUI_common_msg";
 
 export default class msgbox extends zs.fgui.base {
 
+    // 弹窗队列列表
     static _msgList: msgboxParams[];
+    // 弹窗窗口实例
     static _windowInst: zs.fgui.window;
 
+    // 弹窗标题
     sTitle: string;
+    // 弹窗内容
     sContent: string;
+    // 弹窗确认文本
     sConfireText: string;
+    // 弹窗取消文本
     sCancelText: string;
+    // 弹窗确认回调
     comfireHandler: Laya.Handler;
+    // 弹窗取消回调
     cancelHandler: Laya.Handler;
+    // 隐藏取消按钮
     bHideCancel: boolean;
 
     static showMsgBox(params: msgboxParams) {
@@ -21,15 +30,15 @@ export default class msgbox extends zs.fgui.base {
                 .update<msgbox>(msgbox, (unit) => {
                     unit.setTitle(params.title)
                         .setContent(params.content)
-                        .setComfireText(params.comfireText)
+                        .setComfireText(params.confirmText)
                         .setCancelText(params.cancelText)
                         .setComfireHandler(Laya.Handler.create(this, () => {
+                            params.confirmHandler && params.confirmHandler.run();
                             msgbox.hideMsgBox();
-                            params.comfireHandler && params.comfireHandler.run();
                         }))
                         .setCancelHandler(Laya.Handler.create(this, () => {
-                            msgbox.hideMsgBox();
                             params.cancelHandler && params.cancelHandler.run();
+                            msgbox.hideMsgBox();
                         }))
                         .hideCancel(params.hideCancel)
                         .apply();
