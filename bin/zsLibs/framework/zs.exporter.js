@@ -1149,22 +1149,30 @@ window.zs.exporter = window.zs.exporter || {};
                 if (this._cellWidth > 0) {
                     realWidth = Math.min(realWidth, this._cellWidth);
                 }
-                if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Horizontal) {
-                    let scale = realWidth / item.width;
-                    item.width = realWidth;
-                    item.height *= scale;
-                }
+                item.width = realWidth;
+                // if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Horizontal) {
+                //     console.log("itemrender 1");
+                //     let scale = realWidth / item.width;
+                //     item.width = realWidth;
+                //     item.height *= scale;
+                // }
             }
             if (this._cellHeight > 0 || (this._adaptScale && item.height > this._effectHeight)) {
                 let realHeight = this._adaptScale ? this._effectHeight : item.height;
                 if (this._cellHeight > 0) {
                     realHeight = Math.min(realHeight, this._cellHeight);
                 }
-                if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Vertical) {
-                    let scale = realHeight / item.height;
-                    item.height = realHeight;
-                    item.width *= scale;
-                }
+                item.height = realHeight;
+                // if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Vertical) {
+                //     let scale = realHeight / item.height;
+                //     item.height = realHeight;
+                //     item.width *= scale;
+                // }
+            }
+            if (this.keepRatio == AdaptType.Horizontal) {
+                item.height = item.width * (item.initHeight / item.initWidth);
+            } else if (this.keepRatio == AdaptType.Vertical) {
+                item.width = item.height * (item.initWidth / item.initHeight);
             }
             if (this._transition && this._transition.length >= 0) {
                 let transition = item.getTransition(this._transition);

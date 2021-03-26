@@ -3,6 +3,15 @@ window.zs = window.zs || {};
 (function (exports) {
     'use strict';
 
+    function showMsgBox(params) {
+        zs.fgui.msgbox.show(params);
+    }
+
+    function hideMsgBox(isClear) {
+        if (isClear) { zs.fgui.msgbox.clear(); }
+        zs.fgui.msgbox.hide();
+    }
+
     class workflow {
         get exportWindow() {
             if (this._exportWindow == null) {
@@ -32,6 +41,7 @@ window.zs = window.zs || {};
             return null;
         }
         constructor() {
+            this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
         }
         registe() { }
@@ -42,7 +52,7 @@ window.zs = window.zs || {};
             }
             zs.fgui.configs.registeBase(workflow.exporterList, zs.exporter.list);
             zs.fgui.configs.registeBase(workflow.exporterCard, zs.exporter.card);
-            core.addAppShow(Laya.Handler.create(this, this.clearDelayBanner, null, false));
+            core.addAppShow(Laya.Handler.create(this, zs.platform.sync.clearDelayBanner, null, false));
             this.fsm.init();
         }
         setFSM(key, fsm) {
@@ -146,14 +156,8 @@ window.zs = window.zs || {};
             }
             this.exportWindow.clear();
             // banner销毁
-            if (window.zs && window.zs.wx) {
-                let data = zs.configs.productCfg[current];
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                if (data && data.banner) {
-                    this.clearDelayBanner();
-                }
-            }
+            zs.platform.sync.hideBanner();
+            zs.platform.sync.clearDelayBanner();
         }
         onChanged(current) {
             zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
@@ -179,7 +183,7 @@ window.zs = window.zs || {};
                     zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
                 }
             } else {
-                zs.product.get(workflow.switchExporter) && this.checkExporter(current);
+                zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
         }
@@ -200,14 +204,8 @@ window.zs = window.zs || {};
             }
             this.exportWindow.clear();
             // banner销毁
-            if (window.zs && window.zs.wx) {
-                let data = zs.configs.productCfg[current];
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                if (data && data.banner) {
-                    this.clearDelayBanner();
-                }
-            }
+            zs.platform.sync.hideBanner();
+            zs.platform.sync.clearDelayBanner();
         }
         onChildFSMChanged(current) {
             if (this.fsm == null) { return; }
@@ -225,46 +223,27 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            zs.product.get(workflow.switchExporter) && this.checkExporter(childKey);
+            zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
         }
         checkBanner(current) {
-            if (window.zs == null) { return; }
-            if (window.zs.wx) {
-                if (!window.zs.wx.banner) { return; }
-                let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-                wxBannerMgr.hideAll();
-                let data = zs.configs.productCfg[current];
+            let data = zs.configs.productCfg[current];
+            if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
                 if (data && data.banner) {
-                    let config = data.banner;
-                    let switchShow = true;
-                    if (config.switch) {
-                        if (Array.isArray(config.switch)) {
-                            for (let i = 0, n = config.switch.length; i < n; i++) {
-                                if (!zs.product.get(config.switch[i])) {
-                                    switchShow = false;
-                                    break;
-                                }
-                            }
-                        } else if (!zs.product.get(config.switch)) {
-                            switchShow = false;
-                        }
-                    }
-                    if (!switchShow || config.switch != null) {
-                        wxBannerMgr.isWait = true;
-                        return;
-                    }
-                    wxBannerMgr.updateBanner(config.delay || !config.auto, config.left, config.bottom, config.length);
-                    if (config.delay && zs.product.get("zs_banner_banner_time")) {
-                        this.delayBanner = setTimeout(function () { wxBannerMgr.showBanner(config.left, config.bottom, config.length) }, zs.product.get("zs_banner_banner_time"));
-                    }
-                } else {
-                    wxBannerMgr.isWait = true;
+                    zs.log.warn("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
                 }
+                return;
             }
+            data && (zs.platform.sync.checkBanner({ data: data }));
         }
         checkExporter(current) {
             let data = zs.configs.productCfg[current];
+            if (this.exporterIgnoreList && this.exporterIgnoreList.indexOf(current) >= 0) {
+                if (data && data.exporter && data.exporter.length > 0) {
+                    zs.log.warn("状态 " + current + " 在导出忽略列表中，无法自动生成，请自主管理导出展示或将该状态移出忽略列表", "Workflow");
+                }
+                return;
+            }
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
@@ -288,12 +267,7 @@ window.zs = window.zs || {};
                 }
             }
         }
-        clearDelayBanner() {
-            this.delayBanner && clearTimeout(this.delayBanner);
-            this.delayBanner = null;
-        }
     }
-    workflow.switchExporter = "zs_jump_switch";
     workflow.exporterList = "export_list";
     workflow.exporterCard = "export_card";
 
@@ -357,6 +331,7 @@ window.zs = window.zs || {};
             this.progress = 15;
             zs.log.debug("初始化广告与导出组件", 'Core');
             let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic_exporter);
+            zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
             zs.ui.FGUI_card.bind(basicExportPack);
             this.progress = 20;
@@ -398,30 +373,7 @@ window.zs = window.zs || {};
             zs.product.sync(switchs);
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
-            if (window.zs.wx && window.zs.wx.banner) {
-                zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"))
-            }
-            else if (zs.platform.config.platformMark == 'op_') {
-                let zs_onemin_show_ad_switch = zs.product.get("zs_onemin_show_ad_switch");
-                let zs_show_banner_time = zs.product.get("zs_show_banner_time");
-                if (zs_onemin_show_ad_switch) {
-                    zs.platform.sync.setIsInOneMin(true);
-                    Laya.timer.once(60000, this, () => {
-                        zs.platform.sync.setIsInOneMin(false);
-                        zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
-                    });
-                } else {
-                    if (zs_show_banner_time > 0) {
-                        Laya.timer.once(zs_show_banner_time, this, () => {
-                            zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
-                        });
-                    } else {
-                        zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
-                    }
-                }
-                zs.platform.sync.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
-            }
-
+            zs.platform.sync.initBanner();
             zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
             this.progress = 85;
 
@@ -486,9 +438,7 @@ window.zs = window.zs || {};
             });
         }
         static onAppShow(result) {
-            if (window.zs.wx && window.zs.wx.banner) {
-                zs.wx.banner.WxBannerMgr.Instance.updateBanner();
-            }
+            zs.platform.sync.updateBanner();
 
             if (this.appShowListeners == null || this.appShowListeners.length <= 0) { return; }
             for (let i = 0, n = this.appShowListeners.length; i < n; i++) {
@@ -569,6 +519,8 @@ window.zs = window.zs || {};
     core.workflow = null;
     core.loadingPage = null;
 
+    exports.showMsgBox = showMsgBox;
+    exports.hideMsgBox = hideMsgBox;
     exports.workflow = workflow;
     exports.core = core;
 

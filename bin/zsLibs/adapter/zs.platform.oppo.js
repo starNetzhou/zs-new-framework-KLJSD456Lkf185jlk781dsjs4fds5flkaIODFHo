@@ -221,7 +221,7 @@ window.platform = (function () {
     platform.createBannerNum = 0;
     platform.bannerErrorHandler = null;
     platform.bannerAd = null;
-    platform.initBanner = function (params) {
+    platform.createBanner = function (params) {
         if (params.id == null || params.id.length <= 0) {
             zs.log.warn('方法（ initBanner ）缺少必要参数（ id ）', 'Platform');
             return;
@@ -258,6 +258,27 @@ window.platform = (function () {
                 console.warn("bannerAd lose");
             }
         });
+    }
+
+    platform.initBanner = function (params) {
+        let zs_onemin_show_ad_switch = zs.product.get("zs_onemin_show_ad_switch");
+        let zs_show_banner_time = zs.product.get("zs_show_banner_time");
+        if (zs_onemin_show_ad_switch) {
+            platform.setIsInOneMin(true);
+            Laya.timer.once(60000, this, () => {
+                platform.setIsInOneMin(false);
+                platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
+            });
+        } else {
+            if (zs_show_banner_time > 0) {
+                Laya.timer.once(zs_show_banner_time, this, () => {
+                    platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
+                });
+            } else {
+                platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
+            }
+        }
+        platform.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
     }
 
     platform.showBanner = function (params) {
