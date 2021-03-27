@@ -1,8 +1,8 @@
 {
     "debug": true,
     "pure": false,
-    "version": 33333,
     "appName": "开车撞僵尸",
+    "version": "v1",
     "gameId": "kczjs",
     "appId": "wxa2df5b7d70ffadd1",
     "tdKey": "85C4C654EC184EA984CD3D62CB646ADD",
