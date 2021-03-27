@@ -2,6 +2,7 @@
     "debug": true,
     "packgeTime": 10000000000000,
     "appName": null,
+	"version": "v1",
     "gameId": null,
     "appId": null,
     "tdKey": null,
