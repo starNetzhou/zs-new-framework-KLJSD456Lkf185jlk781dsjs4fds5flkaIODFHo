@@ -1,7 +1,7 @@
 {
     "debug": true,
     "pure": false,
-    "packgeTime": 20210224000000,
+    "version": 33333,
     "appName": "开车撞僵尸",
     "gameId": "kczjs",
     "appId": "wxa2df5b7d70ffadd1",
