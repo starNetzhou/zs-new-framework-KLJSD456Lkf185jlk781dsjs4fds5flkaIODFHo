@@ -1,7 +1,7 @@
 {
     "debug": true,
-    "packgeTime": 20210224000000,
     "appName": "逃出僵尸城",
+	"version": "v1",
     "gameId": "tcjsc",
     "appId": "30478911",
     "tdKey": "85C4C654EC184EA984CD3D62CB646ADD",

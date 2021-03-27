@@ -548,21 +548,17 @@ window.zs = window.zs || {};
         // type 配置类型（switch 运营开关 module 模块配置）（必填）
         // module 模块名称（base_module 默认模块）
         // table 配置表名
-        // version 配置版本（online 线上 test 测试）默认线上
         static async config(isSwitch, module, table, mode) {
             let params = {
                 gid: window.zs.platform.config.platformMark + zs.configs.gameCfg.gameId,
                 type: isSwitch ? 'switch' : 'module',
-                pt: zs.configs.gameCfg.packgeTime
+                v: zs.configs.gameCfg.version
             };
             if (!isSwitch) {
                 params.module = module ? module : 'base_module';
                 if (table) {
                     params.table = table;
                 }
-            }
-            if (zs.configs.gameCfg.debug) {
-                params.version = 'test';
             }
 
             return network.request('config', params, mode);
