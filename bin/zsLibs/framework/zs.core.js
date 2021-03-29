@@ -374,6 +374,17 @@ window.zs = window.zs || {};
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
             zs.platform.sync.initBanner();
+            if (window.zs.wx && window.zs.wx.banner) {
+                zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"))
+            }
+            else if (zs.platform.config.platformMark == 'op_') {
+                zs.platform.sync.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
+                zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
+            }
+            else if (zs.platform.config.platformMark == "vv_") {
+                zs.platform.sync.initBannerId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_refresh_time"));
+                zs.platform.sync.initNativeAd(zs.product.get("zs_native_adunit"), zs.product.get("zs_native_adunit2"))
+            }
             zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
             this.progress = 85;
 

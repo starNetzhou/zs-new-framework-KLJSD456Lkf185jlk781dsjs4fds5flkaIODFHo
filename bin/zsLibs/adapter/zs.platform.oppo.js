@@ -10,23 +10,20 @@ window.platform = (function () {
         // })
         platform.systemInfo = qg.getSystemInfoSync();
         //-----------------------------------------------------
-        if (platform.systemInfo.platformVersionCode < 1051) {
-            console.error('版本低于1051 需要手动开启初始化');
-            //这个api低于1051 需要手动开启初始化
-            // qg.initAdService({
-            //     appId: zs.core.appId,
-            //     isDebug: false,
-            //     success: function (res) {
-            //         console.log("success");
-            //     },
-            //     fail: function (res) {
-            //         console.log("fail:" + res.code + res.msg);
-            //     },
-            //     complete: function (res) {
-            //         console.log("complete");
-            //     }
-            // })
-        }
+        //这个api低于1051 需要手动开启初始化
+        // qg.initAdService({
+        //     appId: zs.core.appId,
+        //     isDebug: false,
+        //     success: function (res) {
+        //         console.log("success");
+        //     },
+        //     fail: function (res) {
+        //         console.log("fail:" + res.code + res.msg);
+        //     },
+        //     complete: function (res) {
+        //         console.log("complete");
+        //     }
+        // })
     }
     platform.login = function _async() {
         return new Promise((resolve, reject) => {
@@ -47,7 +44,7 @@ window.platform = (function () {
             qg.login({
                 success: (result) => {
                     resolve({
-                        code: result.data.token
+                        code: result.code
                     });
                 },
                 fail: (result) => {
@@ -193,6 +190,7 @@ window.platform = (function () {
         return platform.videoAd != null;
     }
     platform.onVideoErrorHandler = function (error) {
+        platform.videoAd = null;
         platform.videoErrorHandler && platform.videoErrorHandler(error);
     }
     platform.onVideoCloseHandler = function (result) {
@@ -259,35 +257,13 @@ window.platform = (function () {
             }
         });
     }
-
     platform.initBanner = function (params) {
-        let zs_onemin_show_ad_switch = zs.product.get("zs_onemin_show_ad_switch");
-        let zs_show_banner_time = zs.product.get("zs_show_banner_time");
-        if (zs_onemin_show_ad_switch) {
-            platform.setIsInOneMin(true);
-            Laya.timer.once(60000, this, () => {
-                platform.setIsInOneMin(false);
-                platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
-            });
-        } else {
-            if (zs_show_banner_time > 0) {
-                Laya.timer.once(zs_show_banner_time, this, () => {
-                    platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
-                });
-            } else {
-                platform.createBanner({ id: zs.product.get("zs_banner_adunit") })
-            }
-        }
-        platform.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
+        platform.initBannerId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_refresh_time"));
+        platform.initNativeAd(zs.product.get("zs_native_adunit"), zs.product.get("zs_native_adunit2"));
     }
-
     platform.showBanner = function (params) {
         if (!params || params.onError == null) {
             zs.log.warn('方法（ showBanner ）缺少必要参数（ onError ）', 'Platform');
-        }
-        if (platform.isInOneMin) {
-            zs.log.debug('后台开关打开一分钟内不展示广告');
-            return;
         }
         if (platform.bannerId == null) { return; }
         if (platform.bannerAd == null) {
@@ -325,10 +301,6 @@ window.platform = (function () {
         if (platform.nativeAd) {
             platform.nativeAd.destroy();
         }
-        if (platform.isInOneMin) {
-            zs.log.debug('后台开关打开一分钟内不展示广告');
-            return;
-        }
         console.log("原生广告:" + params.id);
         platform.nativeAd = qg.createNativeAd({
             posId: params.id
@@ -350,11 +322,6 @@ window.platform = (function () {
                 }
                 return;
             }
-            if (platform.isInOneMin) {
-                zs.log.debug('后台开关打开一分钟内不展示广告');
-                reject('后台开关打开一分钟内不展示广告');
-                return;
-            }
             platform.nativeAdErrorHandler = (error) => {
                 reject(error);
             }
@@ -371,7 +338,7 @@ window.platform = (function () {
             platform.nativeAd.reportAdShow({
                 adId: adId
             });
-            console.log("report OPPO NativeAd Show:" + Date.now());
+            console.log("report VIVO NativeAd Show:" + Date.now());
         }
     }
     /** 上报原生点击 */
@@ -380,7 +347,7 @@ window.platform = (function () {
             platform.nativeAd.reportAdClick({
                 adId: adId
             });
-            console.log("report OPPO NativeAd Click:" + Date.now());
+            console.log("report VIVO NativeAd Click:" + Date.now());
         }
     }
     //#endregion
@@ -392,7 +359,7 @@ window.platform = (function () {
             qg.hasShortcutInstalled({
                 success: function (res) {
                     // var data = JSON.stringify(res);
-                    resolve(res);
+                    resolve({ hasIcon: res });
                 },
                 fail: function (err) {
                     console.log("request desktop icon error:" + JSON.stringify(err));
@@ -514,14 +481,6 @@ window.platform = (function () {
     //#region 原生上报点击模块
     platform.zs_ad_report_status = {};
     platform.zs_native_lsat_showTime = 0;
-    /** bool = true 不展示广告 false 正常展示广告 */
-    platform.isInOneMin = false;
-    platform.setIsInOneMin = function (val) {
-        platform.isInOneMin = val;
-    }
-    platform.getIsInOneMin = function () {
-        return platform.isInOneMin;
-    }
     /** 发送请求广告是否显示 */
     platform.sendReqAdShowReport = function (adIcon, adId) {
         if (!adId) {
@@ -620,7 +579,7 @@ window.platform = (function () {
         platform.zs_native_lsat_showTime = time;
     }
     /** */
-    platform.isOppoShowAd = function () {
+    platform.isVivoShowAd = function () {
         var showAd = true;
         let zs_native_limit_10 = zs.product.get('zs_native_limit_10');
         if (zs_native_limit_10) {
@@ -635,8 +594,8 @@ window.platform = (function () {
     platform.isBeforeGameAccount = function _async() {
         return new Promise((resolve, reject) => {
             var gameNum = platform.getGameNum();
-            console.log(platform.isShowNativeAd(gameNum), platform.isOppoShowAd());
-            if (!platform.isInOneMin && platform.isShowNativeAd(gameNum) && platform.isOppoShowAd()) {
+            console.error(platform.isShowNativeAd(gameNum), platform.isVivoShowAd());
+            if (platform.isShowNativeAd(gameNum) && platform.isVivoShowAd()) {
                 resolve();
             } else {
                 reject();

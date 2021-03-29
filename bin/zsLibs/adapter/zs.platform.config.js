@@ -4,7 +4,7 @@ window.zs.platform.config = window.zs.platform.config || {};
 
 (function (exports) {
 
-    const platformMark = "op_";
+    const platformMark = "vv_";
 
     exports.platformMark = platformMark;
 

@@ -9,11 +9,11 @@ window.zs.platform = window.zs.platform || {};
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
-        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions'];
+        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'showInsertAd', 'initBannerId'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
-        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon'];
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType'];
 
     function init() {
         if (proxy) { proxy.init(); }

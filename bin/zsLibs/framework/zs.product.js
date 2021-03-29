@@ -1,7 +1,6 @@
 window.zs = window.zs || {};
 (function (exports) {
     class product {
-
         static get keys() {
             if (this._keys == null) {
                 this._keys = {};
@@ -26,7 +25,6 @@ window.zs = window.zs || {};
             for (let key in switchs) {
                 this.registe(key, switchs[key]);
             }
-
             for (let key in this.keys) {
                 if (!this.keys[key]) { continue; }
 
