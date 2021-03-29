@@ -300,6 +300,14 @@ window.platform = (function () {
         zs.log.debug('bannerAd hide"');
         platform.bannerAd && platform.bannerAd.hide();
     }
+
+    platform.checkBanner = function (params) {
+        let data = params.data;
+        platform.hideBanner();
+        if (data && data.banner) {
+            platform.showBanner();
+        }
+    }
     //#endregion
 
     //#region 原生广告

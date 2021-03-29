@@ -12,10 +12,11 @@ loadLib("libs/laya.core.js")
 loadLib("libs/laya.d3.js")
 loadLib("libs/laya.physics3D.js")
 //-----libs-end-------
-if (typeof wx !== "undefined") {
-    loadLib("zsLibs/adapter/tdweapp.js")
-    loadLib("zsLibs/adapter/zs.wx.banner.js")
-    loadLib("zsLibs/adapter/zs.platform.wx.js")
+if (typeof qg !== "undefined") {
+    qg.onError(function (err) {
+        console.error("vivo error ---->>>  ", err)
+    })
+    loadLib("libs/zs.platform.vivo.js");
 }
 loadLib("zsLibs/adapter/zs.platform.config.js")
 loadLib("zsLibs/framework/zs.log.js")

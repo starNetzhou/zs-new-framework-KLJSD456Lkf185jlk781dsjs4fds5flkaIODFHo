@@ -13,6 +13,8 @@ export default class workflow extends zs.workflow {
 
     exporterPack = "export/export";
 
+    public skipHomeBanner = false;
+
     _windowExport: zs.fgui.window;
 
     get windowExport(): zs.fgui.window {
@@ -46,7 +48,7 @@ export default class workflow extends zs.workflow {
 
     onGameHome(complete) {
         complete.run();
-        if (!this._screeNative || !this._screeNative.view.visible) {
+        if ((!this._screeNative || !this._screeNative.view.visible) && !this.skipHomeBanner) {
             zs.platform.sync.showBanner();
         }
         this.onShowAddDeskTop();
@@ -60,23 +62,21 @@ export default class workflow extends zs.workflow {
 
     onGamePlay(complete) {
         complete.run();
-        zs.platform.sync.showBanner();
     }
 
     onGameSettle(complete) {
         complete.run();
-        zs.platform.sync.hideBanner();
         this.showScreeNative();
     }
-    openScreeNative(complete) {
-        complete.run();
-        zs.platform.sync.hideBanner();
-        if (zs.product.get("zs_native_limit")) {
-            this.showScreeNative();
-        } else {
-            zs.core.workflow.next();
-        }
-    }
+    // openScreeNative(complete) {
+    //     complete.run();
+    //     zs.platform.sync.hideBanner();
+    //     if (zs.product.get("zs_native_limit")) {
+    //         this.showScreeNative();
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
     onGameEnd(complete) {
         complete.run();
         zs.core.workflow.next();
