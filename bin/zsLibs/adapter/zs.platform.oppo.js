@@ -306,8 +306,17 @@ window.platform = (function () {
         platform.bannerAd && platform.bannerAd.hide();
     }
 
-    platform.checkBanner = function(params) {
+    platform.checkBanner = function (params) {
+        if (params.data == null) {
+            zs.log.warn('方法（ checkBanner ）缺少必要参数（ data ）', 'Platform');
+            return;
+        }
 
+        let data = params.data;
+        platform.hideBanner();
+        if (data && data.banner) {
+            platform.showBanner();
+        }
     }
     //#endregion
 

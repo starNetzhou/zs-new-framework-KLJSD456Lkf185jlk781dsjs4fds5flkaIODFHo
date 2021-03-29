@@ -1696,7 +1696,7 @@ declare module zs.platform {
         /**
          * 获取平台登陆信息
          */
-        static getLaunchOptions() : any;
+        static getLaunchOptions(): any;
     }
 }
 

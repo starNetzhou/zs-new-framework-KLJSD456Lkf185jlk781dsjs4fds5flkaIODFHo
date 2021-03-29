@@ -53,7 +53,6 @@ export default class workflow extends zs.workflow {
     onGameHome(complete) {
         complete.run();
         this.hideScreeNative();
-        zs.platform.sync.showBanner();
         this.onShowMoreGame();
         this.onShowAddDeskTop();
     }
@@ -66,18 +65,15 @@ export default class workflow extends zs.workflow {
 
     onGamePlay(complete) {
         complete.run();
-        zs.platform.sync.showBanner();
         this.hideScreeNative();
     }
 
     onGameSettle(complete) {
         complete.run();
-        zs.platform.sync.hideBanner();
         this.showBottomNative();
     }
     openScreeNative(complete) {
         complete.run();
-        zs.platform.sync.hideBanner();
         this.showScreeNative();
     }
     onGameEnd(complete) {
@@ -98,7 +94,7 @@ export default class workflow extends zs.workflow {
             this.windowExport
                 .attach(native_BtnAddDesk)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5,1.5)
+                .scale(1.5, 1.5)
                 .update<native_BtnAddDesk>(native_BtnAddDesk, (unit) => {
                     this._addDeaskTopBtn = unit;
                     unit.apply();
@@ -110,7 +106,7 @@ export default class workflow extends zs.workflow {
         return this.windowExport;
     }
     onHideAddDeskTop() {
-        if(this._addDeaskTopBtn){
+        if (this._addDeaskTopBtn) {
             this.windowExport.detach(this._addDeaskTopBtn);
             this._addDeaskTopBtn = null;
         }
@@ -126,7 +122,7 @@ export default class workflow extends zs.workflow {
             this.windowExport
                 .attach(native_BtnMoreGame)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5,1.5)
+                .scale(1.5, 1.5)
                 .update<native_BtnMoreGame>(native_BtnMoreGame, (unit) => {
                     this._moreGameBtn = unit;
                     unit.apply();
@@ -137,7 +133,7 @@ export default class workflow extends zs.workflow {
         return this.windowExport;
     }
     onHideMoreGame() {
-        if(this._moreGameBtn){
+        if (this._moreGameBtn) {
             this.windowExport.detach(this._moreGameBtn);
             this._moreGameBtn = null;
         }
