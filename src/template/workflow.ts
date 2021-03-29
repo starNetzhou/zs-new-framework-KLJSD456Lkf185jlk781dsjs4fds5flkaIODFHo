@@ -1,19 +1,15 @@
 import exportBinder from "./export/exportBinder";
-import ProductKey from "./ProductKey";
 import native_vivoBottomNative from "./native_vivoBottomNative";
-import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import native_vivoScreeNative from "./native_vivoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 
 export default class workflow extends zs.workflow {
-
     static readonly GAME_START = 'GAME_START';
     static readonly GAME_HOME = 'GAME_HOME';
     static readonly GAME_PREPARE = 'GAME_PREPARE';
     static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
     static readonly GAME_END = 'GAME_END';
-    static readonly OPEN_SCREE_NATIVE = 'OPEN_SCREE_NATIVE';
 
     exporterPack = "export/export";
 
