@@ -305,6 +305,10 @@ window.platform = (function () {
         zs.log.debug('bannerAd hide"');
         platform.bannerAd && platform.bannerAd.hide();
     }
+
+    platform.checkBanner = function(params) {
+
+    }
     //#endregion
 
     //#region 原生广告

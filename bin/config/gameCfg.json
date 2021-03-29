@@ -83,13 +83,7 @@
         "*entry": "fgui/entry/"
     },
     "resources": {
-        "configs": {
-            "nick": [
-                "config/nickname.json",
-                null,
-                true
-            ]
-        },
+        "configs": {},
         "prefabs": {}
     }
 }
