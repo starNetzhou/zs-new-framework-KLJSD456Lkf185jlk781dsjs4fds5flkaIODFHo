@@ -30,8 +30,6 @@ export default class native_BtnAddDesk extends zs.fgui.base {
         //true 就是 有 icon false 是没有
         zs.platform.async.hasDesktopIcon().then((hasIcon) => {
             view.visible = !hasIcon;
-        }).catch(() => {
-            view.visible = true;
         });
         return this;
     }
