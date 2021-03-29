@@ -4,7 +4,6 @@ import native_vivoBottomNative from "./native_vivoBottomNative";
 import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import native_vivoScreeNative from "./native_vivoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
-import native_BtnMoreGame from "./native_BtnMoreGame";
 
 export default class workflow extends zs.workflow {
 
@@ -119,33 +118,6 @@ export default class workflow extends zs.workflow {
         if (this._addDeaskTopBtn) {
             this.windowExport.detach(this._addDeaskTopBtn);
             this._addDeaskTopBtn = null;
-        }
-    }
-    _moreGameBtn: native_BtnMoreGame = null;
-    onShowMoreGame() {
-        if (this._moreGameBtn) {
-            this._moreGameBtn.view.visible = true;
-            this.windowExport
-                .setBase(this._moreGameBtn)
-                .front();
-        } else {
-            this.windowExport
-                .attach(native_BtnMoreGame)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5, 1.5)
-                .update<native_BtnMoreGame>(native_BtnMoreGame, (unit) => {
-                    this._moreGameBtn = unit;
-                    unit.apply();
-                })
-                .align(zs.fgui.AlignType.Left, 50)
-                .front();
-        }
-        return this.windowExport;
-    }
-    onHideMoreGame() {
-        if (this._moreGameBtn) {
-            this.windowExport.detach(this._moreGameBtn);
-            this._moreGameBtn = null;
         }
     }
     //#endregion

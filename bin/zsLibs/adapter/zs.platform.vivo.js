@@ -359,7 +359,7 @@ window.platform = (function () {
             qg.hasShortcutInstalled({
                 success: function (res) {
                     // var data = JSON.stringify(res);
-                    resolve({ hasIcon: res });
+                    resolve(res);
                 },
                 fail: function (err) {
                     console.log("request desktop icon error:" + JSON.stringify(err));
