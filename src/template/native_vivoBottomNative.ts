@@ -1,16 +1,15 @@
 import FGUI_BottomNative from "./export/FGUI_BottomNative";
-import native_oppoScreeNative from "./native_oppoScreeNative";
 
 /*
 * @ Author: yangcheng
 * @ Data: 2021-03-11 15:48
 */
-export default class native_oppoBottomNative extends native_oppoScreeNative {
-    static make() {
+export default class native_vivoBottomNative extends zs.fgui.base {
+    static make(): FGUI_BottomNative {
         let view = FGUI_BottomNative.createInstance();
         return view;
     }
-    static type() {
+    static type(): typeof FGUI_BottomNative {
         return FGUI_BottomNative;
     }
     check(component) {
