@@ -75,18 +75,17 @@ export default class workflow extends zs.workflow {
     openScreeNative(complete) {
         complete.run();
         zs.platform.sync.hideBanner();
-        let key = zs.product.get("zs_native_limit");
-        if (key)
+        if (zs.product.get("zs_native_limit")) {
             this.showScreeNative();
-        else
+        } else {
             zs.core.workflow.next();
+        }
     }
     onGameEnd(complete) {
         complete.run();
         zs.core.workflow.next();
         this.hideScreeNative();
-        let key = zs.product.get("zs_native_limit");
-        if (key) {
+        if (zs.product.get("zs_native_limit")) {
             this.showScreeNative();
             zs.platform.sync.hideBanner();
         }

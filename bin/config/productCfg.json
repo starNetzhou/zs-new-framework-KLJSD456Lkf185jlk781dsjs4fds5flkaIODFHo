@@ -19,9 +19,7 @@
         "banner": {}
     },
     "GAME_PLAY.PLAY": {
-        "banner": {
-            "switch": "zs_game_banner_show_switch"
-        },
+        "banner": {},
         "exporter": []
     },
     "EXPORT_GAME_EGG": {
