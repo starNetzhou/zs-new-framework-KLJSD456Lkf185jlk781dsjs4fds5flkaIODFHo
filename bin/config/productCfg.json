@@ -8,6 +8,7 @@
     },
     "GAME_HOME": {
         "banner": {},
+        "base": [],
         "exporter": [
             {
                 "type": "export_list",
