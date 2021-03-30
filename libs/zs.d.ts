@@ -1696,7 +1696,11 @@ declare module zs.platform {
         /**
          * 获取平台登陆信息
          */
-        static getLaunchOptions() : any;
+        static getLaunchOptions(): any;
+        /**
+         * 获取平台场景值
+         */
+        static getScene(): string;
     }
 }
 
