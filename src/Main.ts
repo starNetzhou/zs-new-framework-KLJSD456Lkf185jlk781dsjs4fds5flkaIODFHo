@@ -1,5 +1,6 @@
 import GameConfig from "./GameConfig";
 import GameLogic from "./GameLogic";
+import LayaLoading from "./LayaLoading";
 import Loading from "./Loading";
 
 class Main {
@@ -32,9 +33,10 @@ class Main {
 	}
 
 	async onConfigLoaded() {
-		Laya.Scene.open("test/Loading.scene");
-		// zs.core.loadingPage = Loading;
-		// Laya.stage.addComponent(GameLogic);
+		zs.core.loadingPage = Loading;
+		// Laya UI 加载页面
+		// zs.core.layaLoadingPage = LayaLoading;
+		Laya.stage.addComponent(GameLogic);
 	}
 }
 //激活启动类
