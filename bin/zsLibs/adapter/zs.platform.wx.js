@@ -47,6 +47,17 @@ window.platform = (function () {
         return platform.launchOptions;
     }
 
+    platform.getScene = function () {
+        if (!platform.launchOptions) {
+            platform.launchOptions = wx.getLaunchOptionsSync();
+        }
+        if (!platform.launchOptions) { return null; }
+
+        if (!platform.launchOptions.scene) { return null; }
+
+        return platform.launchOptions.scene.toString();
+    }
+
     platform.getLoginParams = function _async() {
         return new Promise((resolve, reject) => {
             wx.login({

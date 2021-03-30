@@ -27,8 +27,25 @@ window.zs = window.zs || {};
                 this.registe(key, switchs[key]);
             }
 
+            this.scene = Laya.LocalStorage.getItem(this.firstSceneCache);
+            if (!this.scene) {
+                this.scene = zs.platform.sync.getScene();
+                if (this.scene) {
+                    Laya.LocalStorage.setItem(this.firstSceneCache, this.scene);
+                }
+            }
+
+            let sceneMask = this.sceneCheck(this.keys[product.switchScene]);
+
             for (let key in this.keys) {
                 if (!this.keys[key]) { continue; }
+                if (!sceneMask) {
+                    this.keys[key] = null;
+                    if (this._defines) {
+                        this._defines[key] = null;
+                    }
+                    continue;
+                }
 
                 let cityKey = key + this.cityMark;
                 let cityInfo = this.keys[cityKey];
@@ -60,6 +77,11 @@ window.zs = window.zs || {};
         static cityCheck(cities) {
             if (!this.city || !cities || cities === "") { return 1; }
             if (cities.split('|').indexOf(this.city) < 0) { return 1; }
+            return 0;
+        }
+        static sceneCheck(sceneVal) {
+            if (!this.scene || !sceneVal || sceneVal === "") { return 1; }
+            if (sceneVal.split('|').indexOf(this.scene) < 0) { return 1; }
             return 0;
         }
         static timeCheck(times) {
@@ -138,8 +160,12 @@ window.zs = window.zs || {};
             }
         }
     }
+    product.scene = null;
     product.city = null;
     product.timestamp = null;
+    product.firstSceneCache = "first_enter_scene";
+    product.switchScene = 'zs_scene_value';
+    product.sceneMark = '(scene)'
     product.cityMark = '(city)';
     product.timeMark = '(time)';
 
