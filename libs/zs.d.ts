@@ -1475,6 +1475,10 @@ declare module zs.platform {
          * 创建桌面图标
          */
         static createDesktopIcon(): Promise<any>;
+        /**
+         * 获取网络类型
+         */
+        static getNetworkType(): Promise<any>;
     }
 
     /**
@@ -1701,6 +1705,16 @@ declare module zs.platform {
          * 获取平台场景值
          */
         static getScene(): string;
+        /**
+         * 显示插屏广告
+         * @param params 
+         */
+        static showInsertAd(params: any);
+        /**
+         * 初始化横幅广告ID
+         * @param params 
+         */
+        static initBannerId(params: any);
     }
 }
 
