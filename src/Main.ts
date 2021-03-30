@@ -32,8 +32,9 @@ class Main {
 	}
 
 	async onConfigLoaded() {
-		zs.core.loadingPage = Loading;
-		Laya.stage.addComponent(GameLogic);
+		Laya.Scene.open("test/Loading.scene");
+		// zs.core.loadingPage = Loading;
+		// Laya.stage.addComponent(GameLogic);
 	}
 }
 //激活启动类
