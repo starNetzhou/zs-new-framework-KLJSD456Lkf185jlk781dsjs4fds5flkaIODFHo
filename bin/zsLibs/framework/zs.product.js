@@ -47,6 +47,18 @@ window.zs = window.zs || {};
                     continue;
                 }
 
+                let sceneKey = key + this.sceneMark;
+                let sceneInfo = this.keys[sceneKey];
+                if (this.scene && sceneInfo) {
+                    let sceneValue = this.sceneCheck(sceneInfo);
+                    this.keys[key] = sceneValue;
+                    if (this._defines) {
+                        this._defines[key] = sceneValue;
+                    }
+
+                    if (!sceneValue) { continue; }
+                }
+
                 let cityKey = key + this.cityMark;
                 let cityInfo = this.keys[cityKey];
 
