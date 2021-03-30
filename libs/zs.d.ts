@@ -338,6 +338,11 @@ declare module zs {
          * 未设置将默认使用模板加载页面
          */
         static loadingPage: typeof zs.ui.Loading;
+        /**
+         * 自定义LayaUI加载页面类（优先级低于loadingPage）
+         * 未设置将默认使用模板加载页面
+         */
+        static layaLoadingPage: typeof zs.ui.LayaLoading;
 
         /**
          * 框架初始化方法
@@ -978,6 +983,34 @@ declare module zs.ui {
      * 加载页面
      */
     class Loading extends zs.fgui.base {
+        /**
+         * 加载进度
+         */
+        progress: number;
+        /**
+         * （虚方法）预加载方法，主要用于预加载loading资源包
+         */
+        preload(): Promise<void>;
+        /**
+         * 更新进度
+         * @param value 
+         */
+        updateProgress(value: number);
+        /**
+         * 执行进度
+         */
+        run(progress);
+    }
+
+    /**
+     * LayaUI加载页面
+     * 用于兼容Laya UI
+     **/
+    class LayaLoading extends Laya.Script {
+        /**
+         * Loading创建方法
+         */
+        static make(): LayaLoading;
         /**
          * 加载进度
          */
