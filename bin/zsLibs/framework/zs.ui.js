@@ -149,17 +149,50 @@ window.zs.ui = window.zs.ui || {};
                 this.progressCount -= delta * this.progressTime;
                 if (this.current + delta >= this.progress) {
                     this.current = this.progress;
-                }
-                else {
+                } else {
                     this.current = this.current + delta;
                 }
-
                 this.updateProgress(this.current);
             } else if (this.progress >= 100) {
                 return true;
             }
 
             return false
+        }
+    }
+
+    class LayaLoading extends Laya.Script {
+        constructor() {
+            super(...arguments);
+            this.progressTime = 1 / 100;
+            this.progressCount = 0;
+            this.current = 0;
+            this.progress = 0;
+        }
+        static preload() {
+            return Promise((resolve, reject) => { resolve(); })
+        }
+        static make() {
+            return null;
+        }
+        updateProgress(value) {
+        }
+        run(progress) {
+            this.progress = progress;
+            if (this.current < this.progress) {
+                this.progressCount += Laya.timer.delta * 0.001;
+                let delta = Math.round(this.progressCount / this.progressTime);
+                this.progressCount -= delta * this.progressTime;
+                if (this.current + delta >= this.progress) {
+                    this.current = this.progress;
+                } else {
+                    this.current = this.current + delta;
+                }
+                this.updateProgress(this.current);
+            } else if (this.progress >= 100) {
+                return true;
+            }
+            return false;
         }
     }
 
@@ -171,4 +204,5 @@ window.zs.ui = window.zs.ui || {};
     exports.FGUI_msgbox = FGUI_msgbox;
     exports.FGUI_Loading = FGUI_Loading;
     exports.Loading = Loading;
+    exports.LayaLoading = LayaLoading;
 }(window.zs.ui = window.zs.ui || {}));

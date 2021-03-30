@@ -326,11 +326,15 @@ window.zs = window.zs || {};
             zs.product.init(productDef);
             this._readyStart = false;
             zs.fgui.init();
-            this.loadingPage && (await this.loadingPage.preload());
-            if (this.entry) {
-                this.entryInst = this.entry.init(this.loadingPage ? this.loadingPage : zs.ui.Loading, this, this.ready);
+            let entry = this.entry ? this.entry : zs.base.entry;
+            if (this.loadingPage) {
+                await this.loadingPage.preload();
+                this.entryInst = entry.init(this.loadingPage, this, this.ready);
+            } else if (this.layaLoadingPage) {
+                await this.layaLoadingPage.preload();
+                this.entryInst = entry.init(this.layaLoadingPage, this, this.ready);
             } else {
-                this.entryInst = zs.base.entry.init(this.loadingPage ? this.loadingPage : zs.ui.Loading, this, this.ready);
+                this.entryInst = entry.init(zs.ui.Loading, this, this.ready);
             }
             if (zs.platform.config.platformMark == 'wx_' && typeof wx !== 'undefined') {
                 loadLib("zsLibs/adapter/ald-game.js");
@@ -545,6 +549,7 @@ window.zs = window.zs || {};
     core.overrideWorkflow = null;
     core.workflow = null;
     core.loadingPage = null;
+    core.layaLoadingPage = null;
 
     exports.showMsgBox = showMsgBox;
     exports.hideMsgBox = hideMsgBox;

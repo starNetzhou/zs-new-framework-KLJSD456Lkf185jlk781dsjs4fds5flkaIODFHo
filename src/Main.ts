@@ -1,5 +1,6 @@
 import GameConfig from "./GameConfig";
 import GameLogic from "./GameLogic";
+import LayaLoading from "./LayaLoading";
 import Loading from "./Loading";
 
 class Main {
@@ -33,6 +34,8 @@ class Main {
 
 	async onConfigLoaded() {
 		zs.core.loadingPage = Loading;
+		// Laya UI兼容
+		// zs.core.layaLoadingPage = LayaLoading;
 		Laya.stage.addComponent(GameLogic);
 	}
 }

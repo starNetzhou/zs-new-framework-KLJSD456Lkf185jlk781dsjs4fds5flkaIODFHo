@@ -6,21 +6,33 @@ window.zs.base = window.zs.base || {};
     class entry {
         constructor(type, thisArg, event) {
             this.thisArg = thisArg;
-            this.window = zs.fgui.window.create()
-                .attach(type)
-                .fit()
-                .update(type, (unit) => {
-                    this.loading = unit;
-                    event.call(thisArg);
-                    Laya.timer.frameLoop(1, this, this.onProgress);
-                })
-                .show();
+            if (type.prototype instanceof zs.ui.LayaLoading) {
+                this.loading = type.make();
+                event.call(thisArg);
+                Laya.timer.frameLoop(1, this, this.onProgress);
+            } else {
+                this.window = zs.fgui.window.create()
+                    .attach(type)
+                    .fit()
+                    .update(type, (unit) => {
+                        this.loading = unit;
+                        event.call(thisArg);
+                        Laya.timer.frameLoop(1, this, this.onProgress);
+                    })
+                    .show();
+            }
         }
         onProgress() {
-            if (this.loading.run(this.thisArg.progress || 0) && this.thisArg.readyStart) {
+            if ((!this.loading || this.loading.run(this.thisArg.progress || 0)) && this.thisArg.readyStart) {
                 this.thisArg.start();
                 Laya.timer.clear(this, this.onProgress);
-                this.window.dispose();
+                if (this.loading && this.loading instanceof zs.ui.LayaLoading) {
+                    let owner = this.loading.owner;
+                    owner.removeSelf();
+                    this.loading.destroy();
+                    owner.destroy();
+                }
+                this.window && this.window.dispose();
             }
         }
         get progress() {
