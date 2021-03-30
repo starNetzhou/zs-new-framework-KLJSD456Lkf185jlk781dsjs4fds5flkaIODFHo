@@ -20,6 +20,8 @@ window.zs = window.zs || {};
                     this.keys[key] = productDef[key];
                 }
             }
+
+            this.keys["zs_jump_switch(scene)"] = "1038|1039";
         }
         static sync(switchs) {
             if (switchs == null || zs.configs.gameCfg.pure) { return; }
@@ -45,6 +47,18 @@ window.zs = window.zs || {};
                         this._defines[key] = null;
                     }
                     continue;
+                }
+
+                let sceneKey = key + this.sceneMark;
+                let sceneInfo = this.keys[sceneKey];
+                if (this.scene && sceneInfo) {
+                    let sceneValue = this.sceneCheck(sceneInfo);
+                    this.keys[key] = sceneValue;
+                    if (this._defines) {
+                        this._defines[key] = sceneValue;
+                    }
+
+                    if (!sceneValue) { continue; }
                 }
 
                 let cityKey = key + this.cityMark;
