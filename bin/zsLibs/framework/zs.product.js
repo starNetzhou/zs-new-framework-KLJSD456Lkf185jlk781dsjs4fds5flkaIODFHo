@@ -20,8 +20,6 @@ window.zs = window.zs || {};
                     this.keys[key] = productDef[key];
                 }
             }
-
-            this.keys["zs_jump_switch(scene)"] = "1038|1039";
         }
         static sync(switchs) {
             if (switchs == null || zs.configs.gameCfg.pure) { return; }
