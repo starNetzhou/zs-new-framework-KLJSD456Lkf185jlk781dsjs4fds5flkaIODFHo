@@ -131,6 +131,7 @@ window.zs = window.zs || {};
                 let condition = transition.condition ? transition.condition.call(transition.thisObj) : true;
                 if (!condition) { continue; }
                 this.target = keys[i];
+                zs.log.debug('runNext: ' + this.current + ' - ' + this.target);
                 this.onBeforeChange && this.onBeforeChange.runWith([this.target, this.current]);
                 transition.transition.call(transition.thisObj, Laya.Handler.create(this, this.onTransitionComplete));
                 return this.target;

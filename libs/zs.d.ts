@@ -1684,9 +1684,9 @@ declare module zs.platform {
          */
         static showToast(val, time?);
         /**
-        * oppo 设置一分钟内展不展示广告
-        * @param val 
-        */
+         * oppo 设置一分钟内展不展示广告
+         * @param val 
+         */
         static setIsInOneMin(val);
         /**
          * oppo 获取一分钟之内展示不展示广告
@@ -1697,6 +1697,20 @@ declare module zs.platform {
          * 获取平台登陆信息
          */
         static getLaunchOptions(): any;
+        /**
+         * 获取平台场景值
+         */
+        static getScene(): string;
+        /**
+         * 显示插屏广告
+         * @param params 
+         */
+        static showInsertAd(params: any);
+        /**
+         * 初始化横幅广告ID
+         * @param params 
+         */
+        static initBannerId(params: any);
     }
 }
 

@@ -183,6 +183,7 @@ window.zs = window.zs || {};
                     zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
                 }
             } else {
+                this.checkBase(current);
                 zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
@@ -223,6 +224,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
+            this.checkBase(childKey);
             zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
         }
@@ -247,6 +249,31 @@ window.zs = window.zs || {};
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
+                    if (config.switch) {
+                        if (Array.isArray(config.switch)) {
+                            let skip = false;
+                            for (let i = 0, n = config.switch.length; i < n; i++) {
+                                if (!zs.product.get(config.switch[i])) {
+                                    skip = true;
+                                    break;
+                                }
+                            }
+                            if (skip) { continue; }
+                        } else if (!zs.product.get(config.switch)) {
+                            continue;
+                        }
+                    }
+                    this.exportWindow
+                        .applyConfig(config)
+                        .front();
+                }
+            }
+        }
+        checkBase(current) {
+            let data = zs.configs.productCfg[current];
+            if (data && data.base && data.base.length > 0) {
+                for (let i = 0, n = data.base.length; i < n; i++) {
+                    let config = data.base[i];
                     if (config.switch) {
                         if (Array.isArray(config.switch)) {
                             let skip = false;
@@ -305,7 +332,7 @@ window.zs = window.zs || {};
             } else {
                 this.entryInst = zs.base.entry.init(this.loadingPage ? this.loadingPage : zs.ui.Loading, this, this.ready);
             }
-            if (window.wx) {
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx !== 'undefined') {
                 loadLib("zsLibs/adapter/ald-game.js");
                 loadLib("zsLibs/adapter/h.js");
             }
@@ -374,17 +401,6 @@ window.zs = window.zs || {};
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
             zs.platform.sync.initBanner();
-            if (window.zs.wx && window.zs.wx.banner) {
-                zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"))
-            }
-            else if (zs.platform.config.platformMark == 'op_') {
-                zs.platform.sync.initGamePortalAd(zs.product.get("zs_gamePortalAd_id"));
-                zs.platform.sync.initBanner({ id: zs.product.get("zs_banner_adunit") })
-            }
-            else if (zs.platform.config.platformMark == "vv_") {
-                zs.platform.sync.initBannerId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_refresh_time"));
-                zs.platform.sync.initNativeAd(zs.product.get("zs_native_adunit"), zs.product.get("zs_native_adunit2"))
-            }
             zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
             this.progress = 85;
 
