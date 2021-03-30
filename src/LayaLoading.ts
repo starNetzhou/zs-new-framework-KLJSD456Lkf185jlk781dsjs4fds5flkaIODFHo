@@ -1,4 +1,4 @@
-export default class NativeLoading extends zs.ui.LayaLoading {
+export default class LayaLoading extends zs.ui.LayaLoading {
     static url: string = 'test/Loading.scene';
 
     static loadedScene: Laya.Scene;
@@ -16,14 +16,14 @@ export default class NativeLoading extends zs.ui.LayaLoading {
         });
     }
 
-    static make(): NativeLoading {
+    static make(): LayaLoading {
         if (this.loadedScene == null) { return null; }
-        let layaLoading = this.loadedScene.getComponent(NativeLoading);
+        let layaLoading = this.loadedScene.getComponent(LayaLoading);
         if (layaLoading == null) { return null; }
 
         this.loadedScene.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, '#000000', '#000000');
         layaLoading.progressText = this.loadedScene.getChildByName("progressText") as Laya.Label;
-        return this.loadedScene.getComponent(NativeLoading);
+        return this.loadedScene.getComponent(LayaLoading);
     }
 
     updateProgress(value: number) {
