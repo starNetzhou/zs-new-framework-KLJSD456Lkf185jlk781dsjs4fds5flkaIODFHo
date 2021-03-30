@@ -151,7 +151,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
 
         static collectExport(appid) {
-            if (window.wx == null) { return; }
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx !== 'undefined') { return; }
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
             let sysInfo = null;
@@ -161,7 +161,7 @@ window.zs.exporter = window.zs.exporter || {};
                 from_id: zs.core.appId,
                 to_id: appid,
                 timestamp: curTime,
-                scene: (sysInfo && sysInfo.scene) ? sysInfo.scene : 0,
+                scene: zs.product.scene,
                 zhise: (sysInfo && sysInfo.query && sysInfo.query.zhise) ? sysInfo.query.zhise : ""
             };
             zs.network.nativeRequest(url, signParams, 'POST', true)
