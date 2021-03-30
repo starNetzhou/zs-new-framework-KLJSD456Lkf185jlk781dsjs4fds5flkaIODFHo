@@ -1696,7 +1696,21 @@ declare module zs.platform {
         /**
          * 获取平台登陆信息
          */
-        static getLaunchOptions() : any;
+        static getLaunchOptions(): any;
+        /**
+         * 获取平台场景值
+         */
+        static getScene(): string;
+        /**
+         * 显示插屏广告
+         * @param params 
+         */
+        static showInsertAd(params: any);
+        /**
+         * 初始化横幅广告ID
+         * @param params 
+         */
+        static initBannerId(params: any);
     }
 }
 

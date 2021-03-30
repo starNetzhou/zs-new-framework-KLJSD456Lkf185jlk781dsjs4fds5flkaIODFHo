@@ -183,6 +183,7 @@ window.zs = window.zs || {};
                     zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
                 }
             } else {
+                this.checkBase(current);
                 zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
@@ -223,6 +224,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
+            this.checkBase(childKey);
             zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
         }
@@ -247,6 +249,31 @@ window.zs = window.zs || {};
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
+                    if (config.switch) {
+                        if (Array.isArray(config.switch)) {
+                            let skip = false;
+                            for (let i = 0, n = config.switch.length; i < n; i++) {
+                                if (!zs.product.get(config.switch[i])) {
+                                    skip = true;
+                                    break;
+                                }
+                            }
+                            if (skip) { continue; }
+                        } else if (!zs.product.get(config.switch)) {
+                            continue;
+                        }
+                    }
+                    this.exportWindow
+                        .applyConfig(config)
+                        .front();
+                }
+            }
+        }
+        checkBase(current) {
+            let data = zs.configs.productCfg[current];
+            if (data && data.base && data.base.length > 0) {
+                for (let i = 0, n = data.base.length; i < n; i++) {
+                    let config = data.base[i];
                     if (config.switch) {
                         if (Array.isArray(config.switch)) {
                             let skip = false;
@@ -305,7 +332,7 @@ window.zs = window.zs || {};
             } else {
                 this.entryInst = zs.base.entry.init(this.loadingPage ? this.loadingPage : zs.ui.Loading, this, this.ready);
             }
-            if (window.wx) {
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx !== 'undefined') {
                 loadLib("zsLibs/adapter/ald-game.js");
                 loadLib("zsLibs/adapter/h.js");
             }
