@@ -469,8 +469,6 @@ window.zs = window.zs || {};
             });
         }
         static onAppShow(result) {
-            zs.platform.sync.updateBanner();
-
             if (this.appShowListeners == null || this.appShowListeners.length <= 0) { return; }
             for (let i = 0, n = this.appShowListeners.length; i < n; i++) {
                 let listener = this.appShowListeners[i];
