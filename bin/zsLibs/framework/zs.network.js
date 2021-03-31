@@ -600,8 +600,8 @@ window.zs = window.zs || {};
         "https://gamesapi.zxmn2018.com"
     ];
     network.mapWebApi = {
-        "ping": "game/ping",
-        // "ping": "game/clientInfo",
+        // "ping": "game/ping",
+        "ping": "game/clientInfo",
         "login": "game/login",
         "config": "game/config",
         "update": "game/update",
