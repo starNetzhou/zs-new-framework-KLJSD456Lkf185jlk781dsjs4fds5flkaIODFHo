@@ -38,7 +38,6 @@ window.zs = window.zs || {};
             let sceneMask = this.sceneCheck(this.keys[product.switchScene]);
 
             for (let key in this.keys) {
-                if (!this.keys[key]) { continue; }
                 if (!sceneMask) {
                     this.keys[key] = null;
                     if (this._defines) {
@@ -49,7 +48,7 @@ window.zs = window.zs || {};
 
                 let sceneKey = key + this.sceneMark;
                 let sceneInfo = this.keys[sceneKey];
-                if (this.scene && sceneInfo) {
+                if (this.scene && sceneInfo && sceneInfo.length > 0) {
                     let sceneValue = this.sceneCheck(sceneInfo);
                     this.keys[key] = sceneValue;
                     if (this._defines) {
@@ -62,7 +61,7 @@ window.zs = window.zs || {};
                 let cityKey = key + this.cityMark;
                 let cityInfo = this.keys[cityKey];
 
-                if (this.city && cityInfo) {
+                if (this.city && cityInfo && cityInfo.length > 0) {
                     let cityValue = this.cityCheck(cityInfo);
                     this.keys[key] = cityValue;
                     if (this._defines) {
@@ -75,25 +74,38 @@ window.zs = window.zs || {};
                 let timeKey = key + this.timeMark;
                 let timeInfo = this.keys[timeKey];
 
-                if (this.timestamp && timeInfo) {
-                    let timeValue = this.timeCheck(timeInfo);
+                if (this.timestamp && timeInfo && timeInfo.length > 0) {
+                    let timeInfoSplit = timeInfo.split(/[|｜]/);
+                    let timeValue = 1;
+                    if (timeInfoSplit.length > 1) {
+                        timeValue = 0;
+                        for (let i = 0, n = timeInfoSplit.length; i < n; i++) {
+                            if (!this.timeCheck(timeInfoSplit[i])) {
+                                timeValue = i + 1;
+                                break;
+                            }
+                        }
+                    } else {
+                        timeValue = this.timeCheck(timeInfo);
+                    }
+
+                    console.log("time check " + key, timeValue);
+
                     this.keys[key] = timeValue;
                     if (this._defines) {
                         this._defines[key] = timeValue;
                     }
-
-                    if (!timeValue) { continue; }
                 }
             }
         }
         static cityCheck(cities) {
             if (!this.city || !cities || cities === "") { return 1; }
-            if (cities.split('|').indexOf(this.city) < 0) { return 1; }
+            if (cities.split(/[|｜]/).indexOf(this.city) < 0) { return 1; }
             return 0;
         }
         static sceneCheck(sceneVal) {
             if (!this.scene || !sceneVal || sceneVal === "") { return 1; }
-            if (sceneVal.split('|').indexOf(this.scene) < 0) { return 1; }
+            if (sceneVal.split(/[|｜]/).indexOf(this.scene) < 0) { return 1; }
             return 0;
         }
         static timeCheck(times) {
@@ -101,8 +113,8 @@ window.zs = window.zs || {};
             let timeSplit = times.split('-');
             if (timeSplit.length < 2) { return 1; }
 
-            let startTime = timeSplit[0].split(':');
-            let endTime = timeSplit[1].split(':');
+            let startTime = timeSplit[0].split(/[:：]/);
+            let endTime = timeSplit[1].split(/[:：]/);
 
             let date = new Date(this.timestamp);
             let hour = date.getHours();
