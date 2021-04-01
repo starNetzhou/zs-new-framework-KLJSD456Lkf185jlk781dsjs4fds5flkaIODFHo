@@ -404,8 +404,7 @@ window.zs = window.zs || {};
             zs.product.sync(switchs);
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
-            zs.platform.sync.initBanner();
-            zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") })
+            zs.platform.initAds();
             this.progress = 85;
 
             zs.log.debug("业务流程拼装", 'Core');
