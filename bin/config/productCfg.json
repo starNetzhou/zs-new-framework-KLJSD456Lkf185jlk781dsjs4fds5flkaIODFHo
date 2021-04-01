@@ -1,74 +1,51 @@
 {
     "GAME_START": {},
+    "START_FULL_1": {
+        "banner": {}
+    },
+    "START_FULL_2": {
+        "banner": {}
+    },
     "GAME_HOME": {
-        "banner": {
-            "auto": true
-        },
         "base": [
             {
-                "type": "block_view",
-                "base": {
-                    "Num": 5,
-                    "pos": {
-                        "top": 150,
-                        "centerX": 0
-                    }
-                }
-            },
-            {
-                "type": "more_game",
+                "type": "EXPORT_MORE_GAME",
+                "switch": "zs_jump_switch",
                 "window": {
                     "align": "left",
-                    "alignoffsety": -100
-                }
-            },
-            {
-                "type": "btn_invite",
-                "window": {
-                    "align": "left",
-                    "alignoffsety": 100
+                    "alignoffsetx": 30
                 }
             }
         ]
     },
     "GAME_PREPARE": {},
-    "QQ_OPEN_EGG": {},
-    "QQ_VIDEO": {},
-    "GAME_PLAY.PLAY": {
+    "EXPORT_COMMON_EGG": {
+        "banner": {}
+    },
+    "GAME_PLAY": {},
+    "EXPORT_GAME_EGG": {
+        "banner": {}
+    },
+    "OVER_FULL_1": {
+        "banner": {}
+    },
+    "GAME_SETTLE": {
         "banner": {
-            "auto": true,
-            "switch": "zs_game_banner_show_switch"
+            "delay": true
         },
-        "base": [
+        "exporter": [
             {
-                "type": "block_view",
-                "base": {
-                    "Num": 5,
-                    "pos": {
-                        "top": 150,
-                        "centerX": 0
-                    }
+                "type": "export_knock",
+                "switch": "zs_finish_jump",
+                "window": {
+                    "align": "center",
+                    "alignoffsety": -30
                 }
             }
         ]
     },
-    "QQ_OVER_EGG": {},
-    "GAME_SETTLE": {
-        "base": [
-            {
-                "type": "block_view",
-                "base": {
-                    "Num": 5,
-                    "pos": {
-                        "centerY": -120,
-                        "centerX": 0
-                    }
-                }
-            }
-        ],
-        "banner": {
-            "auto": true
-        }
+    "OVER_FULL_2": {
+        "banner": {}
     },
     "GAME_END": {}
 }

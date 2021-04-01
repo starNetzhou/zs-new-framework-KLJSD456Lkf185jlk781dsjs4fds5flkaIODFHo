@@ -1,11 +1,10 @@
 {
-    "debug": false,
-    "version": "2.0.0",
+    "debug": true,
     "appName": "逃出僵尸城",
     "gameId": "tcjsc",
-    "appId": "1111561903",
-    "secret": "lpRWESQdAtw8zs7h",
-    "tdConfig": "",
+    "appId": "ttc643b0fe597894a6",
+    "version": "2.0.0",
+    "secret": "dZPIQ6FCAyvVGzFK",
     "fguiPacks": [
         "fgui/main"
     ],
@@ -61,17 +60,10 @@
         }
     },
     "subpackages": {
-        "*3dres": "3dres",
-        "*sound": "sound"
+        "*3dres": "3dres"
     },
     "resources": {
-        "configs": {
-            "nick": [
-                "config/nickname.json",
-                null,
-                true
-            ]
-        },
+        "configs": {},
         "prefabs": {}
     }
 }
