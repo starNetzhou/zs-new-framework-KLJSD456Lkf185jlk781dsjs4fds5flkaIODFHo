@@ -1,60 +1,29 @@
 {
     "GAME_START": {},
-    "START_FULL_1": {
-        "banner": {}
-    },
-    "START_FULL_2": {
-        "banner": {}
-    },
     "GAME_HOME": {
-        "banner": {},
-        "base": [],
-        "exporter": [
+        "banner": {
+            "auto": true
+        },
+        "base": [
             {
-                "type": "export_list",
-                "window": {
-                    "align": "topleft",
-                    "alignoffsety": 500
-                },
+                "type": "block_view",
                 "base": {
-                    "item": "export_item_2",
-                    "mode": "side",
-                    "width": 300,
-                    "max": 2,
-                    "shaketime": 3000
+                    "Num": 5,
+                    "pos": {
+                        "top": 150,
+                        "centerX": 0
+                    }
                 }
             },
             {
-                "type": "export_list",
+                "type": "more_game",
                 "window": {
-                    "align": "topright",
-                    "alignoffsety": 500
-                },
-                "base": {
-                    "item": "export_item_2",
-                    "mode": "side",
-                    "width": 300,
-                    "max": 2,
-                    "shaketime": 3000
+                    "align": "left",
+                    "alignoffsety": -100
                 }
             },
             {
-                "type": "export_list",
-                "window": {
-                    "align": "top",
-                    "alignoffsety": 95
-                },
-                "base": {
-                    "item": "export_item_7",
-                    "mode": "hlist",
-                    "height": 270,
-                    "max": 10,
-                    "marginleft": 10,
-                    "marginright": 10
-                }
-            },
-            {
-                "type": "export_side",
+                "type": "btn_invite",
                 "window": {
                     "align": "left",
                     "alignoffsety": 100
@@ -63,54 +32,43 @@
         ]
     },
     "GAME_PREPARE": {},
-    "EXPORT_COMMON_EGG": {
-        "banner": {}
-    },
+    "QQ_OPEN_EGG": {},
+    "QQ_VIDEO": {},
     "GAME_PLAY.PLAY": {
         "banner": {
+            "auto": true,
             "switch": "zs_game_banner_show_switch"
         },
-        "exporter": [
+        "base": [
             {
-                "type": "export_list",
-                "window": {
-                    "align": "top",
-                    "alignoffsety": 140
-                },
+                "type": "block_view",
                 "base": {
-                    "item": "export_item_7",
-                    "mode": "hlist",
-                    "height": 270,
-                    "max": 10,
-                    "marginleft": 10,
-                    "marginright": 10
+                    "Num": 5,
+                    "pos": {
+                        "top": 150,
+                        "centerX": 0
+                    }
                 }
             }
         ]
     },
-    "EXPORT_GAME_EGG": {
-        "banner": {}
-    },
-    "OVER_FULL_1": {
-        "banner": {}
-    },
+    "QQ_OVER_EGG": {},
     "GAME_SETTLE": {
-        "banner": {
-            "delay": true
-        },
-        "exporter": [
+        "base": [
             {
-                "type": "export_knock",
-                "switch": "zs_finish_jump",
-                "window": {
-                    "align": "center",
-                    "alignoffsety": -30
+                "type": "block_view",
+                "base": {
+                    "Num": 5,
+                    "pos": {
+                        "centerY": -120,
+                        "centerX": 0
+                    }
                 }
             }
-        ]
-    },
-    "OVER_FULL_2": {
-        "banner": {}
+        ],
+        "banner": {
+            "auto": true
+        }
     },
     "GAME_END": {}
 }

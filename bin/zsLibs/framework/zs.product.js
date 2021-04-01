@@ -9,10 +9,15 @@ window.zs = window.zs || {};
             return this._keys;
         }
 
+        static cleanProductKey(value) {
+            return value.replace(/\s/g, "").replace('（', '(').replace('）', ')');
+        }
+
         static init(productDef) {
             if (productDef == null) { return; }
             this._defines = productDef;
             for (let key in productDef) {
+                key = this.cleanProductKey(key);
                 if (zs.configs.gameCfg.pure) {
                     this.keys[key] = null;
                     this._defines[key] = null;
@@ -46,7 +51,7 @@ window.zs = window.zs || {};
                     continue;
                 }
 
-                let sceneKey = key + this.sceneMark;
+                let sceneKey = key + '(' + this.sceneMark + ')';
                 let sceneInfo = this.keys[sceneKey];
                 if (this.scene && sceneInfo && sceneInfo.length > 0) {
                     let sceneValue = this.sceneCheck(sceneInfo);
@@ -58,9 +63,8 @@ window.zs = window.zs || {};
                     if (!sceneValue) { continue; }
                 }
 
-                let cityKey = key + this.cityMark;
+                let cityKey = key + '(' + this.cityMark + ')';
                 let cityInfo = this.keys[cityKey];
-
                 if (this.city && cityInfo && cityInfo.length > 0) {
                     let cityValue = this.cityCheck(cityInfo);
                     this.keys[key] = cityValue;
@@ -71,9 +75,8 @@ window.zs = window.zs || {};
                     if (!cityValue) { continue; }
                 }
 
-                let timeKey = key + this.timeMark;
+                let timeKey = key + '(' + this.timeMark + ')';
                 let timeInfo = this.keys[timeKey];
-
                 if (this.timestamp && timeInfo && timeInfo.length > 0) {
                     let timeInfoSplit = timeInfo.split(/[|｜]/);
                     let timeValue = 1;
@@ -89,8 +92,6 @@ window.zs = window.zs || {};
                         timeValue = this.timeCheck(timeInfo);
                     }
 
-                    console.log("time check " + key, timeValue);
-
                     this.keys[key] = timeValue;
                     if (this._defines) {
                         this._defines[key] = timeValue;
@@ -100,12 +101,12 @@ window.zs = window.zs || {};
         }
         static cityCheck(cities) {
             if (!this.city || !cities || cities === "") { return 1; }
-            if (cities.split(/[|｜]/).indexOf(this.city) < 0) { return 1; }
+            if (cities.replace(/\s/g, "").split(/[|｜]/).indexOf(this.city) < 0) { return 1; }
             return 0;
         }
         static sceneCheck(sceneVal) {
             if (!this.scene || !sceneVal || sceneVal === "") { return 1; }
-            if (sceneVal.split(/[|｜]/).indexOf(this.scene) < 0) { return 1; }
+            if (sceneVal.replace(/\s/g, "").split(/[|｜]/).indexOf(this.scene) < 0) { return 1; }
             return 0;
         }
         static timeCheck(times) {
@@ -154,6 +155,7 @@ window.zs = window.zs || {};
         }
         static registe(key, define) {
             if (define == null) { return; }
+            key = this.cleanProductKey(key);
 
             let def = this.keys[key];
             if (def == null || (typeof def === typeof define)) {
@@ -173,6 +175,7 @@ window.zs = window.zs || {};
             }
         }
         static get(key) {
+            key = this.cleanProductKey(key);
             let def = this.keys[key];
             if (typeof def === 'function') {
                 return def.call(this);
@@ -189,9 +192,9 @@ window.zs = window.zs || {};
     product.timestamp = null;
     product.firstSceneCache = "first_enter_scene";
     product.switchScene = 'zs_scene_value';
-    product.sceneMark = '(scene)'
-    product.cityMark = '(city)';
-    product.timeMark = '(time)';
+    product.sceneMark = 'scene'
+    product.cityMark = 'city';
+    product.timeMark = 'time';
 
     exports.product = product;
 }(window.zs = window.zs || {}));
