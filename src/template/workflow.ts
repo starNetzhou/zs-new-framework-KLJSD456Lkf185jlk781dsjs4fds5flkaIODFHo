@@ -267,7 +267,6 @@ export default class workflow extends zs.workflow {
         console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
         if (ProductKey.zs_false_news_switch) {
             this.fakeMsg();
-            console.log(this.windowExport);
         }
     }
 
