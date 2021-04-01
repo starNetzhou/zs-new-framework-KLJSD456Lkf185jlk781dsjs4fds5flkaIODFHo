@@ -658,7 +658,10 @@ declare module zs {
          * @param key 接口名 
          */
         static get(key: string): any;
-        
+        /**
+         * 时间段检查
+         * @param value 时间值
+         */
         static timeCheck(value: string): number;
     }
 
