@@ -9,13 +9,13 @@ window.zs.platform = window.zs.platform || {};
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
-        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showShareMenu',
+        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
         'openShare', 'isVideoEnable', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
         'hideBlockAd', 'showInsertAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
-        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'showGamePortalAd',
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple', 'showGamePortalAd',
         'hasDesktopIcon', 'createDesktopIcon', 'isColorSignExistSync', 'addRecentColorSign', 'getSetting'];
 
     function init() {
@@ -55,7 +55,6 @@ window.zs.platform = window.zs.platform || {};
     function initAds() {
         proxy && (proxy.initAds());
     }
-
     class async { }
     class sync { }
 
