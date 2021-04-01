@@ -15,7 +15,6 @@ export default class mainPage extends zs.fgui.base {
     }
 
     init() {
-        console.log("mainPage init");
         let view = this.view as fgui_entity;
         view.img.touchable = true;
         view.txt.onClick(this, () => {
