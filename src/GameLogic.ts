@@ -18,7 +18,7 @@ export default class GameLogic extends Laya.Script {
 
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
-        
+
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")
@@ -33,6 +33,7 @@ export default class GameLogic extends Laya.Script {
         });
 
         zs.core.onPrepare = Laya.Handler.create(this, async () => {
+            console.log(fairygui.GRoot.inst.width + " : " + fairygui.GRoot.inst.height);
             zs.scene.nodesDef = GameNode;
             zs.scene.inst.load('3dres/Conventional/TestScene.ls', true).then(() => {
                 zs.core.readyFinish();
@@ -98,6 +99,7 @@ export default class GameLogic extends Laya.Script {
             } else {
                 this.gameExporter = zs.fgui.window.create()
                     .attach(mainPage)
+                    .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
                     .fit()
                     .update<mainPage>(mainPage, (unit) => {
                         console.log(unit);

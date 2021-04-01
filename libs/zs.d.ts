@@ -658,6 +658,11 @@ declare module zs {
          * @param key 接口名 
          */
         static get(key: string): any;
+        /**
+         * 时间段检查
+         * @param value 时间值
+         */
+        static timeCheck(value: string): number;
     }
 
     /**
@@ -1414,6 +1419,10 @@ declare module zs.platform {
      * 初始化方法（无需主动调用）
      */
     function init();
+    /**
+     * 初始化广告接口（无需主动调用）
+     */
+    function initAds();
 
     /**
      * 异步调用类
@@ -1689,9 +1698,9 @@ declare module zs.platform {
          */
         static setDefaultShare(params?: any): any;
         /**
-         * 
-         * @param type 
-         */
+        * 
+        * @param type 
+        */
         static updateReviveTypeInfo(type);
         /**
          * 设置原生最后显示的时间
@@ -1748,6 +1757,83 @@ declare module zs.platform {
          * @param params 
          */
         static initBannerId(params: any);
+        /**
+        * 初始化分享菜单
+        * @param title 标题
+        * @param imageUrl 图片地址
+        */
+        static showShareMenu(title, imageUrl): any;
+        /**
+        * 打开分享
+        * @param title 标题
+        * @param imageUrl 图片地址
+        * @param failedFunc 失败函数
+        */
+        static openShare(title, imageUrl, failedFunc): any;
+        /**
+        * 
+        * @param params 
+        */
+        static isVideoEnable(params?: any): any;
+        /**
+        * 
+        * @param params 
+        */
+        static getReadSetting(params?: any): any;
+        /**
+        * 
+        * @param params 
+        */
+        static playSound(params?: any): any;
+        /**
+         * 
+         * @param params 
+         */
+        static initAppBox(params?: any): any;
+        /**
+         * 
+         * @param params 
+         */
+        static showAppBox(closeFunc?: Function, errFunc?: Function): any;
+        /**初始化积木广告
+      * @param blockAdUnit ID
+      * @param orient 方向 landscape或null 横 vertical 竖
+      * @param Num 展示数量
+      * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
+      * @param loadFunc 加载后的回调 
+      */
+        static showToast(text: string, time?: number);
+        static checkBlockAd(blockAdUnit, orient, Num, pos, loadFunc): any;
+        /**
+          * 
+          * @param params 
+          */
+        static showBlockAd(params?: any): any;
+        /**
+          * 
+          * @param params 
+          */
+        static hideBlockAd(params?: any): any;
+        /**
+         * 
+         * @param params 
+         */
+        static showInsertAd(params?: any): any;
+        /**
+         * 
+         * @param params 
+         */
+        static destroyInsertAd(params?: any): any;
+        /**
+        * 
+        * @param params 
+        */
+        static pauseSound(params?: any): any;
+        /**
+         * 
+         * @param params 
+         */
+        static getAdPos(params?: any): any;
     }
 }
 

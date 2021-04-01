@@ -456,7 +456,7 @@ export default class workflow extends zs.workflow {
                         }))
                         .apply();
                 })
-                .align(zs.fgui.AlignType.Center)
+                .align(zs.fgui.AlignType.Top)
                 .front();
         }
         return this.windowExport;
