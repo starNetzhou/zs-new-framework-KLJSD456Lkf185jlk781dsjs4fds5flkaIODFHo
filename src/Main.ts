@@ -34,6 +34,7 @@ class Main {
 
 	async onConfigLoaded() {
 		zs.core.loadingPage = Loading;
+		// Laya UI兼容
 		// zs.core.layaLoadingPage = LayaLoading;
 		Laya.stage.addComponent(GameLogic);
 	}

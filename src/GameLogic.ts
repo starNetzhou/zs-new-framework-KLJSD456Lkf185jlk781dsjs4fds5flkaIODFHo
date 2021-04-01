@@ -18,7 +18,6 @@ export default class GameLogic extends Laya.Script {
 
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
-
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")
@@ -46,10 +45,10 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_PREPARE");
         }));
+
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
         }));
-
         zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY START");
         }));
