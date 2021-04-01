@@ -1,28 +1,11 @@
 {
-    "debug": true,
-    "pure": false,
-    "appName": "开车撞僵尸",
-    "version": "v1",
-    "gameId": "kczjs",
-    "appId": "wxa2df5b7d70ffadd1",
-    "tdKey": "85C4C654EC184EA984CD3D62CB646ADD",
-    "tdVersion": "1.0.0",
-    "aldKey": "3d2a2aa3e82651cc2b74df3a47b96e21",
-    "secret": "dZPIQ6FCAyvVGzFK",
-    "tdConfig": {
-        "gameComplete": {
-            "label": "完成游戏",
-            "params": [
-                "uid",
-                "isWin",
-                "level"
-            ],
-            "strict": true
-        },
-        "levelComplete_": {
-            "label": "关卡完成-"
-        }
-    },
+    "debug": false,
+    "version": "1.0.0",
+    "appName": "逃出僵尸城",
+    "gameId": "tcjsc",
+    "appId": "1111561903",
+    "secret": "lpRWESQdAtw8zs7h",
+    "tdConfig": "",
     "fguiPacks": [
         "fgui/main"
     ],
@@ -51,8 +34,8 @@
             "zs_reminder_switch": 0,
             "zs_false_news_switch": 0,
             "zs_slide_jump_switch": 0,
-            "zs_share_title": "",
-            "zs_share_img": "",
+            "zs_share_title": "这个是分享标题",
+            "zs_share_img": "这个是分享图片地址",
             "zs_banner_adunit": "",
             "zs_banner_adunit2": "",
             "zs_banner_adunit3": "",
@@ -68,7 +51,7 @@
             "zs_revive_num": 0,
             "zs_system": "",
             "zs_city": "上海市|广州市|深圳市|成都市|北京市",
-            "zs_time": "",
+            "zs_time": 0,
             "zs_banner_banner_time": 1000,
             "zs_full_screen_banner_time": 3,
             "zs_banner_refresh_time": 30000
@@ -78,10 +61,8 @@
         }
     },
     "subpackages": {
-        "*3dres": "3dres/",
-        "*sound": "sound/",
-        "*main": "fgui/main/",
-        "*entry": "fgui/entry/"
+        "*3dres": "3dres",
+        "*sound": "sound"
     },
     "resources": {
         "configs": {

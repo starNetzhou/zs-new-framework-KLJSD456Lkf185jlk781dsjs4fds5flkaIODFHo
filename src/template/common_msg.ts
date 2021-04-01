@@ -1,4 +1,4 @@
-import FGUI_common_msg from "./export/FGUI_common_msg";
+import FGUI_common_msg from "./fgui/FGUI_common_msg";
 
 export default class msgbox extends zs.fgui.base {
 

@@ -12,10 +12,9 @@ loadLib("libs/laya.core.js")
 loadLib("libs/laya.d3.js")
 loadLib("libs/laya.physics3D.js")
 //-----libs-end-------
-if (typeof wx !== "undefined") {
-    loadLib("zsLibs/adapter/tdweapp.js")
-    loadLib("zsLibs/adapter/zs.wx.banner.js")
-    loadLib("zsLibs/adapter/zs.platform.wx.js")
+if (typeof qq !== "undefined") {
+    loadLib("zsLibs/adapter/zs.qq.banner.js")
+    loadLib("zsLibs/adapter/zs.platform.qq.js")
 }
 loadLib("zsLibs/adapter/zs.platform.config.js")
 loadLib("zsLibs/framework/zs.log.js")

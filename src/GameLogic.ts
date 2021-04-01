@@ -18,7 +18,6 @@ export default class GameLogic extends Laya.Script {
 
         this.workflow = new workflow;
         zs.core.workflow = this.workflow;
-        
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")
@@ -43,18 +42,10 @@ export default class GameLogic extends Laya.Script {
             console.log("Workflow ====== GAME_START");
         }));
 
-        zs.core.onWorkflow(workflow.START_FULL_1, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== START_FULL_1");
-        }));
-        zs.core.onWorkflow(workflow.START_FULL_2, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== START_FULL_2");
-        }));
         zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_PREPARE");
         }));
-        zs.core.onWorkflow(workflow.EXPORT_COMMON_EGG, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== EXPORT_COMMON_EGG");
-        }));
+
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
         }));
@@ -73,17 +64,9 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY END");
         }));
-        zs.core.onWorkflow(workflow.EXPORT_GAME_EGG, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== EXPORT_GAME_EGG");
-        }));
-        zs.core.onWorkflow(workflow.OVER_FULL_1, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== OVER_FULL_1");
-        }));
+
         zs.core.onWorkflow(workflow.GAME_SETTLE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_SETTLE");
-        }));
-        zs.core.onWorkflow(workflow.OVER_FULL_2, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== OVER_FULL_2");
         }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_END");
