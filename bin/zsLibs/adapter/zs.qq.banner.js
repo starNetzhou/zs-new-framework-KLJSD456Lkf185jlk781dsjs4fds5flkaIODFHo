@@ -19,6 +19,7 @@ window.zs.qq = window.zs.qq || {};
             this.loadTimer = setTimeout(function () { console.log("加载超时"); s.destroy() }, 10000);
             this.showTime = 0;
             this.birthTime = 0;
+            this.inErr = false;
         }
         /**生存时间 */
         get liveTime() {
@@ -68,7 +69,7 @@ window.zs.qq = window.zs.qq || {};
             this.bannerAd.onError(function (err) {
                 console.error("Banner err:", err);
                 QQBannerMgr.Instance.inErr();
-                s.destroy();
+                s.inErr = true;
             });
 
             this.bannerAd.onResize(this.onResize.bind(this));
@@ -89,13 +90,15 @@ window.zs.qq = window.zs.qq || {};
             this.isWait = false;
             var s = this;
             this.updatePosition();
-            this.bannerAd.show().then(function () {
-                console.warn("banner标号" + s.bannerIndex + "展示成功,当前已展示时间" + s.showLong);
-                s.showTime = new Date().getTime();
-                if (s.isWait) {
-                    s.hide();
-                }
-            });
+            try {
+                this.bannerAd.show().then(function () {
+                    console.warn("banner标号" + s.bannerIndex + "展示成功,当前已展示时间" + s.showLong);
+                    s.showTime = new Date().getTime();
+                    if (s.isWait) { s.hide(); }
+                });
+            } catch (e) {
+                console.log("banner报错了");
+            }
         }
         //正常展示位置
         updatePosition() {
@@ -124,8 +127,14 @@ window.zs.qq = window.zs.qq || {};
             this.isLoad = null;
             this.isShow = null;
             this.isWait = null;
+            this.loadTimer && clearTimeout(this.loadTimer);
+            this.pos = null;
+            this.loadFunc = null;
+            this.showLong = null;
+            this.birthTime = null;
             this.loadTimer = null;
             this.showTime = null;
+            this.inErr = null;
         }
 
         updateY(top) {
@@ -209,12 +218,16 @@ window.zs.qq = window.zs.qq || {};
             let eNum = 0;
             for (let i = this.qqbannerArray.length - 1; i >= 0; i--) {
                 let banner = this.qqbannerArray[i];
+                if (banner.inErr) {
+                    banner.destroy();
+                    console.log("banner" + banner.bannerIndex + "报错了");
+                }
                 if (this.qqbannerArray.length > 5 && banner.showEd && banner.liveTime > 30000) {
                     console.log("banner" + banner.bannerIndex + "生存时长超30s并已展示时长" + banner.showLong);
                     banner.destroy();
                 }
                 if (!banner.bannerAd) {
-                    console.log("banner已销毁");
+                    console.log("banner" + banner.bannerIndex + "已销毁");
                     this.qqbannerArray.splice(i, 1);
                     continue;
                 }
