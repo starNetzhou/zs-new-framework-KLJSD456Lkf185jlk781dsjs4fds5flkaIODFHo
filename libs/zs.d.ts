@@ -50,6 +50,10 @@ declare module zs {
          */
         debug: boolean,
         /**
+         * 纯净模式开关
+         */
+        pure: boolean,
+        /**
          * 项目名称
          */
         appName: string,
@@ -187,11 +191,40 @@ declare module zs {
          */
         Sync = 2
     }
-
+    /**
+     * 显示消息提示框
+     * @param params 提示框信息
+     */
+    function showMsgBox(params: msgboxParams);
+    /**
+     * 隐藏消息提示框
+     * @param isClear 清空消息队列
+     */
+    function hideMsgBox(isClear?: boolean);
     /**
      * 工作流
      */
     class workflow {
+        /**
+         * 列表导出位模板名称
+         */
+        static readonly exporterList: string;
+        /**
+         * 卡片导出位模板名称
+         */
+        static readonly exporterCard: string;
+        /**
+         * 导出位忽略列表
+         */
+        exporterIgnoreList: string[];
+        /**
+         *  横幅广告忽略列表
+         */
+        bannerIgnoreList: string[];
+        /**
+         * 导出开关名称
+         */
+        switchExporter: string;
         /**
          * 状态机实例
          */
@@ -201,6 +234,14 @@ declare module zs {
          */
         exporterPack: string;
         /**
+         * 获取工作流状态
+         */
+        get state(): string;
+        /**
+         * 获取工作流子状态
+         */
+        get childState(): string;
+        /**
          * 注册方法（无需主动调用），虚方法，用于自定义工作流
          */
         registe();
@@ -208,6 +249,12 @@ declare module zs {
          * 开始方法（无需主动调用）
          */
         start();
+        /**
+         * 设置子状态机
+         * @param key 父状态名
+         * @param fsm 子状态机
+         */
+        setFSM(key: string, fsm: zs.fsm);
         /**
          * 注册工作流监听，用于监听工作流状态改变
          * @param key 状态名
@@ -227,6 +274,11 @@ declare module zs {
          * @param target （可选）目标状态名，默认自动跳转
          */
         next(target?: string);
+        /**
+         * 子状态跳转 
+         * @param target （可选）目标状态名，默认自动跳转
+         */
+        childNext(target?: string);
     }
 
     /**
@@ -286,6 +338,11 @@ declare module zs {
          * 未设置将默认使用模板加载页面
          */
         static loadingPage: typeof zs.ui.Loading;
+        /**
+         * 自定义LayaUI加载页面类（优先级低于loadingPage）
+         * 未设置将默认使用模板加载页面
+         */
+        static layaLoadingPage: typeof zs.ui.LayaLoading;
 
         /**
          * 框架初始化方法
@@ -370,6 +427,12 @@ declare module zs {
          * @param canBreak （可选）状态是否可被中途打断
          */
         registe(from: string, to: string, priority?: number, auto?: boolean, thisObj?: any, transition?: (complete: Laya.Handler) => void, condition?: () => boolean, canBreak?: boolean): fsm;
+        /**
+         * 设置状态机默认值
+         * @param state 默认状态
+         * @param auto 默认自动状态
+         */
+        setDefault(state: string, auto?: boolean): fsm;
         /**
          * 注销状态
          * @param from 开始状态名
@@ -595,8 +658,6 @@ declare module zs {
          * @param key 接口名 
          */
         static get(key: string): any;
-
-        static timeCheck(time);
     }
 
     /**
@@ -940,6 +1001,34 @@ declare module zs.ui {
          */
         run(progress);
     }
+
+    /**
+     * LayaUI加载页面
+     * 用于兼容Laya UI
+     **/
+    class LayaLoading extends Laya.Script {
+        /**
+         * Loading创建方法
+         */
+        static make(): LayaLoading;
+        /**
+         * 加载进度
+         */
+        progress: number;
+        /**
+         * （虚方法）预加载方法，主要用于预加载loading资源包
+         */
+        preload(): Promise<void>;
+        /**
+         * 更新进度
+         * @param value 
+         */
+        updateProgress(value: number);
+        /**
+         * 执行进度
+         */
+        run(progress);
+    }
 }
 /**
  * 模板类
@@ -970,11 +1059,11 @@ declare module zs.base {
 }
 
 interface msgboxParams {
-    title?: string,
-    content?: string,
-    comfireText?: string,
+    title: string,
+    content: string,
+    confirmText?: string,
     cancelText?: string,
-    comfireHandler?: Laya.Handler,
+    confirmHandler?: Laya.Handler,
     cancelHandler?: Laya.Handler,
     hideCancel?: boolean
 }
@@ -1399,6 +1488,34 @@ declare module zs.platform {
          * @param params 
          */
         static playVideo(params?: any): any;
+        /**
+         * oppo 加载原生
+         */
+        static loadNativeAd(): Promise<any>;
+        /**
+         * oppo 是否在游戏之前展示
+         */
+        static isBeforeGameAccount(): Promise<any>;
+        /**
+         * oppo 获取上报状态
+         */
+        static getAdReporteStatus(adUnit): Promise<any>;
+        /**
+         * oppo 显示原生更多好玩
+         */
+        static showGamePortalAd(): Promise<any>;
+        /**
+         * 判断是否有桌面图标
+         */
+        static hasDesktopIcon(): Promise<any>;
+        /**
+         * 创建桌面图标
+         */
+        static createDesktopIcon(): Promise<any>;
+        /**
+         * 获取网络类型
+         */
+        static getNetworkType(): Promise<any>;
     }
 
     /**
@@ -1456,6 +1573,16 @@ declare module zs.platform {
          */
         static initBanner(params?: any): any;
         /**
+         * 检查横幅广告
+         * @param params 
+         */
+        static checkBanner(params?: any): any;
+        /**
+         * 清理延迟展示横幅广告
+         * @param params 
+         */
+        static clearDelayBanner(params?: any): any;
+        /**
          * 显示横幅广告
          * @param params 
          */
@@ -1465,6 +1592,11 @@ declare module zs.platform {
          * @param params 
          */
         static updateBanner(params?: any): any;
+        /**
+         * 更新横幅广告位置
+         * @param params 
+         */
+        static updateBannerPos(params?: any): any;
         /**
          * 隐藏横幅广告
          * @param params 
@@ -1560,6 +1692,66 @@ declare module zs.platform {
          * @param params 
          */
         static setDefaultShare(params?: any): any;
+        /**
+        * 
+        * @param type 
+        */
+        static updateReviveTypeInfo(type);
+        /**
+         * 设置原生最后显示的时间
+         * @param time 
+         */
+        static setNativeLastShowTime(time: Number);
+        /**
+        * oppo 初始化原生
+        */
+        static initNativeAd({ id: any });
+        /**
+        * oppo 原生请求显示上报
+        * @param adIcon 
+        * @param adId 
+        */
+        static sendReqAdShowReport(adIcon, adId);
+        /**
+         * oppo 原生请求点击上报
+         * @param adIcon 
+         * @param adId 
+         */
+        static sendReqAdClickReport(adIcon, adId);
+        /**
+         * 原生平台弹窗
+         * @param val 
+         * @param time 
+         */
+        static showToast(val, time?);
+        /**
+         * oppo 设置一分钟内展不展示广告
+         * @param val 
+         */
+        static setIsInOneMin(val);
+        /**
+         * oppo 获取一分钟之内展示不展示广告
+         * @returns bool = true 不展示广告 false 正常展示广告
+         */
+        static getIsInOneMin(): boolean;
+        /**
+         * 获取平台登陆信息
+         */
+        static getLaunchOptions(): any;
+        /**
+         * 获取平台场景值
+         */
+        static getScene(): string;
+        /**
+         * 显示插屏广告
+         * @param params 
+         */
+        static showInsertAd(params: any);
+        /**
+         * 初始化横幅广告ID
+         * @param params 
+         */
+        static initBannerId(params: any);
         /**
         * 初始化分享菜单
         * @param title 标题
