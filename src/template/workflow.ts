@@ -62,8 +62,8 @@ export default class workflow extends zs.workflow {
     _challengeExport: exporter_friend_challenge;
     _fakeMsg: exporter_fake_msg;
     _fakeExit: exporter_fake_exit;
-    _commonEgg: zs.ad.egg;
-    _gameEgg: zs.ad.egg;
+    _commonEgg: ad_egg;
+    _gameEgg: ad_egg;
 
     commonMsgList: zs.fgui.window[];
 

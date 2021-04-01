@@ -1873,13 +1873,6 @@ interface ExporterDataList {
     iosLinkAd: ExporterData[]
 }
 
-declare module zs.ad {
-    class egg extends zs.fgui.base {
-        setCloseCallback(callback: Laya.Handler): egg;
-        apply(): egg;
-    }
-}
-
 /**
  * 导出模块
  */
