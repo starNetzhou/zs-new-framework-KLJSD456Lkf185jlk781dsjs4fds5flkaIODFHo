@@ -18,10 +18,15 @@ window.platform = (function () {
             })
             updateManager.onUpdateReady(() => {
                 // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
-                updateManager.applyUpdate()
+                updateManager.applyUpdate();
             })
         }
         console.log("微信平台初始化...");
+    }
+
+    platform.initAds() = function () {
+        platform.initBanner();
+        platform.initVideo({ id: zs.product.get("zs_video_adunit") });
     }
 
     platform.login = function _async() {
