@@ -1521,6 +1521,14 @@ declare module zs.platform {
          * 获取网络类型
          */
         static getNetworkType(): Promise<any>;
+        /**
+         * 弹出头条小游戏盒子界面
+         */
+        static showMoreGamesModalSimple(): Promise<any>;
+        /**
+         * 分享录屏
+         */
+        static shareRecorderVideo(): Promise<any>;
     }
 
     /**
@@ -1602,6 +1610,11 @@ declare module zs.platform {
          * @param params 
          */
         static updateBannerPos(params?: any): any;
+        /**
+         * 显示单像素banner
+         * @param params 
+         */
+        static showOnePixelBanner(params?: any): any;
         /**
          * 隐藏横幅广告
          * @param params 
@@ -1957,6 +1970,13 @@ interface ExporterDataList {
      * ios跳转列表
      */
     iosLinkAd: ExporterData[]
+}
+
+declare module zs.ad {
+    class egg extends zs.fgui.base {
+        setCloseCallback(callback: Laya.Handler): egg;
+        apply(): egg;
+    }
 }
 
 /**
