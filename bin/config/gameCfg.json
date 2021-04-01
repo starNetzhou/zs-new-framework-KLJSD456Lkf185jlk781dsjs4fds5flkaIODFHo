@@ -61,17 +61,10 @@
         }
     },
     "subpackages": {
-        "*3dres": "3dres",
-        "*sound": "sound"
+        "*3dres": "3dres"
     },
     "resources": {
-        "configs": {
-            "nick": [
-                "config/nickname.json",
-                null,
-                true
-            ]
-        },
+        "configs": {},
         "prefabs": {}
     }
 }
