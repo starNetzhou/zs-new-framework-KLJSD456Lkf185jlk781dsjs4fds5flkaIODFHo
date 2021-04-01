@@ -11,6 +11,10 @@ window.platform = (function () {
         });
         //-----------------------------------------------------
     }
+    platform.initAds = function () {
+        zs.platform.sync.initBanner();
+        zs.platform.sync.initVideo({ id: zs.product.get("zs_video_adunit") });
+    }
     platform.login = function _async() {
         return new Promise((resolve, reject) => {
             qg.login({
