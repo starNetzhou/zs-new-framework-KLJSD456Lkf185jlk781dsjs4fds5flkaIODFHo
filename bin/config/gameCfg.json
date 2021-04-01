@@ -60,8 +60,7 @@
         }
     },
     "subpackages": {
-        "*3dres": "3dres/",
-        "*sound": "sound/"
+        "*3dres": "3dres/"
     },
     "resources": {
         "configs": {},

@@ -413,6 +413,15 @@ window.zs.fgui = window.zs.fgui || {};
                 if (childIdx >= 0) {
                     root.setChildIndex(this.window, root.numChildren - 1);
                 }
+
+                if (msgbox.windowInst.isShowing()) {
+                    let msgboxWindow = msgbox.windowInst.window;
+                    let root = msgboxWindow.root;
+                    let childIdx = root.getChildIndex(msgboxWindow);
+                    if (childIdx >= 0) {
+                        root.setChildIndex(msgboxWindow, root.numChildren - 1);
+                    }
+                }
             }
             return this;
         }
