@@ -1429,28 +1429,72 @@ declare module zs.platform {
      */
     class async {
         /**
-         * 登录接口
-         * @param params 
+         * 登录接口 (wx)
+         * wx
+         * then 成功信息
+         * catch 失败信息
          */
         static login(params?: any): Promise<any>;
         /**
-         * 写入云存储
+         * 获取登录参数 (wx)
+         * wx
+         * then 登录code
          * @param params 
+         */
+        static getLoginParams(params?: any): Promise<any>;
+        /**
+         * 网络请求 (wx)
+         * wx
+         * url string URL地址
+         * data any 参数信息
+         * method string 请求方法（POST、GET等）
+         */
+        static request(params?: any): Promise<any>;
+        /**
+         * 播放视频广告 (wx)
+         * wx
+         * then 播放关闭，返回bool， true为完成播放，false为中断播放
+         * catch 播放失败， 返回错误信息
+         */
+        static playVideo(params?: any): Promise<any>;
+        /**
+         * 写入云存储 (wx)
+         * wx
+         * kvPair any 存储键值对
          */
         static setCloudStorage(params?: any): Promise<any>;
         /**
-         * 读取云存储
-         * @param params 
+         * 读取云存储 (wx)
+         * wx
+         * keyList string[] 键列表
          */
         static getCloudStorage(params?: any): Promise<any>;
         /**
-         * 创建用户信息权限
-         * @param params 
+         * 创建用户信息权限 (wx)
+         * wx
+         * rect { 弹出窗口尺寸
+         *  x number X偏移百分比
+         *  y number Y偏移百分比
+         *  width number 宽度百分比
+         *  height number 高度百分比
+         * }
          */
         static userInfoCreate(params?: any): Promise<any>;
         /**
-         * 加载分包
-         * @param params 
+         * 导出跳转 (wx)
+         * wx
+         * appInfo { 导出信息
+         *  appid string 导出ID
+         *  link_path string 链接路径
+         *  extraData any 额外数据
+         * }
+         */
+        static navigateToOther(params?: any): Promise<any>;
+        /**
+         * 加载分包 (wx)
+         * wx
+         * pkgName string 分包名称
+         * progressHandler? Handler 分包加载进度回调,返回进度number
          */
         static loadSubpackage(params?: any): Promise<any>;
         /**
@@ -1483,16 +1527,6 @@ declare module zs.platform {
          * @param params 
          */
         static checkFollowAwemeSta(params?: any): Promise<any>;
-        /**
-         * 导出跳转
-         * @param params 
-         */
-        static navigateToOther(params?: any): any;
-        /**
-         * 播放视频广告
-         * @param params 
-         */
-        static playVideo(params?: any): any;
         /**
          * oppo 加载原生
          */
@@ -1536,160 +1570,181 @@ declare module zs.platform {
      */
     class sync {
         /**
-         * 分享接口
-         * @param params 
+         * 分享接口 (wx)
+         * wx 
+         * title string 标题
+         * imgUrl string 图片URL
          */
         static share(params?: any): any;
         /**
-         * 隐藏用户信息窗口
-         * @param params 
+         * 隐藏用户信息窗口 (wx)
          */
         static userInfoHide(params?: any): any;
         /**
-         * 显示用户信息窗口
-         * @param params 
+         * 显示用户信息窗口 (wx)
          */
         static userInfoShow(params?: any): any;
         /**
-         * 销毁用户信息窗口
-         * @param params 
+         * 销毁用户信息窗口 (wx)
          */
         static userInfoDestroy(params?: any): any;
         /**
-         * 初始化视频广告
-         * @param params 
+         * 初始化视频广告 (wx)
+         * wx
+         * id string 广告ID
          */
         static initVideo(params?: any): any;
         /**
-         * 视频广告是否已开启
-         * @param params 
+         * 视频广告是否已开启 (wx)
+         * 返回 bool
          */
         static isVideoEnable(params?: any): any;
         /**
-         * 初始化插屏广告
-         * @param params 
+         * 初始化插屏广告 (wx)
+         * wx
+         * id string 广告ID
          */
         static initInsert(params?: any): any;
         /**
-         * 加载插屏广告
-         * @param params 
+         * 加载插屏广告 (wx)
+         * wx
+         * closeHandler Handler 关闭事件
+         * errorHandler Handler 错误事件
          */
         static loadInsert(params?: any): any;
         /**
          * 创建横幅广告
-         * @param params 
+         * 
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告
-         * @param params 
+         * 初始化横幅广告 (wx)
+         * 
          */
         static initBanner(params?: any): any;
         /**
-         * 检查横幅广告
-         * @param params 
+         * 检查横幅广告 (wx)
+         * wx
+         * data any 广告配置，参照productCfg banner配置格式
          */
         static checkBanner(params?: any): any;
         /**
-         * 清理延迟展示横幅广告
-         * @param params 
+         * 清理延迟展示横幅广告 (wx)
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告
-         * @param params 
+         * 显示横幅广告 (wx)
+         * wx
+         * left? number 左部偏移,默认0
+         * bottom? number 底部偏移，默认0
+         * length? number 长度，默认1
          */
         static showBanner(params?: any): any;
         /**
-         * 更新横幅广告
-         * @param params 
+         * 更新横幅广告 (wx)
+         * wx
+         * isWait? boolean 等待展示
+         * left? number 左部偏移,默认0
+         * bottom? number 底部偏移，默认0
+         * length? number 长度，默认1
          */
         static updateBanner(params?: any): any;
         /**
-         * 更新横幅广告位置
-         * @param params 
+         * 更新横幅广告位置 (wx)
+         * wx
+         * toTouch? boolean 移动到点击位置
          */
         static updateBannerPos(params?: any): any;
+        /**
+         * 隐藏横幅广告 (wx)
+         */
+        static hideBanner(params?: any): any;
+        /**
+         * 开始录像 (wx)
+         */
+        static recorderStart(params?: any): any;
+        /**
+         * 停止录像 (wx)
+         */
+        static recorderStop(params?: any): any;
+        /**
+         * 暂停录像 (wx)
+         */
+        static recorderPause(params?: any): any;
+        /**
+         * 恢复录像 (wx)
+         */
+        static recorderResume(params?: any): any;
+        /**
+         * 创建录像 (wx)
+         * wx
+         * data { 分享录屏参数
+         *  percentY? number(0-1) Y轴偏移百分比，默认为 0.7
+         *  btnText? string 分享按钮文本，默认为 分享录屏
+         *  query? string 分享参数
+         *  bgm? string 分享背景音乐
+         *  buttonType? string 分享按钮类型，默认为 challenge
+         *  titleType? string 分享标题类型，默认为 default.level
+         *  score number 分享分数
+         *  successHandler? Handler 分享成功事件
+         * }
+         */
+        static recorderCreate(params?: any): any;
+        /**
+         * 隐藏录像 (wx)
+         */
+        static recorderHide(params?: any): any;
+        /**
+         * 是否支持录像 (wx)
+         * wx
+         * 返回 bool
+         */
+        static canShareRecorder(params?: any): any;
+        /**
+         * 状态栏高度 (wx)
+         * 返回 number
+         */
+        static statusBarHeight(params?: any): any;
+        /**
+         * 屏幕宽度 (wx)
+         * wx
+         * 返回 number
+         * @param params 
+         */
+        static screenWidth(params?: any): any;
+        /**
+         * 屏幕高度 (wx)
+         * wx
+         * 返回 number
+         */
+        static screenHeight(params?: any): any;
+        /**
+         * 震动 (wx)
+         * wx
+         * isLong? boolean 是否为长震
+         */
+        static vibrate(params?: any): any;
+        /**
+         * 网络是否正常 (wx)
+         * wx
+         * 返回 bool
+         */
+        static isNetValid(params?: any): any;
+        /**
+         * 添加显示事件 (wx)
+         * showHandler Function 事件回调
+         */
+        static addEventShow(params?: any): any;
+        /**
+         * 添加隐藏事件 (wx)
+         * hideHandler Function 事件回调
+         */
+        static addEventHide(params?: any): any;
         /**
          * 显示单像素banner
          * @param params 
          */
         static showOnePixelBanner(params?: any): any;
-        /**
-         * 隐藏横幅广告
-         * @param params 
-         */
-        static hideBanner(params?: any): any;
-        /**
-         * 开始录像
-         * @param params 
-         */
-        static recorderStart(params?: any): any;
-        /**
-         * 停止录像
-         * @param params 
-         */
-        static recorderStop(params?: any): any;
-        /**
-         * 暂停录像
-         * @param params 
-         */
-        static recorderPause(params?: any): any;
-        /**
-         * 恢复录像
-         * @param params 
-         */
-        static recorderResume(params?: any): any;
-        /**
-         * 创建录像
-         * @param params 
-         */
-        static recorderCreate(params?: any): any;
-        /**
-         * 隐藏录像
-         * @param params 
-         */
-        static recorderHide(params?: any): any;
-        /**
-         * 是否支持录像
-         * @param params 
-         */
-        static canShareRecorder(params?: any): any;
-        /**
-         * 状态栏高度
-         * @param params 
-         */
-        static statusBarHeight(params?: any): any;
-        /**
-         * 屏幕宽度
-         * @param params 
-         */
-        static screenWidth(params?: any): any;
-        /**
-         * 屏幕高度
-         * @param params 
-         */
-        static screenHeight(params?: any): any;
-        /**
-         * 震动
-         * @param params 
-         */
-        static vibrate(params?: any): any;
-        /**
-         * 网络是否正常
-         * @param params 
-         */
-        static isNetValid(params?: any): any;
-        /**
-         * 添加显示事件
-         * @param params 
-         */
-        static addEventShow(params?: any): any;
-        /**
-         * 添加隐藏事件
-         * @param params 
-         */
-        static addEventHide(params?: any): any;
         /**
          * 录像片段
          * @param params 
@@ -1706,14 +1761,15 @@ declare module zs.platform {
          */
         static showFavoriteGuide(params?: any): any;
         /**
-         * 
-         * @param params 
+         * 设置自动分享参数 (wx)
+         * wx 
+         * title string 标题
+         * imgUrl string 图片URL
          */
         static setDefaultShare(params?: any): any;
         /**
-        * 
-        * @param type 
-        */
+         * 
+         */
         static updateReviveTypeInfo(type);
         /**
          * 设置原生最后显示的时间
@@ -1753,11 +1809,15 @@ declare module zs.platform {
          */
         static getIsInOneMin(): boolean;
         /**
-         * 获取平台登陆信息
+         * 获取平台登陆信息 (wx)
+         * wx
+         * 返回 any 登入信息
          */
         static getLaunchOptions(): any;
         /**
-         * 获取平台场景值
+         * 获取平台场景值 (wx)
+         * wx
+         * 返回 string 场景值
          */
         static getScene(): string;
         /**
