@@ -1813,13 +1813,13 @@ declare module zs.platform {
         * @param adIcon 广告Icon
         * @param adId 广告ID
         */
-        static sendReqAdShowReport(adIcon: string, adId: string);
+        static sendReqAdShowReport(adIcon: string, adId: string | number);
         /**
          * 原生请求点击上报 (op,vv)
          * @param adIcon 广告Icon
          * @param adId 广告ID
          */
-        static sendReqAdClickReport(adIcon: string, adId: string);
+        static sendReqAdClickReport(adIcon: string, adId: string | number);
         /**
          * 初始化互推盒子 (op)
          * @param adUnitId 盒子ID

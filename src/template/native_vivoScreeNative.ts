@@ -11,7 +11,7 @@ export default class native_vivoScreeNative extends zs.fgui.base {
     /**原生广告id */
     adUnit: string;
     /**原生广告数据标识 */
-    adId: Number;
+    adId: number;
     /**是否已关闭 */
     closed: boolean = false;
 
