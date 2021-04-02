@@ -13,7 +13,7 @@ window.zs.platform = window.zs.platform || {};
         'openShare', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
         'hideBlockAd', 'destroyInsertAd', 'pauseSound', 'getAdPos'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
-        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'getUserInfo', 'authorize', 'addShortcut',
+        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'getUserInfo',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
         'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple'];
 
