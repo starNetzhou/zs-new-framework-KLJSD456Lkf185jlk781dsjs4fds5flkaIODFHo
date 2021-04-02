@@ -10,7 +10,7 @@ window.zs.platform = window.zs.platform || {};
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
         'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
-        'openShare', 'isVideoEnable', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
+        'openShare', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
         'hideBlockAd', 'showInsertAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
@@ -52,9 +52,7 @@ window.zs.platform = window.zs.platform || {};
         }
     }
 
-    function initAds() {
-        proxy && (proxy.initAds());
-    }
+    function initAds() { proxy && (proxy.initAds()); }
     class async { }
     class sync { }
 
