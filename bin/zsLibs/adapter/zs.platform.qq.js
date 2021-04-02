@@ -44,10 +44,10 @@ window.platform = (function () {
 
     platform.initAds = function () {
         platform.sendAppFrom();
-        platform.initVideo(zs.product.get("zs_video_adunit"));
-        platform.initAppBox(zs.product.get("zs_box_adunit"));
+        platform.initVideo({ id: zs.product.get("zs_video_adunit") });
+        platform.initAppBox({ id: zs.product.get("zs_box_adunit") });
         platform.initBanner();
-        platform.initInsert(zs.product.get("zs_full_screen_adunit"));
+        platform.initInsert({ id: zs.product.get("zs_full_screen_adunit") });
     }
 
     platform.addEventShow = function (params) {
@@ -62,13 +62,6 @@ window.platform = (function () {
     }
 
     // /**初始化分享 */
-    // platform.showShareMenu = function (title, imageUrl) {
-    //     qq.showShareMenu();
-    //     qq.onShareAppMessage(() => ({
-    //         title: title,
-    //         imageUrl: imageUrl // 图片 URL
-    //     }));
-    // }
     platform.setDefaultShare = function (params) {
         if (params.title == null) {
             zs.log.warn('方法（ share ）缺少必要参数（ title ）', 'Platform');
@@ -110,17 +103,17 @@ window.platform = (function () {
         });
     }
     /**加载分包 */
-    platform.loadSubpackage = function _async(obj) {
+    platform.loadSubpackage = function _async(params) {
         return new Promise((resolve, reject) => {
             qq.loadSubpackage({
-                name: obj.pkgName,
+                name: params.pkgName,
                 success: function success(res) {
                     resolve();
-                    console.log("分包" + obj.pkgName + "加载成功");
+                    console.log("分包" + params.pkgName + "加载成功");
                 },
                 fail: function fail(err) {
                     reject();
-                    console.log("分包" + obj.pkgName + "加载失败", JSON.stringify(err));
+                    console.log("分包" + params.pkgName + "加载失败", JSON.stringify(err));
                 }
             })
         });
@@ -136,7 +129,7 @@ window.platform = (function () {
             },
             fail: function () {
                 console.log("分享失败");
-                if (failedFunc) failedFunc();
+                failedFunc && failedFunc.run();
             },
             complete: function () {
             }
@@ -195,11 +188,15 @@ window.platform = (function () {
         platform.delayBanner = null;
     }
     /**初始化视频 */
-    platform.initVideo = function (videoAdUnit) {
-        if (!videoAdUnit) return;
+    platform.initVideo = function (params) {
+        if (!params || !params.id) {
+            zs.log.error("initVideo 缺少参数 id", "Platform");
+            return;
+        }
+        let videoAdUnit = params.id;
         platform.rewardedVideoAd = qq.createRewardedVideoAd({ adUnitId: videoAdUnit });
         if (platform.rewardedVideoAd == null) {
-            console.debug("初始化vide失败");
+            console.debug("初始化video失败");
             return;
         }
         platform.rewardedVideoAd.onLoad(function () {
@@ -236,9 +233,9 @@ window.platform = (function () {
         return platform.rewardedVideoAd != null && platform.videoLoad;
     }
     /**播放视频*/
-    platform.playVideo = function _async(videoErrorFunc) {
+    platform.playVideo = function _async() {
         return new Promise((resolve, reject) => {
-            platform.videoErrorFunc = videoErrorFunc;
+            platform.videoErrorFunc = () => { reject(); };
             if (!platform.rewardedVideoAd) {
                 reject();
             }
@@ -378,27 +375,30 @@ window.platform = (function () {
             })
         });
     }
-    /**c初始化盒子 */
-    platform.initAppBox = function (boxAdUnit) {
-        console.log("box广告初始化....");
-        if (!boxAdUnit) return;
-        if (platform.appBoxAd) return
+    /**初始化盒子 */
+    platform.initAppBox = function (params) {
+        if (!params || !params.id) {
+            zs.log.error("initAppBox 方法参数 id 丢失", "Platform");
+            return;
+        }
+        let boxAdUnit = params.id;
+        if (platform.appBoxAd) return;
         console.log("appBoxId：" + boxAdUnit);
         platform.appBoxAd = qq.createAppBox({ adUnitId: boxAdUnit });
         platform.appBoxAd.load();
         platform.appBoxAd.onClose(function () {
-            platform.boxCloseFunc && platform.boxCloseFunc();
+            platform.boxCloseFunc && platform.boxCloseFunc.run();
         });
     }
 
     platform.showAppBox = function (boxCloseFunc, errFunc) {
         if (platform.appBoxAd) {
             platform.appBoxAd.show().catch(function () {
-                errFunc && errFunc();
+                errFunc && errFunc.run();
             });
             platform.boxCloseHandle = boxCloseFunc;
         } else {
-            errFunc && errFunc();
+            errFunc && errFunc.run();
             console.log("AppBox未初始化");
         }
     }
@@ -425,12 +425,10 @@ window.platform = (function () {
         var pos = platform.getAdPos(pos, (orient == "landscape" ? (8 + 65 * Num) : 65), (orient == "landscape" ? 73 : (73 * Num)));
         platform.blockAd = qq.createBlockAd({ adUnitId: blockAdUnit, size: Num, orientation: orient ? orient : "landscape", style: { left: pos.left, top: pos.top } });
         if (!platform.blockAd) return;
-        platform.blockLoadFunc = function () {
-            loadFunc();
-        }
+        platform.blockLoadFunc = loadFunc;
         platform.blockAd.onLoad(function () {
             platform.blockAdLoaded = true;
-            platform.blockLoadFunc && platform.blockLoadFunc();
+            platform.blockLoadFunc && platform.blockLoadFunc.run();
         });
         platform.blockAd.onError(function (errMsg) {
             try { console.debug(JSON.stringify(errMsg)) } catch (e) { console.debug(errMsg) };
@@ -468,8 +466,12 @@ window.platform = (function () {
         }
     }
 
-    platform.initInsert = function (insertUnit) {
-        if (!insertUnit) return;
+    platform.initInsert = function (params) {
+        if (!params || !params.id) {
+            zs.log.error("initInsert 缺少参数 id", "Platform");
+            return;
+        }
+        let insertUnit = params.id;
         if (platform.insertAd) return;
         platform.insertUnit = insertUnit;
         console.log("insertAd" + insertUnit);
@@ -486,21 +488,21 @@ window.platform = (function () {
         });
         platform.insertAd.onClose(function () {
             platform.insertLoaded = false;
-            platform.insertCloseFunc && platform.insertCloseFunc();
+            platform.insertCloseFunc && platform.insertCloseFunc.run();
         })
     }
 
-    platform.showInsertAd = function (closeFunc) {
+    platform.showInsertAd = function (params) {
         if (platform.insertAd && platform.insertLoaded) {
             platform.insertAd.show().then(function () {
-                platform.insertCloseFunc = closeFunc();
+                platform.insertCloseFunc = params.closeFunc;
             }).catch(function () {
-                closeFunc && closeFunc();
+                params && params.closeFunc && params.closeFunc.run();
             });
         }
         else {
             console.debug("insertAd 尚未初始化");
-            closeFunc && closeFunc();
+            params && params.closeFunc && params.closeFunc.run();
         }
     }
 
@@ -534,7 +536,7 @@ window.platform = (function () {
         audio.loop = loop;
         platform.srcIdxObj[res] = { "audio": audio, "ptime": new Date().getTime(), "isStop": false, "curTime": 0 };
         audio.onEnded(function () {
-            if (compHandler) compHandler.run();
+            compHandler && compHandler.run();
             platform.srcIdxObj[res].isStop = true;
         });
         audio.play();
@@ -655,8 +657,7 @@ window.platform = (function () {
     }
 
     return platform;
-}
-)();
+})();
 var request = function (url, data, method, success, fail, complete) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {

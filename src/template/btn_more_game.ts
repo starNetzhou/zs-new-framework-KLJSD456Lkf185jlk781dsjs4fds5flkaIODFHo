@@ -26,8 +26,8 @@ export default class btn_more_game extends zs.fgui.base {
         return this;
     }
     onClick() {
-        zs.platform.sync.showAppBox(null, function () {
+        zs.platform.sync.showAppBox(null, Laya.Handler.create(this, () => {
             zs.platform.sync.showToast("暂无更多好玩");
-        });
+        }));
     }
 };

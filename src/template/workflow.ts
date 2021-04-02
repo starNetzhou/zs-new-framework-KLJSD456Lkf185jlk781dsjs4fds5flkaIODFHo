@@ -179,9 +179,11 @@ export default class workflow extends zs.workflow {
 
     onGameEnd(complete) {
         complete.run();
-        zs.platform.sync.showInsertAd(function () {
-            zs.core.workflow.next();
-        })
+        zs.platform.sync.showInsertAd({
+            closeFunc: Laya.Handler.create(this, () => {
+                zs.core.workflow.next();
+            })
+        });
     }
 
     showVideoGet() {

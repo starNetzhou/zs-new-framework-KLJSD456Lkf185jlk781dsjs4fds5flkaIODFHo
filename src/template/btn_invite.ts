@@ -26,8 +26,8 @@ export default class btn_invite extends zs.fgui.base {
         return this;
     }
     onClick() {
-        zs.platform.sync.openShare(zs.product.get("zs_share_title"), zs.product.get("zs_share_image"), function (err) {
+        zs.platform.sync.openShare(zs.product.get("zs_share_title"), zs.product.get("zs_share_image"), Laya.Handler.create(this, (err) => {
             zs.platform.sync.showToast("分享失败");
-        })
+        }));
     }
 };

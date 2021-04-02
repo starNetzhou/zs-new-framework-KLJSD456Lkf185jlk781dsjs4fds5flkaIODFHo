@@ -29,9 +29,9 @@ export default class block_view extends zs.fgui.base {
 
     applyConfig(config?) {
         if (config) {
-            zs.platform.sync.checkBlockAd(zs.product.get("zs_blockAdUnit_id"), config.orient, config.Num, config.pos, function () {
+            zs.platform.sync.checkBlockAd(zs.product.get("zs_blockAdUnit_id"), config.orient, config.Num, config.pos, Laya.Handler.create(this, () => {
                 zs.platform.sync.showBlockAd(config.pos);
-            })
+            }));
         }
         return this;
     }

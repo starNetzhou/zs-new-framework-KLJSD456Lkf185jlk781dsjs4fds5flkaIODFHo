@@ -11,12 +11,11 @@ window.zs.platform = window.zs.platform || {};
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
         'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
         'openShare', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
-        'hideBlockAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
+        'hideBlockAd', 'destroyInsertAd', 'pauseSound', 'getAdPos'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
-        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
+        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
-        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple',
-        'isColorSignExistSync', 'addRecentColorSign', 'getSetting'];
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple'];
 
     function init() {
         if (proxy) { proxy.init(); }

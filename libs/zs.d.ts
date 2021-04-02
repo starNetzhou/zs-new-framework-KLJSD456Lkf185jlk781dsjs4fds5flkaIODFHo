@@ -1436,8 +1436,8 @@ declare module zs.platform {
          */
         static login(params?: any): Promise<any>;
         /**
-         * 获取登录参数 (wx,op,vv)
-         * wx,op,vv
+         * 获取登录参数 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * then 登录信息
          */
         static getLoginParams(params?: any): Promise<any>;
@@ -1450,8 +1450,8 @@ declare module zs.platform {
          */
         static request(params?: any): Promise<any>;
         /**
-         * 播放视频广告 (wx,op,vv)
-         * wx,op,vv
+         * 播放视频广告 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * then 播放关闭，返回bool， true为完成播放，false为中断播放
          * catch 播放失败， 返回错误信息
          */
@@ -1490,17 +1490,12 @@ declare module zs.platform {
          */
         static navigateToOther(params?: any): Promise<any>;
         /**
-         * 加载分包 (wx,op,vv)
-         * wx,op,vv
+         * 加载分包 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * pkgName string 分包名称
          * progressHandler? Handler 分包加载进度回调,返回进度number
          */
         static loadSubpackage(params?: any): Promise<any>;
-        /**
-         * 显示模态
-         * @param params 
-         */
-        static showModel(params?: any): Promise<any>;
         /**
          * 获取用户信息
          * @param params 
@@ -1606,13 +1601,13 @@ declare module zs.platform {
          */
         static userInfoDestroy(params?: any): any;
         /**
-         * 初始化视频广告 (wx,op)
+         * 初始化视频广告 (wx,op,qq)
          * wx,op
          * id string 广告ID
          */
         static initVideo(params?: any): any;
         /**
-         * 视频广告是否已开启 (wx,op)
+         * 视频广告是否已开启 (wx,op,qq)
          * 返回 bool
          */
         static isVideoEnable(params?: any): any;
@@ -1642,37 +1637,48 @@ declare module zs.platform {
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告 (wx,op,vv)
+         * 初始化横幅广告 (wx,op,vv,qq)
          * 
          */
         static initBanner(params?: any): any;
         /**
-         * 检查横幅广告 (wx,op,vv)
-         * wx,op,vv
+         * 检查横幅广告 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * data any 广告配置，参照productCfg banner配置格式
          */
         static checkBanner(params?: any): any;
         /**
-         * 清理延迟展示横幅广告 (wx)
+         * 清理延迟展示横幅广告 (wx,qq)
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告 (wx,op,vv)
+         * 显示横幅广告 (wx,op,vv,qq)
          * wx
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
          * length? number 长度，默认1
          * op
          * onError Handler 错误事件
+         * qq
+         * position? { 展示位置
+         *  centerX X位置
+         *  centerY Y位置
+         * }
          */
         static showBanner(params?: any): any;
         /**
-         * 更新横幅广告 (wx)
+         * 更新横幅广告 (wx,qq)
          * wx
          * isWait? boolean 等待展示
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
          * length? number 长度，默认1
+         * qq
+         * isWait? boolean 等待展示
+         * position? { 展示位置
+         *  centerX X位置
+         *  centerY Y位置
+         * }
          */
         static updateBanner(params?: any): any;
         /**
@@ -1682,7 +1688,7 @@ declare module zs.platform {
          */
         static updateBannerPos(params?: any): any;
         /**
-         * 隐藏横幅广告 (wx,op,vv)
+         * 隐藏横幅广告 (wx,op,vv,qq)
          */
         static hideBanner(params?: any): any;
         /**
@@ -1742,8 +1748,8 @@ declare module zs.platform {
          */
         static screenHeight(params?: any): any;
         /**
-         * 震动 (wx,op,vv)
-         * wx,op,vv
+         * 震动 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * isLong? boolean 是否为长震
          */
         static vibrate(params?: any): any;
@@ -1753,12 +1759,12 @@ declare module zs.platform {
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx,op,vv)
+         * 添加显示事件 (wx,op,vv,qq)
          * showHandler Function 事件回调
          */
         static addEventShow(params?: any): any;
         /**
-         * 添加隐藏事件 (wx,op,vv)
+         * 添加隐藏事件 (wx,op,vv,qq)
          * hideHandler Function 事件回调
          */
         static addEventHide(params?: any): any;
@@ -1783,8 +1789,8 @@ declare module zs.platform {
          */
         static showFavoriteGuide(params?: any): any;
         /**
-         * 设置自动分享参数 (wx)
-         * wx 
+         * 设置自动分享参数 (wx,qq)
+         * wx,qq
          * title string 标题
          * imgUrl string 图片URL
          */
@@ -1838,14 +1844,14 @@ declare module zs.platform {
          */
         static getLaunchOptions(): any;
         /**
-         * 获取平台场景值 (wx)
-         * wx
+         * 获取平台场景值 (wx,qq)
+         * wx,qq
          * 返回 string 场景值
          */
         static getScene(): string;
         /**
-         * 显示插屏广告 (vv)
-         * vv
+         * 显示插屏广告 (vv,qq)
+         * vv,qq
          * closeFunc Handler 关闭事件回调
          */
         static showInsertAd(params: any): any;
@@ -1864,70 +1870,78 @@ declare module zs.platform {
         */
         static showShareMenu(title, imageUrl): any;
         /**
-        * 打开分享
+        * 打开分享 (qq)
         * @param title 标题
         * @param imageUrl 图片地址
         * @param failedFunc 失败函数
         */
-        static openShare(title, imageUrl, failedFunc): any;
+        static openShare(title: string, imageUrl: string, failedFunc: Laya.Handler): any;
         /**
         * 
         * @param params 
         */
         static isVideoEnable(params?: any): any;
         /**
-        * 
-        * @param params 
+        * 获取订阅消息 (qq)
+        * @param typeArr 订阅列表
         */
-        static getReadSetting(params?: any): any;
+        static getReadSetting(typeArr: string[]): any;
         /**
-        * 
-        * @param params 
+        * 播放音效 (qq)
+        * @param url 音效路径
+        * @param loop 循环模式
+        * @param completeHandler 完成事件
         */
-        static playSound(params?: any): any;
+        static playSound(url: string, loop: boolean, completeHandler: Laya.Handler): any;
         /**
-         * 
-         * @param params 
+         * 初始化盒子广告 (qq)
+         * id string 盒子ID
          */
         static initAppBox(params?: any): any;
         /**
-         * 
-         * @param params 
+         * 展示盒子广告 (qq)
+         * @params closeFunc 关闭事件 
+         * @params errFunc 错误事件
          */
-        static showAppBox(closeFunc?: Function, errFunc?: Function): any;
-        /**初始化积木广告
-      * @param blockAdUnit ID
-      * @param orient 方向 landscape或null 横 vertical 竖
-      * @param Num 展示数量
-      * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
-      * @param loadFunc 加载后的回调 
-      */
-        static checkBlockAd(blockAdUnit, orient, Num, pos, loadFunc): any;
+        static showAppBox(closeFunc?: Laya.Handler, errFunc?: Laya.Handler): any;
         /**
-          * 
-          * @param params 
+         * 初始化积木广告 (qq)
+         * @param blockAdUnit ID
+         * @param orient 方向 landscape或null 横 vertical 竖
+         * @param numShow 展示数量
+         * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
+         * @param loadFunc 加载后的回调
+         */
+        static checkBlockAd(blockAdUnit: string, orient: string, numShow: number, pos: any, loadFunc: Laya.Handler): any;
+        /**
+          * 展示格子广告 (qq)
+          * position { 位置偏移
+          *  left 左偏移
+          *  top 顶偏移
+          * }
           */
-        static showBlockAd(params?: any): any;
+        static showBlockAd(position: any): any;
         /**
-          * 
-          * @param params 
+          * 隐藏格子广告 (qq)
           */
         static hideBlockAd(params?: any): any;
         /**
-         * 
+         * 销毁插屏广告 (qq)
          * @param params 
          */
         static destroyInsertAd(params?: any): any;
         /**
-        * 
-        * @param params 
+        * 暂停音效 (qq)
+        * url string 音效路径
         */
-        static pauseSound(params?: any): any;
+        static pauseSound(url: string): any;
         /**
-         * 
-         * @param params 
+         * 获取广告位置 (qq)
+         * @params pos {left?,right?,top?,bottom?} 左偏移
+         * @params width 宽度
+         * @params height 高度
          */
-        static getAdPos(params?: any): any;
+        static getAdPos(pos: any, width: number, height: number): { left: number, top: number };
     }
 }
 
