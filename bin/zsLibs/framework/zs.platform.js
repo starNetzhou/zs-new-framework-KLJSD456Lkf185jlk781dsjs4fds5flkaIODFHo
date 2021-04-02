@@ -5,7 +5,7 @@ window.zs.platform = window.zs.platform || {};
     const syncList = ['share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable',
         'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'checkBanner', 'clearDelayBanner', 'showBanner',
         'updateBanner', 'updateBannerPos', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause',
-        'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'c',
+        'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight',
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
