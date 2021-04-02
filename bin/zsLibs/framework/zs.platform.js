@@ -9,14 +9,13 @@ window.zs.platform = window.zs.platform || {};
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
-        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
-        'openShare', 'isVideoEnable', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
-        'hideBlockAd', 'showInsertAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
+        'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
+        'openShare', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
+        'hideBlockAd', 'destroyInsertAd', 'pauseSound', 'getAdPos'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
-        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
+        'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
-        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple', 'showGamePortalAd',
-        'hasDesktopIcon', 'createDesktopIcon', 'isColorSignExistSync', 'addRecentColorSign', 'getSetting'];
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple'];
 
     function init() {
         if (proxy) { proxy.init(); }
@@ -52,9 +51,7 @@ window.zs.platform = window.zs.platform || {};
         }
     }
 
-    function initAds() {
-        proxy && (proxy.initAds());
-    }
+    function initAds() { proxy && (proxy.initAds()); }
     class async { }
     class sync { }
 
