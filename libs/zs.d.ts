@@ -1429,29 +1429,29 @@ declare module zs.platform {
      */
     class async {
         /**
-         * 登录接口 (wx,op,vv)
+         * 登录接口 (wx,op,vv,tt)
          * wx,op,vv
          * then 成功信息
          * catch 失败信息
          */
         static login(params?: any): Promise<any>;
         /**
-         * 获取登录参数 (wx,op,vv,qq)
+         * 获取登录参数 (wx,op,vv,qq,tt)
          * wx,op,vv,qq
          * then 登录信息
          */
         static getLoginParams(params?: any): Promise<any>;
         /**
-         * 网络请求 (wx,op,vv)
-         * wx,op,vv
+         * 网络请求 (wx,op,vv,tt)
+         * wx,op,vv,tt
          * url string URL地址
          * data any 参数信息
          * method string 请求方法（POST、GET等）
          */
         static request(params?: any): Promise<any>;
         /**
-         * 播放视频广告 (wx,op,vv,qq)
-         * wx,op,vv,qq
+         * 播放视频广告 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq,tt
          * then 播放关闭，返回bool， true为完成播放，false为中断播放
          * catch 播放失败， 返回错误信息
          */
@@ -1490,27 +1490,12 @@ declare module zs.platform {
          */
         static navigateToOther(params?: any): Promise<any>;
         /**
-         * 加载分包 (wx,op,vv,qq)
-         * wx,op,vv,qq
+         * 加载分包 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq,tt
          * pkgName string 分包名称
          * progressHandler? Handler 分包加载进度回调,返回进度number
          */
         static loadSubpackage(params?: any): Promise<any>;
-        /**
-         * 获取用户信息
-         * @param params 
-         */
-        static getUserInfo(params?: any): Promise<any>;
-        /**
-         * 验证接口
-         * @param params 
-         */
-        static authorize(params?: any): Promise<any>;
-        /**
-         * 
-         * @param params 
-         */
-        static addShortcut(params?: any): Promise<any>;
         /**
          * 
          * @param params 
@@ -1568,11 +1553,11 @@ declare module zs.platform {
          */
         static getNetworkType(): Promise<any>;
         /**
-         * 弹出头条小游戏盒子界面
+         * 弹出头条小游戏盒子界面 (tt)
          */
         static showMoreGamesModalSimple(): Promise<any>;
         /**
-         * 分享录屏
+         * 分享录屏 (tt)
          */
         static shareRecorderVideo(): Promise<any>;
     }
@@ -1601,27 +1586,27 @@ declare module zs.platform {
          */
         static userInfoDestroy(params?: any): any;
         /**
-         * 初始化视频广告 (wx,op,qq)
-         * wx,op
+         * 初始化视频广告 (wx,op,qq,tt)
+         * wx,op,qq,tt
          * id string 广告ID
          */
         static initVideo(params?: any): any;
         /**
-         * 视频广告是否已开启 (wx,op,qq)
+         * 视频广告是否已开启 (wx,op,qq,tt)
          * 返回 bool
          */
         static isVideoEnable(params?: any): any;
         /**
-         * 初始化插屏广告 (wx,vv)
-         * wx
+         * 初始化插屏广告 (wx,vv,tt)
+         * wx,tt
          * id string 广告ID
          * vv
          * insertAdUnitId string 广告ID
          */
         static initInsert(params?: any): any;
         /**
-         * 加载插屏广告 (wx,vv)
-         * wx
+         * 加载插屏广告 (wx,vv,tt)
+         * wx,tt
          * closeHandler Handler 关闭事件
          * errorHandler Handler 错误事件
          * vv
@@ -1637,8 +1622,7 @@ declare module zs.platform {
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告 (wx,op,vv,qq)
-         * 
+         * 初始化横幅广告 (wx,op,vv,qq,tt)
          */
         static initBanner(params?: any): any;
         /**
@@ -1652,7 +1636,7 @@ declare module zs.platform {
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告 (wx,op,vv,qq)
+         * 显示横幅广告 (wx,op,vv,qq,tt)
          * wx
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
@@ -1688,23 +1672,25 @@ declare module zs.platform {
          */
         static updateBannerPos(params?: any): any;
         /**
-         * 隐藏横幅广告 (wx,op,vv,qq)
+         * 隐藏横幅广告 (wx,op,vv,qq,tt)
          */
         static hideBanner(params?: any): any;
         /**
-         * 开始录像 (wx)
+         * 开始录像 (wx,tt)
+         * tt
+         * maxTime number 最长录屏时间
          */
         static recorderStart(params?: any): any;
         /**
-         * 停止录像 (wx)
+         * 停止录像 (wx,tt)
          */
         static recorderStop(params?: any): any;
         /**
-         * 暂停录像 (wx)
+         * 暂停录像 (wx,tt)
          */
         static recorderPause(params?: any): any;
         /**
-         * 恢复录像 (wx)
+         * 恢复录像 (wx,tt)
          */
         static recorderResume(params?: any): any;
         /**
@@ -1727,69 +1713,68 @@ declare module zs.platform {
          */
         static recorderHide(params?: any): any;
         /**
-         * 是否支持录像 (wx)
+         * 是否支持录像 (wx,tt)
          * 返回 bool
          */
         static canShareRecorder(params?: any): any;
         /**
-         * 状态栏高度 (wx,op,vv)
+         * 状态栏高度 (wx,op,vv,tt)
          * 返回 number
          */
         static statusBarHeight(params?: any): any;
         /**
-         * 屏幕宽度 (wx,op,vv)
+         * 屏幕宽度 (wx,op,vv,tt)
          * 返回 number
          * @param params 
          */
         static screenWidth(params?: any): any;
         /**
-         * 屏幕高度 (wx,op,vv)
+         * 屏幕高度 (wx,op,vv,tt)
          * 返回 number
          */
         static screenHeight(params?: any): any;
         /**
-         * 震动 (wx,op,vv,qq)
+         * 震动 (wx,op,vv,qq,tt)
          * wx,op,vv,qq
          * isLong? boolean 是否为长震
          */
         static vibrate(params?: any): any;
         /**
-         * 网络是否正常 (wx,op,vv)
+         * 网络是否正常 (wx,op,vv,tt)
          * 返回 bool
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx,op,vv,qq)
+         * 添加显示事件 (wx,op,vv,qq,tt)
          * showHandler Function 事件回调
          */
         static addEventShow(params?: any): any;
         /**
-         * 添加隐藏事件 (wx,op,vv,qq)
+         * 添加隐藏事件 (wx,op,vv,qq,tt)
          * hideHandler Function 事件回调
          */
         static addEventHide(params?: any): any;
         /**
-         * 显示单像素banner
-         * @param params 
+         * 显示单像素banner (tt)
          */
         static showOnePixelBanner(params?: any): any;
         /**
-         * 录像片段
-         * @param params 
+         * 裁剪高光时刻 (tt)
+         * tt
+         * beforeTime 开始时间
+         * laterTime 结束时间
          */
         static recorderClip(params?: any): any;
         /**
          * 分享录像
-         * @param params 
          */
         static recorderShare(params?: any): any;
         /**
-         * 
-         * @param params 
+         * 调起关注小程序的引导组件
          */
         static showFavoriteGuide(params?: any): any;
         /**
-         * 设置自动分享参数 (wx,qq)
+         * 设置自动分享参数 (wx,qq,tt)
          * wx,qq
          * title string 标题
          * imgUrl string 图片URL
