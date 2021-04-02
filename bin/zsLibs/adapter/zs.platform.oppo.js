@@ -5,27 +5,10 @@ window.platform = (function () {
     //#region 初始化和登录 必须保留的几个方法
     platform.init = function () {
         console.log("platform.init");
-        // qg.onError(function (res) {
-        //     console.error(res);
-        // })
         platform.systemInfo = qg.getSystemInfoSync();
         //-----------------------------------------------------
         if (platform.systemInfo.platformVersionCode < 1051) {
             console.error('版本低于1051 需要手动开启初始化');
-            //这个api低于1051 需要手动开启初始化
-            // qg.initAdService({
-            //     appId: zs.core.appId,
-            //     isDebug: false,
-            //     success: function (res) {
-            //         console.log("success");
-            //     },
-            //     fail: function (res) {
-            //         console.log("fail:" + res.code + res.msg);
-            //     },
-            //     complete: function (res) {
-            //         console.log("complete");
-            //     }
-            // })
         }
     }
     platform.initAds = function () {
