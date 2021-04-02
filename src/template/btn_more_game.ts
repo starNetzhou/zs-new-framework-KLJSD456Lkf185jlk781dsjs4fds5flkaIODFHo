@@ -1,4 +1,4 @@
-import QQAd_btn_moregame from "./fgui/QQAd_btn_moregame";
+import QQAd_btn_moregame from "./export/QQAd_btn_moregame";
 
 export default class btn_more_game extends zs.fgui.base {
     owner: QQAd_btn_moregame;

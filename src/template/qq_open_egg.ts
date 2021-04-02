@@ -1,4 +1,4 @@
-import QQAd_common_egg from "./fgui/QQAd_common_egg";
+import QQAd_common_egg from "./export/QQAd_common_egg";
 
 export default class qq_open_egg extends zs.fgui.base {
 

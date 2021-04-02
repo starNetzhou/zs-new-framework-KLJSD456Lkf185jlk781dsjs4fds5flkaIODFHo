@@ -1,4 +1,4 @@
-import QQAd_btn_invite from "./fgui/QQAd_btn_invite";
+import QQAd_btn_invite from "./export/QQAd_btn_invite";
 
 export default class btn_invite extends zs.fgui.base {
     owner: QQAd_btn_invite;

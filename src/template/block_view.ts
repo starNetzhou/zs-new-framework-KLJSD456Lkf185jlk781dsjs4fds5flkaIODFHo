@@ -1,4 +1,4 @@
-import QQAd_blockWindow from "src/template/fgui/QQAd_blockWindow";
+import QQAd_blockWindow from "src/template/export/QQAd_blockWindow";
 
 export default class block_view extends zs.fgui.base {
     viewName: string;

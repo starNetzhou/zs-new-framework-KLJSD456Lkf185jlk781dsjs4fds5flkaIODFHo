@@ -1,4 +1,4 @@
-import QQadBinder from "./fgui/QQadBinder";
+import QQadBinder from "./export/QQadBinder";
 import qq_open_egg from "./qq_open_egg";
 import qq_over_egg from "./qq_over_egg";
 import btn_invite from "./btn_invite";

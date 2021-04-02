@@ -1,4 +1,4 @@
-import QQAd_egg_box from "./fgui/QQAd_egg_box";
+import QQAd_egg_box from "./export/QQAd_egg_box";
 
 export default class qq_over_egg extends zs.fgui.base {
 

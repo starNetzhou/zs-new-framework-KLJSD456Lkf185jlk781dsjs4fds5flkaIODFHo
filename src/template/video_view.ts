@@ -1,5 +1,5 @@
 import msgbox from "./common_msg";
-import QQAd_video_get from "./fgui/QQAd_video_get";
+import QQAd_video_get from "./export/QQAd_video_get";
 
 export default class video_view extends zs.fgui.base {
     viewName: string;
