@@ -1429,30 +1429,29 @@ declare module zs.platform {
      */
     class async {
         /**
-         * 登录接口 (wx)
-         * wx
+         * 登录接口 (wx,op,vv,tt)
+         * wx,op,vv
          * then 成功信息
          * catch 失败信息
          */
         static login(params?: any): Promise<any>;
         /**
-         * 获取登录参数 (wx)
-         * wx
-         * then 登录code
-         * @param params 
+         * 获取登录参数 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq
+         * then 登录信息
          */
         static getLoginParams(params?: any): Promise<any>;
         /**
-         * 网络请求 (wx)
-         * wx
+         * 网络请求 (wx,op,vv,tt)
+         * wx,op,vv,tt
          * url string URL地址
          * data any 参数信息
          * method string 请求方法（POST、GET等）
          */
         static request(params?: any): Promise<any>;
         /**
-         * 播放视频广告 (wx)
-         * wx
+         * 播放视频广告 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq,tt
          * then 播放关闭，返回bool， true为完成播放，false为中断播放
          * catch 播放失败， 返回错误信息
          */
@@ -1491,32 +1490,12 @@ declare module zs.platform {
          */
         static navigateToOther(params?: any): Promise<any>;
         /**
-         * 加载分包 (wx)
-         * wx
+         * 加载分包 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq,tt
          * pkgName string 分包名称
          * progressHandler? Handler 分包加载进度回调,返回进度number
          */
         static loadSubpackage(params?: any): Promise<any>;
-        /**
-         * 显示模态
-         * @param params 
-         */
-        static showModel(params?: any): Promise<any>;
-        /**
-         * 获取用户信息
-         * @param params 
-         */
-        static getUserInfo(params?: any): Promise<any>;
-        /**
-         * 验证接口
-         * @param params 
-         */
-        static authorize(params?: any): Promise<any>;
-        /**
-         * 
-         * @param params 
-         */
-        static addShortcut(params?: any): Promise<any>;
         /**
          * 
          * @param params 
@@ -1528,39 +1507,57 @@ declare module zs.platform {
          */
         static checkFollowAwemeSta(params?: any): Promise<any>;
         /**
-         * oppo 加载原生
+         * 加载原生广告 (op,vv)
+         * op,vv
+         * then 返回广告数据
+         * catch 返回错误信息
          */
         static loadNativeAd(): Promise<any>;
         /**
-         * oppo 是否在游戏之前展示
+         * 是否在游戏之前展示 (op)
+         * then 确认
+         * catch 拒绝
          */
         static isBeforeGameAccount(): Promise<any>;
         /**
-         * oppo 获取上报状态
+         * 获取上报状态 (op)
+         * op
+         * then 确认
+         * catch 拒绝
          */
         static getAdReporteStatus(adUnit): Promise<any>;
         /**
-         * oppo 显示原生更多好玩
+         * 显示原生更多好玩 (op)
+         * op
+         * then 确认
+         * catch 拒绝
          */
         static showGamePortalAd(): Promise<any>;
         /**
-         * 判断是否有桌面图标
+         * 判断是否有桌面图标 (op,vv)
+         * op,vv
+         * then boolean 结果 true 有 false 无
+         * catch 错误
          */
         static hasDesktopIcon(): Promise<any>;
         /**
-         * 创建桌面图标
+         * 创建桌面图标 (op,vv)
+         * op,vv
+         * then 创建成功
+         * catch 创建失败
          */
         static createDesktopIcon(): Promise<any>;
         /**
-         * 获取网络类型
+         * 获取网络类型 (vv)
+         * then 成功
          */
         static getNetworkType(): Promise<any>;
         /**
-         * 弹出头条小游戏盒子界面
+         * 弹出头条小游戏盒子界面 (tt)
          */
         static showMoreGamesModalSimple(): Promise<any>;
         /**
-         * 分享录屏
+         * 分享录屏 (tt)
          */
         static shareRecorderVideo(): Promise<any>;
     }
@@ -1589,64 +1586,83 @@ declare module zs.platform {
          */
         static userInfoDestroy(params?: any): any;
         /**
-         * 初始化视频广告 (wx)
-         * wx
+         * 初始化视频广告 (wx,op,qq,tt)
+         * wx,op,qq,tt
          * id string 广告ID
          */
         static initVideo(params?: any): any;
         /**
-         * 视频广告是否已开启 (wx)
+         * 视频广告是否已开启 (wx,op,qq,tt)
          * 返回 bool
          */
         static isVideoEnable(params?: any): any;
         /**
-         * 初始化插屏广告 (wx)
-         * wx
+         * 初始化插屏广告 (wx,vv,tt)
+         * wx,tt
          * id string 广告ID
+         * vv
+         * insertAdUnitId string 广告ID
          */
         static initInsert(params?: any): any;
         /**
-         * 加载插屏广告 (wx)
-         * wx
+         * 加载插屏广告 (wx,vv,tt)
+         * wx,tt
          * closeHandler Handler 关闭事件
          * errorHandler Handler 错误事件
+         * vv
+         * loadFunc Handler 加载事件
+         * errFunc  Handler 错误事件
          */
         static loadInsert(params?: any): any;
         /**
-         * 创建横幅广告
-         * 
+         * 创建横幅广告 (op)
+         * op
+         * id string 广告ID
+         * onError Handler 错误事件
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告 (wx)
-         * 
+         * 初始化横幅广告 (wx,op,vv,qq,tt)
          */
         static initBanner(params?: any): any;
         /**
-         * 检查横幅广告 (wx)
-         * wx
+         * 检查横幅广告 (wx,op,vv,qq)
+         * wx,op,vv,qq
          * data any 广告配置，参照productCfg banner配置格式
          */
         static checkBanner(params?: any): any;
         /**
-         * 清理延迟展示横幅广告 (wx)
+         * 清理延迟展示横幅广告 (wx,qq)
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告 (wx)
+         * 显示横幅广告 (wx,op,vv,qq,tt)
          * wx
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
          * length? number 长度，默认1
+         * op
+         * onError Handler 错误事件
+         * qq
+         * position? { 展示位置
+         *  centerX X位置
+         *  centerY Y位置
+         * }
          */
         static showBanner(params?: any): any;
         /**
-         * 更新横幅广告 (wx)
+         * 更新横幅广告 (wx,qq)
          * wx
          * isWait? boolean 等待展示
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
          * length? number 长度，默认1
+         * qq
+         * isWait? boolean 等待展示
+         * position? { 展示位置
+         *  centerX X位置
+         *  centerY Y位置
+         * }
          */
         static updateBanner(params?: any): any;
         /**
@@ -1656,23 +1672,25 @@ declare module zs.platform {
          */
         static updateBannerPos(params?: any): any;
         /**
-         * 隐藏横幅广告 (wx)
+         * 隐藏横幅广告 (wx,op,vv,qq,tt)
          */
         static hideBanner(params?: any): any;
         /**
-         * 开始录像 (wx)
+         * 开始录像 (wx,tt)
+         * tt
+         * maxTime number 最长录屏时间
          */
         static recorderStart(params?: any): any;
         /**
-         * 停止录像 (wx)
+         * 停止录像 (wx,tt)
          */
         static recorderStop(params?: any): any;
         /**
-         * 暂停录像 (wx)
+         * 暂停录像 (wx,tt)
          */
         static recorderPause(params?: any): any;
         /**
-         * 恢复录像 (wx)
+         * 恢复录像 (wx,tt)
          */
         static recorderResume(params?: any): any;
         /**
@@ -1695,119 +1713,115 @@ declare module zs.platform {
          */
         static recorderHide(params?: any): any;
         /**
-         * 是否支持录像 (wx)
-         * wx
+         * 是否支持录像 (wx,tt)
          * 返回 bool
          */
         static canShareRecorder(params?: any): any;
         /**
-         * 状态栏高度 (wx)
+         * 状态栏高度 (wx,op,vv,tt)
          * 返回 number
          */
         static statusBarHeight(params?: any): any;
         /**
-         * 屏幕宽度 (wx)
-         * wx
+         * 屏幕宽度 (wx,op,vv,tt)
          * 返回 number
          * @param params 
          */
         static screenWidth(params?: any): any;
         /**
-         * 屏幕高度 (wx)
-         * wx
+         * 屏幕高度 (wx,op,vv,tt)
          * 返回 number
          */
         static screenHeight(params?: any): any;
         /**
-         * 震动 (wx)
-         * wx
+         * 震动 (wx,op,vv,qq,tt)
+         * wx,op,vv,qq
          * isLong? boolean 是否为长震
          */
         static vibrate(params?: any): any;
         /**
-         * 网络是否正常 (wx)
-         * wx
+         * 网络是否正常 (wx,op,vv,tt)
          * 返回 bool
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx)
+         * 添加显示事件 (wx,op,vv,qq,tt)
          * showHandler Function 事件回调
          */
         static addEventShow(params?: any): any;
         /**
-         * 添加隐藏事件 (wx)
+         * 添加隐藏事件 (wx,op,vv,qq,tt)
          * hideHandler Function 事件回调
          */
         static addEventHide(params?: any): any;
         /**
-         * 显示单像素banner
-         * @param params 
+         * 显示单像素banner (tt)
          */
         static showOnePixelBanner(params?: any): any;
         /**
-         * 录像片段
-         * @param params 
+         * 裁剪高光时刻 (tt)
+         * tt
+         * beforeTime 开始时间
+         * laterTime 结束时间
          */
         static recorderClip(params?: any): any;
         /**
          * 分享录像
-         * @param params 
          */
         static recorderShare(params?: any): any;
         /**
-         * 
-         * @param params 
+         * 调起关注小程序的引导组件
          */
         static showFavoriteGuide(params?: any): any;
         /**
-         * 设置自动分享参数 (wx)
-         * wx 
+         * 设置自动分享参数 (wx,qq,tt)
+         * wx,qq
          * title string 标题
          * imgUrl string 图片URL
          */
         static setDefaultShare(params?: any): any;
         /**
-         * 
+         * 更新复活类型信息 (op)
+         * @param type 复活类型
          */
-        static updateReviveTypeInfo(type);
+        static updateReviveTypeInfo(type: string);
         /**
-         * 设置原生最后显示的时间
-         * @param time 
+         * 设置原生最后显示的时间 (op)
+         * @param time 时间
          */
-        static setNativeLastShowTime(time: Number);
+        static setNativeLastShowTime(time: number);
         /**
-        * oppo 初始化原生
+        * 初始化原生广告 (op,vv)
+        * op
+        * id string 广告ID
+        * vv
+        * adUnitId1 string 广告ID1
+        * adUnitId2 string 广告ID2
         */
-        static initNativeAd({ id: any });
+        static initNativeAd(params?: any): any;
         /**
-        * oppo 原生请求显示上报
-        * @param adIcon 
-        * @param adId 
+        * 原生请求显示上报 (op,vv)
+        * @param adIcon 广告Icon
+        * @param adId 广告ID
         */
-        static sendReqAdShowReport(adIcon, adId);
+        static sendReqAdShowReport(adIcon: string, adId: string | number);
         /**
-         * oppo 原生请求点击上报
-         * @param adIcon 
-         * @param adId 
+         * 原生请求点击上报 (op,vv)
+         * @param adIcon 广告Icon
+         * @param adId 广告ID
          */
-        static sendReqAdClickReport(adIcon, adId);
+        static sendReqAdClickReport(adIcon: string, adId: string | number);
         /**
-         * 原生平台弹窗
-         * @param val 
-         * @param time 
+         * 初始化互推盒子 (op)
+         * @param adUnitId 盒子ID
          */
-        static showToast(val, time?);
+        static initGamePortalAd(adUnitId: string);
         /**
-         * oppo 设置一分钟内展不展示广告
-         * @param val 
+         * 原生平台弹窗 (op)
+         * @param title 标题
+         * @param duration 时间
          */
-        static setIsInOneMin(val);
-        /**
-         * oppo 获取一分钟之内展示不展示广告
-         * @returns bool = true 不展示广告 false 正常展示广告
-         */
-        static getIsInOneMin(): boolean;
+        static showToast(title: string, time?: number);
         /**
          * 获取平台登陆信息 (wx)
          * wx
@@ -1815,21 +1829,25 @@ declare module zs.platform {
          */
         static getLaunchOptions(): any;
         /**
-         * 获取平台场景值 (wx)
-         * wx
+         * 获取平台场景值 (wx,qq)
+         * wx,qq
          * 返回 string 场景值
          */
         static getScene(): string;
         /**
-         * 显示插屏广告
-         * @param params 
+         * 显示插屏广告 (vv,qq)
+         * vv,qq
+         * closeFunc Handler 关闭事件回调
          */
-        static showInsertAd(params: any);
+        static showInsertAd(params: any): any;
         /**
-         * 初始化横幅广告ID
-         * @param params 
+         * 初始化横幅广告ID (vv)
+         * vv
+         * bannerAdUnit string 广告Unit
+         * bannerAdUnit2 string 广告Unit2
+         * bannerLiveTime number 广告存活时间
          */
-        static initBannerId(params: any);
+        static initBannerId(params: any): any;
         /**
         * 初始化分享菜单
         * @param title 标题
@@ -1837,76 +1855,78 @@ declare module zs.platform {
         */
         static showShareMenu(title, imageUrl): any;
         /**
-        * 打开分享
+        * 打开分享 (qq)
         * @param title 标题
         * @param imageUrl 图片地址
         * @param failedFunc 失败函数
         */
-        static openShare(title, imageUrl, failedFunc): any;
+        static openShare(title: string, imageUrl: string, failedFunc: Laya.Handler): any;
         /**
         * 
         * @param params 
         */
         static isVideoEnable(params?: any): any;
         /**
-        * 
-        * @param params 
+        * 获取订阅消息 (qq)
+        * @param typeArr 订阅列表
         */
-        static getReadSetting(params?: any): any;
+        static getReadSetting(typeArr: string[]): any;
         /**
-        * 
-        * @param params 
+        * 播放音效 (qq)
+        * @param url 音效路径
+        * @param loop 循环模式
+        * @param completeHandler 完成事件
         */
-        static playSound(params?: any): any;
+        static playSound(url: string, loop: boolean, completeHandler: Laya.Handler): any;
         /**
-         * 
-         * @param params 
+         * 初始化盒子广告 (qq)
+         * id string 盒子ID
          */
         static initAppBox(params?: any): any;
         /**
-         * 
-         * @param params 
+         * 展示盒子广告 (qq)
+         * @params closeFunc 关闭事件 
+         * @params errFunc 错误事件
          */
-        static showAppBox(closeFunc?: Function, errFunc?: Function): any;
-        /**初始化积木广告
-      * @param blockAdUnit ID
-      * @param orient 方向 landscape或null 横 vertical 竖
-      * @param Num 展示数量
-      * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
-      * @param loadFunc 加载后的回调 
-      */
-        static showToast(text: string, time?: number);
-        static checkBlockAd(blockAdUnit, orient, Num, pos, loadFunc): any;
+        static showAppBox(closeFunc?: Laya.Handler, errFunc?: Laya.Handler): any;
         /**
-          * 
-          * @param params 
+         * 初始化积木广告 (qq)
+         * @param blockAdUnit ID
+         * @param orient 方向 landscape或null 横 vertical 竖
+         * @param numShow 展示数量
+         * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
+         * @param loadFunc 加载后的回调
+         */
+        static checkBlockAd(blockAdUnit: string, orient: string, numShow: number, pos: any, loadFunc: Laya.Handler): any;
+        /**
+          * 展示格子广告 (qq)
+          * position { 位置偏移
+          *  left 左偏移
+          *  top 顶偏移
+          * }
           */
-        static showBlockAd(params?: any): any;
+        static showBlockAd(position: any): any;
         /**
-          * 
-          * @param params 
+          * 隐藏格子广告 (qq)
           */
         static hideBlockAd(params?: any): any;
         /**
-         * 
-         * @param params 
-         */
-        static showInsertAd(params?: any): any;
-        /**
-         * 
+         * 销毁插屏广告 (qq)
          * @param params 
          */
         static destroyInsertAd(params?: any): any;
         /**
-        * 
-        * @param params 
+        * 暂停音效 (qq)
+        * url string 音效路径
         */
-        static pauseSound(params?: any): any;
+        static pauseSound(url: string): any;
         /**
-         * 
-         * @param params 
+         * 获取广告位置 (qq)
+         * @params pos {left?,right?,top?,bottom?} 左偏移
+         * @params width 宽度
+         * @params height 高度
          */
-        static getAdPos(params?: any): any;
+        static getAdPos(pos: any, width: number, height: number): { left: number, top: number };
     }
 }
 
