@@ -217,12 +217,12 @@ window.platform = (function () {
             return;
         }
         platform.insertAd.onLoad(() => {
-            params && params.loadFunc && params.loadFunc();
+            params && params.loadFunc && params.loadFunc.run();
         });
         platform.insertAd.onError(err => {
             console.log("插屏广告错误事件", err.errMsg, err.errCode);
             platform.insertAd = null;
-            params && params.errFunc && params.errFunc();
+            params && params.errFunc && params.errFunc.run();
         })
     }
     platform.showInsertAd = function (params) {
@@ -236,7 +236,7 @@ window.platform = (function () {
         }
         platform.insertAd.onClose(() => {
             platform.insertAd = null;
-            params && params.closeFunc && params.closeFunc();
+            params && params.closeFunc && params.closeFunc.run();
         })
         platform.insertAd.show();
     }
@@ -249,18 +249,18 @@ window.platform = (function () {
     platform.bannerAdUnitArr = [];
     platform.bannerLiveTime = 10000;
     platform.bannerLastShowTime = 0;
-    platform.initBanner = function (params) {
-        platform.initBannerId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_refresh_time"));
-        platform.initNativeAd(zs.product.get("zs_native_adunit"), zs.product.get("zs_native_adunit2"));
+    platform.initBanner = function () {
+        platform.initBannerId({ bannerAdUnit: zs.product.get("zs_banner_adunit"), bannerAdUnit2: zs.product.get("zs_banner_adunit2"), bannerLiveTime: zs.product.get("zs_banner_refresh_time") });
+        platform.initNativeAd({ adUnitId1: zs.product.get("zs_native_adunit"), adUnitId2: zs.product.get("zs_native_adunit2") });
     }
-    platform.initBannerId = function (bannerAdUnit, bannerAdUnit2, bannerLiveTime) {
-        bannerAdUnit && platform.bannerAdUnitArr.push(bannerAdUnit);
-        bannerAdUnit2 && platform.bannerAdUnitArr.push(bannerAdUnit2);
-        platform.bannerLiveTime = bannerLiveTime;
+    platform.initBannerId = function (params) {
+        params.bannerAdUnit && platform.bannerAdUnitArr.push(params.bannerAdUnit);
+        params.bannerAdUnit2 && platform.bannerAdUnitArr.push(params.bannerAdUnit2);
+        platform.bannerLiveTime = params.bannerLiveTime;
         platform.bannerLastShowTime = 0;
     }
 
-    platform.showBanner = function (params) {
+    platform.showBanner = function () {
         if (!platform.bannerAdUnitArr) {
             zs.log.debug("🐢 咋回事！！");
             return;
@@ -330,9 +330,9 @@ window.platform = (function () {
         platform.nativeAdLoadedHandler && platform.nativeAdLoadedHandler(data);
     }
     /**初始化原生 */
-    platform.initNativeAd = function (adUnitId1, adUnitId2) {
-        adUnitId1 && platform.nativeAdUnitIdArr.push(adUnitId1);
-        adUnitId2 && platform.nativeAdUnitIdArr.push(adUnitId2);
+    platform.initNativeAd = function (params) {
+        params.adUnitId1 && platform.nativeAdUnitIdArr.push(params.adUnitId1);
+        params.adUnitId2 && platform.nativeAdUnitIdArr.push(params.adUnitId2);
         platform.nativeLastLoadTime = 0;
     }
     /**加载原生 返回对应的参数 */

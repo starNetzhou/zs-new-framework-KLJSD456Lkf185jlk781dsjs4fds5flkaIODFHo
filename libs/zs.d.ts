@@ -1429,30 +1429,29 @@ declare module zs.platform {
      */
     class async {
         /**
-         * 登录接口 (wx,op)
-         * wx,op
+         * 登录接口 (wx,op,vv)
+         * wx,op,vv
          * then 成功信息
          * catch 失败信息
          */
         static login(params?: any): Promise<any>;
         /**
-         * 获取登录参数 (wx,op)
-         * wx,op
-         * then 登录code
-         * @param params 
+         * 获取登录参数 (wx,op,vv)
+         * wx,op,vv
+         * then 登录信息
          */
         static getLoginParams(params?: any): Promise<any>;
         /**
-         * 网络请求 (wx,op)
-         * wx,op
+         * 网络请求 (wx,op,vv)
+         * wx,op,vv
          * url string URL地址
          * data any 参数信息
          * method string 请求方法（POST、GET等）
          */
         static request(params?: any): Promise<any>;
         /**
-         * 播放视频广告 (wx,op)
-         * wx,op
+         * 播放视频广告 (wx,op,vv)
+         * wx,op,vv
          * then 播放关闭，返回bool， true为完成播放，false为中断播放
          * catch 播放失败， 返回错误信息
          */
@@ -1491,8 +1490,8 @@ declare module zs.platform {
          */
         static navigateToOther(params?: any): Promise<any>;
         /**
-         * 加载分包 (wx,op)
-         * wx,op
+         * 加载分包 (wx,op,vv)
+         * wx,op,vv
          * pkgName string 分包名称
          * progressHandler? Handler 分包加载进度回调,返回进度number
          */
@@ -1528,8 +1527,8 @@ declare module zs.platform {
          */
         static checkFollowAwemeSta(params?: any): Promise<any>;
         /**
-         * 加载原生广告 (op)
-         * op
+         * 加载原生广告 (op,vv)
+         * op,vv
          * then 返回广告数据
          * catch 返回错误信息
          */
@@ -1555,21 +1554,22 @@ declare module zs.platform {
          */
         static showGamePortalAd(): Promise<any>;
         /**
-         * 判断是否有桌面图标 (op)
-         * op
+         * 判断是否有桌面图标 (op,vv)
+         * op,vv
          * then boolean 结果 true 有 false 无
          * catch 错误
          */
         static hasDesktopIcon(): Promise<any>;
         /**
-         * 创建桌面图标 (op)
-         * op
+         * 创建桌面图标 (op,vv)
+         * op,vv
          * then 创建成功
          * catch 创建失败
          */
         static createDesktopIcon(): Promise<any>;
         /**
-         * 获取网络类型
+         * 获取网络类型 (vv)
+         * then 成功
          */
         static getNetworkType(): Promise<any>;
         /**
@@ -1617,16 +1617,21 @@ declare module zs.platform {
          */
         static isVideoEnable(params?: any): any;
         /**
-         * 初始化插屏广告 (wx)
+         * 初始化插屏广告 (wx,vv)
          * wx
          * id string 广告ID
+         * vv
+         * insertAdUnitId string 广告ID
          */
         static initInsert(params?: any): any;
         /**
-         * 加载插屏广告 (wx)
+         * 加载插屏广告 (wx,vv)
          * wx
          * closeHandler Handler 关闭事件
          * errorHandler Handler 错误事件
+         * vv
+         * loadFunc Handler 加载事件
+         * errFunc  Handler 错误事件
          */
         static loadInsert(params?: any): any;
         /**
@@ -1637,13 +1642,13 @@ declare module zs.platform {
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告 (wx,op)
+         * 初始化横幅广告 (wx,op,vv)
          * 
          */
         static initBanner(params?: any): any;
         /**
-         * 检查横幅广告 (wx,op)
-         * wx
+         * 检查横幅广告 (wx,op,vv)
+         * wx,op,vv
          * data any 广告配置，参照productCfg banner配置格式
          */
         static checkBanner(params?: any): any;
@@ -1652,7 +1657,7 @@ declare module zs.platform {
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告 (wx,op)
+         * 显示横幅广告 (wx,op,vv)
          * wx
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
@@ -1677,7 +1682,7 @@ declare module zs.platform {
          */
         static updateBannerPos(params?: any): any;
         /**
-         * 隐藏横幅广告 (wx,op)
+         * 隐藏横幅广告 (wx,op,vv)
          */
         static hideBanner(params?: any): any;
         /**
@@ -1721,39 +1726,39 @@ declare module zs.platform {
          */
         static canShareRecorder(params?: any): any;
         /**
-         * 状态栏高度 (wx,op)
+         * 状态栏高度 (wx,op,vv)
          * 返回 number
          */
         static statusBarHeight(params?: any): any;
         /**
-         * 屏幕宽度 (wx,op)
+         * 屏幕宽度 (wx,op,vv)
          * 返回 number
          * @param params 
          */
         static screenWidth(params?: any): any;
         /**
-         * 屏幕高度 (wx,op)
+         * 屏幕高度 (wx,op,vv)
          * 返回 number
          */
         static screenHeight(params?: any): any;
         /**
-         * 震动 (wx,op)
-         * wx,op
+         * 震动 (wx,op,vv)
+         * wx,op,vv
          * isLong? boolean 是否为长震
          */
         static vibrate(params?: any): any;
         /**
-         * 网络是否正常 (wx,op)
+         * 网络是否正常 (wx,op,vv)
          * 返回 bool
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx,op)
+         * 添加显示事件 (wx,op,vv)
          * showHandler Function 事件回调
          */
         static addEventShow(params?: any): any;
         /**
-         * 添加隐藏事件 (wx,op)
+         * 添加隐藏事件 (wx,op,vv)
          * hideHandler Function 事件回调
          */
         static addEventHide(params?: any): any;
@@ -1795,19 +1800,22 @@ declare module zs.platform {
          */
         static setNativeLastShowTime(time: number);
         /**
-        * 初始化原生广告 (op)
+        * 初始化原生广告 (op,vv)
         * op
         * id string 广告ID
+        * vv
+        * adUnitId1 string 广告ID1
+        * adUnitId2 string 广告ID2
         */
-        static initNativeAd({ id: any });
+        static initNativeAd(params?: any): any;
         /**
-        * 原生请求显示上报 (op)
+        * 原生请求显示上报 (op,vv)
         * @param adIcon 广告Icon
         * @param adId 广告ID
         */
         static sendReqAdShowReport(adIcon: string, adId: string);
         /**
-         * 原生请求点击上报 (op)
+         * 原生请求点击上报 (op,vv)
          * @param adIcon 广告Icon
          * @param adId 广告ID
          */
@@ -1836,15 +1844,19 @@ declare module zs.platform {
          */
         static getScene(): string;
         /**
-         * 显示插屏广告
-         * @param params 
+         * 显示插屏广告 (vv)
+         * vv
+         * closeFunc Handler 关闭事件回调
          */
-        static showInsertAd(params: any);
+        static showInsertAd(params: any): any;
         /**
-         * 初始化横幅广告ID
-         * @param params 
+         * 初始化横幅广告ID (vv)
+         * vv
+         * bannerAdUnit string 广告Unit
+         * bannerAdUnit2 string 广告Unit2
+         * bannerLiveTime number 广告存活时间
          */
-        static initBannerId(params: any);
+        static initBannerId(params: any): any;
         /**
         * 初始化分享菜单
         * @param title 标题
@@ -1901,11 +1913,6 @@ declare module zs.platform {
           * @param params 
           */
         static hideBlockAd(params?: any): any;
-        /**
-         * 
-         * @param params 
-         */
-        static showInsertAd(params?: any): any;
         /**
          * 
          * @param params 

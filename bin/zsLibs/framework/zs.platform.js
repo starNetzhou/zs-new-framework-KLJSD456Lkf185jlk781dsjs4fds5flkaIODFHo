@@ -5,13 +5,13 @@ window.zs.platform = window.zs.platform || {};
     const syncList = ['share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable',
         'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'checkBanner', 'clearDelayBanner', 'showBanner',
         'updateBanner', 'updateBannerPos', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause',
-        'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight',
+        'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'c',
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',
         'recorderShare', 'showFavoriteGuide', 'setDefaultShare', 'updateReviveTypeInfo', 'setNativeLastShowTime',
         'initNativeAd', 'sendReqAdShowReport', 'sendReqAdClickReport', 'initGamePortalAd', 'showToast',
-        'setIsInOneMin', 'getIsInOneMin', 'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
+        'getLaunchOptions', 'getScene', 'showInsertAd', 'initBannerId', 'showOnePixelBanner', 'showShareMenu',
         'openShare', 'getReadSetting', 'playSound', 'initAppBox', 'showAppBox', 'checkBlockAd', 'showBlockAd',
-        'hideBlockAd', 'showInsertAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
+        'hideBlockAd', 'destroyInsertAd', 'pauseSound', 'getAdPos', 'sendAppFrom'];
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
