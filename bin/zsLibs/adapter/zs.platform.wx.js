@@ -109,7 +109,7 @@ window.platform = (function () {
             title: params.title,
             imageUrl: params.imgUrl
         }
-        wx.onShareAppMessage(() => shareInfo)
+        wx.onShareAppMessage(() => shareInfo);
     }
 
     platform.setCloudStorage = function _async(params) {
@@ -137,7 +137,7 @@ window.platform = (function () {
     platform.getCloudStorage = function _async(params) {
         return new Promise((resolve, reject) => {
             if (true) {
-                zs.log.warn('该接口只可在开放数据域下使用,直接调用无效')
+                zs.log.warn('getCloudStorage接口只可在开放数据域下使用,直接调用无效')
                 return reject();
             }
             if (params.keyList == null) {
@@ -396,21 +396,8 @@ window.platform = (function () {
     }
 
     platform.showBanner = function (params) {
-        if (params.onError == null) {
-            zs.log.warn('方法（ showBanner ）缺少必要参数（ onError ）', 'Platform');
-            return;
-        }
-        if (platform.bannerId == null) { return; }
-        if (platform.bannerAd == null) {
-            platform.initBanner(platform.bannerId, platform.keepTime || 1000, params.onError);
-        }
-        if (platform.bannerAd) {
-            if (platform.bannerStyle) {
-                platform.bannerAd.style.top = window.screen.availHeight - platform.bannerStyle.height - 3;
-                platform.bannerAd.style.left = (window.screen.availWidth - platform.bannerStyle.width) * 0.5;
-            }
-            platform.bannerAd.show();
-        }
+        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
+        wxBannerMgr.showBanner(params.left, params.bottom, params.length);
     }
 
     platform.updateBanner = function (params) {
@@ -518,7 +505,7 @@ window.platform = (function () {
                 bgm: data.bgm || "",
                 timeRange: [[0, 15000]],
                 button: {
-                    template: data.buttomType || "challenge"
+                    template: data.buttonType || "challenge"
                 },
                 title: {
                     template: data.titleType || "default.level",
@@ -528,7 +515,7 @@ window.platform = (function () {
         });
         platform.shareRecorderButton.show();
         platform.shareRecorderButton.onTap((result) => {
-            data.successHandler && data.successHandler(result);
+            data.successHandler && data.successHandler.runWith(result);
         });
     }
 
