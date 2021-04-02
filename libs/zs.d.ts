@@ -1429,30 +1429,30 @@ declare module zs.platform {
      */
     class async {
         /**
-         * 登录接口 (wx)
-         * wx
+         * 登录接口 (wx,op)
+         * wx,op
          * then 成功信息
          * catch 失败信息
          */
         static login(params?: any): Promise<any>;
         /**
-         * 获取登录参数 (wx)
-         * wx
+         * 获取登录参数 (wx,op)
+         * wx,op
          * then 登录code
          * @param params 
          */
         static getLoginParams(params?: any): Promise<any>;
         /**
-         * 网络请求 (wx)
-         * wx
+         * 网络请求 (wx,op)
+         * wx,op
          * url string URL地址
          * data any 参数信息
          * method string 请求方法（POST、GET等）
          */
         static request(params?: any): Promise<any>;
         /**
-         * 播放视频广告 (wx)
-         * wx
+         * 播放视频广告 (wx,op)
+         * wx,op
          * then 播放关闭，返回bool， true为完成播放，false为中断播放
          * catch 播放失败， 返回错误信息
          */
@@ -1491,8 +1491,8 @@ declare module zs.platform {
          */
         static navigateToOther(params?: any): Promise<any>;
         /**
-         * 加载分包 (wx)
-         * wx
+         * 加载分包 (wx,op)
+         * wx,op
          * pkgName string 分包名称
          * progressHandler? Handler 分包加载进度回调,返回进度number
          */
@@ -1528,27 +1528,44 @@ declare module zs.platform {
          */
         static checkFollowAwemeSta(params?: any): Promise<any>;
         /**
-         * oppo 加载原生
+         * 加载原生广告 (op)
+         * op
+         * then 返回广告数据
+         * catch 返回错误信息
          */
         static loadNativeAd(): Promise<any>;
         /**
-         * oppo 是否在游戏之前展示
+         * 是否在游戏之前展示 (op)
+         * then 确认
+         * catch 拒绝
          */
         static isBeforeGameAccount(): Promise<any>;
         /**
-         * oppo 获取上报状态
+         * 获取上报状态 (op)
+         * op
+         * then 确认
+         * catch 拒绝
          */
         static getAdReporteStatus(adUnit): Promise<any>;
         /**
-         * oppo 显示原生更多好玩
+         * 显示原生更多好玩 (op)
+         * op
+         * then 确认
+         * catch 拒绝
          */
         static showGamePortalAd(): Promise<any>;
         /**
-         * 判断是否有桌面图标
+         * 判断是否有桌面图标 (op)
+         * op
+         * then boolean 结果 true 有 false 无
+         * catch 错误
          */
         static hasDesktopIcon(): Promise<any>;
         /**
-         * 创建桌面图标
+         * 创建桌面图标 (op)
+         * op
+         * then 创建成功
+         * catch 创建失败
          */
         static createDesktopIcon(): Promise<any>;
         /**
@@ -1589,13 +1606,13 @@ declare module zs.platform {
          */
         static userInfoDestroy(params?: any): any;
         /**
-         * 初始化视频广告 (wx)
-         * wx
+         * 初始化视频广告 (wx,op)
+         * wx,op
          * id string 广告ID
          */
         static initVideo(params?: any): any;
         /**
-         * 视频广告是否已开启 (wx)
+         * 视频广告是否已开启 (wx,op)
          * 返回 bool
          */
         static isVideoEnable(params?: any): any;
@@ -1613,17 +1630,19 @@ declare module zs.platform {
          */
         static loadInsert(params?: any): any;
         /**
-         * 创建横幅广告
-         * 
+         * 创建横幅广告 (op)
+         * op
+         * id string 广告ID
+         * onError Handler 错误事件
          */
         static createBanner(params?: any): any;
         /**
-         * 初始化横幅广告 (wx)
+         * 初始化横幅广告 (wx,op)
          * 
          */
         static initBanner(params?: any): any;
         /**
-         * 检查横幅广告 (wx)
+         * 检查横幅广告 (wx,op)
          * wx
          * data any 广告配置，参照productCfg banner配置格式
          */
@@ -1633,11 +1652,13 @@ declare module zs.platform {
          */
         static clearDelayBanner(params?: any): any;
         /**
-         * 显示横幅广告 (wx)
+         * 显示横幅广告 (wx,op)
          * wx
          * left? number 左部偏移,默认0
          * bottom? number 底部偏移，默认0
          * length? number 长度，默认1
+         * op
+         * onError Handler 错误事件
          */
         static showBanner(params?: any): any;
         /**
@@ -1656,7 +1677,7 @@ declare module zs.platform {
          */
         static updateBannerPos(params?: any): any;
         /**
-         * 隐藏横幅广告 (wx)
+         * 隐藏横幅广告 (wx,op)
          */
         static hideBanner(params?: any): any;
         /**
@@ -1696,47 +1717,43 @@ declare module zs.platform {
         static recorderHide(params?: any): any;
         /**
          * 是否支持录像 (wx)
-         * wx
          * 返回 bool
          */
         static canShareRecorder(params?: any): any;
         /**
-         * 状态栏高度 (wx)
+         * 状态栏高度 (wx,op)
          * 返回 number
          */
         static statusBarHeight(params?: any): any;
         /**
-         * 屏幕宽度 (wx)
-         * wx
+         * 屏幕宽度 (wx,op)
          * 返回 number
          * @param params 
          */
         static screenWidth(params?: any): any;
         /**
-         * 屏幕高度 (wx)
-         * wx
+         * 屏幕高度 (wx,op)
          * 返回 number
          */
         static screenHeight(params?: any): any;
         /**
-         * 震动 (wx)
-         * wx
+         * 震动 (wx,op)
+         * wx,op
          * isLong? boolean 是否为长震
          */
         static vibrate(params?: any): any;
         /**
-         * 网络是否正常 (wx)
-         * wx
+         * 网络是否正常 (wx,op)
          * 返回 bool
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx)
+         * 添加显示事件 (wx,op)
          * showHandler Function 事件回调
          */
         static addEventShow(params?: any): any;
         /**
-         * 添加隐藏事件 (wx)
+         * 添加隐藏事件 (wx,op)
          * hideHandler Function 事件回调
          */
         static addEventHide(params?: any): any;
@@ -1768,46 +1785,44 @@ declare module zs.platform {
          */
         static setDefaultShare(params?: any): any;
         /**
-         * 
+         * 更新复活类型信息 (op)
+         * @param type 复活类型
          */
-        static updateReviveTypeInfo(type);
+        static updateReviveTypeInfo(type: string);
         /**
-         * 设置原生最后显示的时间
-         * @param time 
+         * 设置原生最后显示的时间 (op)
+         * @param time 时间
          */
-        static setNativeLastShowTime(time: Number);
+        static setNativeLastShowTime(time: number);
         /**
-        * oppo 初始化原生
+        * 初始化原生广告 (op)
+        * op
+        * id string 广告ID
         */
         static initNativeAd({ id: any });
         /**
-        * oppo 原生请求显示上报
-        * @param adIcon 
-        * @param adId 
+        * 原生请求显示上报 (op)
+        * @param adIcon 广告Icon
+        * @param adId 广告ID
         */
-        static sendReqAdShowReport(adIcon, adId);
+        static sendReqAdShowReport(adIcon: string, adId: string);
         /**
-         * oppo 原生请求点击上报
-         * @param adIcon 
-         * @param adId 
+         * 原生请求点击上报 (op)
+         * @param adIcon 广告Icon
+         * @param adId 广告ID
          */
-        static sendReqAdClickReport(adIcon, adId);
+        static sendReqAdClickReport(adIcon: string, adId: string);
         /**
-         * 原生平台弹窗
-         * @param val 
-         * @param time 
+         * 初始化互推盒子 (op)
+         * @param adUnitId 盒子ID
          */
-        static showToast(val, time?);
+        static initGamePortalAd(adUnitId: string);
         /**
-         * oppo 设置一分钟内展不展示广告
-         * @param val 
+         * 原生平台弹窗 (op)
+         * @param title 标题
+         * @param duration 时间
          */
-        static setIsInOneMin(val);
-        /**
-         * oppo 获取一分钟之内展示不展示广告
-         * @returns bool = true 不展示广告 false 正常展示广告
-         */
-        static getIsInOneMin(): boolean;
+        static showToast(title: string, time?: number);
         /**
          * 获取平台登陆信息 (wx)
          * wx
@@ -1875,7 +1890,6 @@ declare module zs.platform {
       * @param pos 适配信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
       * @param loadFunc 加载后的回调 
       */
-        static showToast(text: string, time?: number);
         static checkBlockAd(blockAdUnit, orient, Num, pos, loadFunc): any;
         /**
           * 

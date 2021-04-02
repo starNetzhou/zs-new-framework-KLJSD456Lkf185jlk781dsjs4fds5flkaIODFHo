@@ -15,8 +15,8 @@ window.zs.platform = window.zs.platform || {};
     const asyncList = ['login', 'getLoginParams', 'request', 'playVideo', 'setCloudStorage', 'getCloudStorage',
         'userInfoCreate', 'navigateToOther', 'loadSubpackage', 'showModel', 'getUserInfo', 'authorize', 'addShortcut',
         'openAwemeUserProfile', 'checkFollowAwemeState', 'loadNativeAd', 'isBeforeGameAccount', 'getAdReporteStatus',
-        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple', 'showGamePortalAd',
-        'hasDesktopIcon', 'createDesktopIcon', 'isColorSignExistSync', 'addRecentColorSign', 'getSetting'];
+        'showGamePortalAd', 'hasDesktopIcon', 'createDesktopIcon', 'getNetworkType', 'shareRecorderVideo', 'showMoreGamesModalSimple',
+        'isColorSignExistSync', 'addRecentColorSign', 'getSetting'];
 
     function init() {
         if (proxy) { proxy.init(); }

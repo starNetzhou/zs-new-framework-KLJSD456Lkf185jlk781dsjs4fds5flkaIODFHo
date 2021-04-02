@@ -264,7 +264,7 @@ window.platform = (function () {
         });
     }
 
-    platform.initBanner = function (params) {
+    platform.initBanner = function () {
         let zs_onemin_show_ad_switch = zs.product.get("zs_onemin_show_ad_switch");
         let zs_show_banner_time = zs.product.get("zs_show_banner_time");
         if (zs_onemin_show_ad_switch) {
@@ -727,7 +727,7 @@ window.platform = (function () {
         qg.showToast({
             title: value,
             icon: 'success',
-            duration: 2000
+            duration: duration
         })
     }
 
