@@ -12,13 +12,6 @@ window.zs = window.zs || {};
     })(ResourceType = ResourceType || (ResourceType = {}));
 
     class resource {
-        // static get fguiTextureMap() {
-        //     if (this._fguiTextureMap == null) {
-        //         this._fguiTextureMap = {};
-        //     }
-        //     return this._fguiTextureMap;
-        // }
-
         static init() {
             resource.loadedPacks = [];
             resource.preloadPacks = [];
@@ -72,8 +65,9 @@ window.zs = window.zs || {};
         }
 
         static load(url, type) {
-            let packKey = resource.check(url);
             return new Promise((resolve, reject) => {
+                if (!url) { return resolve(); }
+                let packKey = resource.check(url);
                 resource.numLoading++;
                 if (packKey && !this.isPackLoaded(packKey)) {
                     zs.platform.async.loadSubpackage({ pkgName: resource.subpacks[packKey] })
@@ -125,13 +119,6 @@ window.zs = window.zs || {};
                             fairygui.UIPackage.loadPackage(url, Laya.Handler.create(this, (result) => {
                                 if (result && result.length > 0) {
                                     let pack = result[0];
-                                    // let textureMap = this.fguiTextureMap[pack._id];
-                                    // if (textureMap && textureMap.length > 0) {
-                                    //     for (let i = 0, n = textureMap.length; i < n; i++) {
-                                    //         textureMap[i].lock = false;
-                                    //     }
-                                    // }
-                                    // textureMap = [];
                                     let items = pack._items;
                                     for (let i = 0, n = items.length; i < n; i++) {
                                         let item = items[i];
@@ -139,11 +126,9 @@ window.zs = window.zs || {};
                                             let texture = pack.getItemAsset(item);
                                             if (texture._bitmap) {
                                                 texture._bitmap.lock = true;
-                                                // textureMap.push(texture._bitmap);
                                             }
                                         }
                                     }
-                                    // this.fguiTextureMap[pack._id] = textureMap;
                                     resolve(pack);
                                 } else {
                                     resolve(null);
@@ -161,13 +146,6 @@ window.zs = window.zs || {};
         }
         static destroyFGUIPackage(pack) {
             if (pack) {
-                // let textureMap = this.fguiTextureMap[pack._id];
-                // if (textureMap && textureMap.length > 0) {
-                //     for (let i = 0, n = textureMap.length; i < n; i++) {
-                //         textureMap[i].lock = false;
-                //     }
-                // }
-                // delete this.fguiTextureMap[pack._id];
                 pack.dispose();
             }
         }
@@ -197,14 +175,39 @@ window.zs = window.zs || {};
                 });
             }
             if (url == null || isAsync) {
-                let config = await zs.resource.load(path)
+                console.log("configs load " + key + " : " + path + " : " + url);
+                await zs.resource.load(path)
+                    .then((result) => {
+                        configs.list[key] = result;
+                    })
                     .catch(() => {
                         zs.log.warn("本地无法正确加载配置表 " + key + " 路径为 " + path, "Configs");
                     });
-                configs.list[key] = config;
             }
             if (url) {
-                // TODO 加入网络获取配置
+                let urlSplit = url.split('>>', 2);
+                let lenUrlSplit = urlSplit.length;
+                if (lenUrlSplit > 0) {
+                    let module = urlSplit.length > 1 ? urlSplit[0] : null;
+                    let table = urlSplit.length > 1 ? urlSplit[1] : urlSplit[0];
+                    if (isAsync) {
+                        zs.network.config(false, module, table)
+                            .then((result) => {
+                                result && (configs.list[key] = result);
+                                console.log("zs.config remote async load", result);
+                            })
+                            .catch(() => {
+                                zs.log.warn("远程无法正确加载配置表 " + key + " 路径为 " + url, "Configs");
+                            });
+                    } else {
+                        let result = await zs.network.config(false, module, table)
+                            .catch(() => {
+                                zs.log.warn("远程无法正确加载配置表 " + key + " 路径为 " + url, "Configs");
+                            });
+                        result && (configs.list[key] = result);
+                        console.log("zs.config remote sync load", result);
+                    }
+                }
             }
             return new Promise((resolve, reject) => {
                 resolve(configs.list[key]);

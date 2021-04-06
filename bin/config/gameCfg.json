@@ -85,10 +85,13 @@
     },
     "resources": {
         "configs": {
+            "gamedata": [
+                null,
+                "GameDataCfg"
+            ],
             "nick": [
                 "config/nickname.json",
-                null,
-                true
+                null
             ]
         },
         "prefabs": {}

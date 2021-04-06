@@ -373,6 +373,10 @@ window.zs = window.zs || {};
             await zs.fgui.loadPacks(zs.configs.gameCfg.fguiPacks, true);
             this.onFGUIBind && this.onFGUIBind.run();
             this.progress = 40;
+            zs.log.debug("web 设置", 'Core');
+            core.userInfo = await zs.network.init();
+            core.userId = core.userInfo.user_id;
+            this.progress = 50;
             zs.log.debug("加载基础配置", 'Core');
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.configs) {
                 let cfgs = zs.configs.gameCfg.resources.configs;
@@ -383,8 +387,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            this.progress = 50;
-            zs.log.debug("加载基础资产", 'Core');
+            this.progress = 60;
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.prefabs) {
                 let cfgs = zs.configs.gameCfg.resources.prefabs;
                 for (let key in cfgs) {
@@ -394,10 +397,6 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            this.progress = 60;
-            zs.log.debug("web 设置", 'Core');
-            core.userInfo = await zs.network.init();
-            core.userId = core.userInfo.user_id;
             this.progress = 70;
             zs.log.debug("运营设置", 'Core');
             let switchs = await zs.network.config(true);
