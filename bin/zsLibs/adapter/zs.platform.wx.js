@@ -24,7 +24,7 @@ window.platform = (function () {
         console.log("微信平台初始化...");
     }
 
-    platform.initAds() = function () {
+    platform.initAds = function () {
         platform.initBanner();
         platform.initVideo({ id: zs.product.get("zs_video_adunit") });
     }
