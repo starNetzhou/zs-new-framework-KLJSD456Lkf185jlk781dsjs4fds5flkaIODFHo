@@ -2,6 +2,9 @@ import FGUI_hot_game from "./export/FGUI_hot_game";
 import FGUI_Side from "./export/FGUI_Side";
 
 export default class exporter_side extends zs.fgui.base {
+
+    static typeDefine = FGUI_Side;
+
     // 导出容器
     content: FGUI_hot_game;
     // 导出列表
@@ -27,27 +30,12 @@ export default class exporter_side extends zs.fgui.base {
             this.adList.itemRenderer = Laya.Handler.create(this, this.onAdListRender, null, false);
             this.adList.on(fgui.Events.CLICK_ITEM, this, this.onAdListItemClick);
         }
-        // console.log(component);
-    }
-    static make() {
-        let view = FGUI_Side.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_Side;
     }
     dispose() {
         super.dispose();
         Laya.Tween.clearAll(this.content);
         clearTimeout(this.delayHandler);
     }
-    check(component) {
-        if (component instanceof FGUI_Side) {
-            return true;
-        }
-        return false;
-    }
-
     onBtnPopClick() {
         this.bHide = !this.bHide;
         this.updatePos();

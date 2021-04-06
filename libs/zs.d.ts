@@ -1177,14 +1177,22 @@ declare module zs.fgui {
      */
     class base {
         /**
+         * 类型定义
+         */
+        static typeDefine: typeof fairygui.GComponent;
+        /**
          * 显示组件
          */
         get view(): fairygui.GComponent;
+        /**
+         * 构造方法
+         * @param component 构造FGUI组件
+         */
         constructor(component: fairygui.GComponent);
         /**
          * 构建方法
          */
-        static make(): fairygui.GComponent;
+        static make(type?: typeof fairygui.GComponent): fairygui.GComponent;
         /**
          * 类型
          */

@@ -2,6 +2,9 @@ import FGUI_full_1 from "./export/FGUI_full_1";
 import FGUI_full_1_content from "./export/FGUI_full_1_content";
 
 export default class exporter_full_1 extends zs.exporter.full {
+
+    static typeDefine = FGUI_full_1;
+
     // 更新横幅广告延迟
     static readonly updateBannerDelay = 500;
     // 误触偏移
@@ -95,13 +98,6 @@ export default class exporter_full_1 extends zs.exporter.full {
             this.maxList_2 = this.list_2.numItems;
         }
     }
-    static make() {
-        let view = FGUI_full_1.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_full_1;
-    }
     init() {
         super.init();
         this.viewName = "FULL_1"
@@ -114,12 +110,6 @@ export default class exporter_full_1 extends zs.exporter.full {
         clearTimeout(this.delayTimer1);
         clearTimeout(this.delayTimer2);
         zs.platform.sync.hideBanner();
-    }
-    check(component: FGUI_full_1) {
-        if (component instanceof FGUI_full_1) {
-            return true;
-        }
-        return false;
     }
     setData_1(datas: ExporterData[]) {
         this._datas_1 = datas.filter(element => true);

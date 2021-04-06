@@ -2,28 +2,14 @@ import FGUI_fake_exit from "./export/FGUI_fake_exit";
 
 export default class exporter_fake_exit extends zs.fgui.base {
 
+    static typeDefine = FGUI_fake_exit;
+
     // 事件回调
     callback: Laya.Handler;
 
     constructor(component) {
         super(component);
-        if (component && component instanceof FGUI_fake_exit) {
-            component.onClick(this, this.onBtnExitClick)
-        }
-        // console.log(component);
-    }
-    static make() {
-        let view = FGUI_fake_exit.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_fake_exit;
-    }
-    check(component) {
-        if (component instanceof FGUI_fake_exit) {
-            return true;
-        }
-        return false;
+        component.onClick(this, this.onBtnExitClick)
     }
     apply() {
         return this;

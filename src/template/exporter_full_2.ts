@@ -1,6 +1,9 @@
 import FGUI_full_2 from "./export/FGUI_full_2";
 
 export default class exporter_full_2 extends zs.exporter.full {
+
+    static typeDefine = FGUI_full_2;
+
     // 误触偏移
     static readonly mistakenOffset = 300;
     // 按钮偏移时间
@@ -71,14 +74,6 @@ export default class exporter_full_2 extends zs.exporter.full {
             component.rankList.on(Laya.Event.MOUSE_DOWN, this, this.onDragStateBegin);
             component.rankList.on(Laya.Event.MOUSE_MOVE, this, this.onDragStateChanged);
         }
-        // console.log(component);
-    }
-    static make() {
-        let view = FGUI_full_2.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_full_2;
     }
     init() {
         super.init();
@@ -90,12 +85,6 @@ export default class exporter_full_2 extends zs.exporter.full {
         let view = this.view as FGUI_full_2;
         Laya.Tween.clearAll(view.btn_continue);
         zs.platform.sync.hideBanner();
-    }
-    check(component) {
-        if (component instanceof FGUI_full_2) {
-            return true;
-        }
-        return false;
     }
     setItemByData(item, data: ExporterData, rank?: number) {
         item.picture.icon = data.app_icon;
@@ -154,7 +143,7 @@ export default class exporter_full_2 extends zs.exporter.full {
                 view.btn_continue.touchable = true;
             }), Number(delayTime))
             // 展示banner
-            zs.platform.sync.updateBanner({isWait: false});
+            zs.platform.sync.updateBanner({ isWait: false });
 
             return;
         }
