@@ -2,6 +2,9 @@ import FGUI_btn_egg from "./export/FGUI_btn_egg";
 import FGUI_common_egg from "./export/FGUI_common_egg";
 
 export default class ad_egg extends zs.fgui.base {
+
+    static typeDefine = FGUI_common_egg;
+
     // 横幅广告偏移延迟
     static readonly bannerOffsetDelay = 1000;
     // 砸金蛋奖励延迟
@@ -47,13 +50,6 @@ export default class ad_egg extends zs.fgui.base {
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
         }
     }
-    static make() {
-        let view = FGUI_common_egg.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_common_egg;
-    }
     init() {
         super.init();
         this.viewName = "EGG";
@@ -61,12 +57,6 @@ export default class ad_egg extends zs.fgui.base {
     dispose() {
         this.removeEvent();
         super.dispose();
-    }
-    check(component) {
-        if (component instanceof FGUI_common_egg) {
-            return true;
-        }
-        return false;
     }
     setCloseCallback(callback) {
         this.callback = callback;
