@@ -17,12 +17,14 @@
     "compressImageNoteList": [
         ""
     ],
-    "compressJs": false,
+    "compressJs": true,
     "compressJsFilter": [
         "$basePath/**/*.js",
-        "!$basePath/libs/min/**/*.js"
+        "!$basePath/libs/min/**/*.js",
+        "!$basePath/zsLibs/fairygui/*.js"
     ],
     "compressJsNoteList": [
+        "",
         "",
         ""
     ],
@@ -69,7 +71,7 @@
     "useMinJsLibs": true,
     "es6toes5": false,
     "projectType": "ts",
-    "pubTime": 1616476888871,
+    "pubTime": 1617862817028,
     "uesEnginePlugin": false,
     "wxOptimize": {
         "useOptimizeOpen": false,
