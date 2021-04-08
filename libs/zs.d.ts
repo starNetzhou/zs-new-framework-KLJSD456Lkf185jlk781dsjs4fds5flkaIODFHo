@@ -1763,16 +1763,6 @@ declare module zs.platform {
          */
         static isNetValid(params?: any): any;
         /**
-         * 添加显示事件 (wx,op,vv,qq,tt)
-         * showHandler Function 事件回调
-         */
-        static addEventShow(params?: any): any;
-        /**
-         * 添加隐藏事件 (wx,op,vv,qq,tt)
-         * hideHandler Function 事件回调
-         */
-        static addEventHide(params?: any): any;
-        /**
          * 显示单像素banner (tt)
          */
         static showOnePixelBanner(params?: any): any;
