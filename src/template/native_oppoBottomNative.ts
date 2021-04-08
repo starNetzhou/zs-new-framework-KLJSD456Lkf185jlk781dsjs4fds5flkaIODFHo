@@ -1,5 +1,6 @@
 import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import FGUI_ScreeNative from "./export/FGUI_ScreeNative";
+import ProductKey from "./ProductKey";
 
 /*底部原生
 * @ Author: yangcheng
@@ -49,7 +50,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
         this.owner.visible = false;
         this.closed = false;
         zs.platform.async.isBeforeGameAccount().then(() => {
-            this.adUnit = zs.product.get("zs_native_adunit")
+            this.adUnit = ProductKey.zs_native_adunit;
             //初始化原生
             zs.platform.sync.initNativeAd({ id: this.adUnit });
             //加载原生
@@ -72,17 +73,17 @@ export default class native_oppoBottomNative extends zs.fgui.base {
         var url = adData.imgUrlList[0];
         console.log("🐑 : --- >>> ", data);
         this.adId = adData.adId;
-        let zs_native_click_switch = zs.product.get('zs_native_click_switch');
-        let zs_jump_time = zs.product.get('zs_jump_time');
-        let zs_native_adunit = zs.product.get('zs_native_adunit');
-        let zs_native_touch_switch = zs.product.get('zs_native_touch_switch');
+        let zs_native_click_switch = ProductKey.zs_native_click_switch;
+        let zs_jump_time = ProductKey.zs_jump_time;
+        let zs_native_adunit = ProductKey.zs_native_adunit;
+        let zs_native_touch_switch = ProductKey.zs_native_touch_switch;
 
         //icon
         this.owner.btnAdImg.icon = url;
         this.owner.lab_desc.text = adData.desc;
         var btnText;
         if (zs_native_click_switch) {
-            btnText = zs.product.get('zs_native_btn_text') ? zs.product.get('zs_native_btn_text') : adData.clickBtnTxt;
+            btnText = ProductKey.zs_native_btn_text ? ProductKey.zs_native_btn_text : adData.clickBtnTxt;
         } else {
             btnText = "点击跳过";
         }
@@ -122,7 +123,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
     }
     /**打开广告 或者 关闭页面 */
     openAdAndCloseView() {
-        let zs_native_click_switch = zs.product.get('zs_native_click_switch')
+        let zs_native_click_switch = ProductKey.zs_native_click_switch;
         if (zs_native_click_switch) {
             // Laya.SoundManager.playSound(PlatformMgr.clickSound);
             zs.platform.sync.sendReqAdClickReport(this.adUnit, this.adId);

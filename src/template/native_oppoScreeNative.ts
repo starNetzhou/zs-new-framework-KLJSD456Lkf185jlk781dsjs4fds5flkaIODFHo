@@ -1,5 +1,6 @@
 import FGUI_ScreeNative from "./export/FGUI_ScreeNative";
 import native_oppoBottomNative from "./native_oppoBottomNative";
+import ProductKey from "./ProductKey";
 
 /*全屏原生导出
 * @ Author: yangcheng
@@ -20,7 +21,7 @@ export default class native_oppoScreeNative extends native_oppoBottomNative {
         return false;
     }
     apply() {
-        let zs_native_limit = zs.product.get('zs_native_limit');
+        let zs_native_limit = ProductKey.zs_native_limit;
         console.log("🐑 下一关开始/重新开始原生广告开关 : --- >>> ", zs_native_limit);
         if (!zs_native_limit) {
             this.closeView();
