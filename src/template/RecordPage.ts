@@ -1,5 +1,6 @@
 import msgbox from "./common_msg";
 import FGUI_RecordPage from "./export/FGUI_RecordPage";
+import ProductKey from "./ProductKey";
 
 /**分享录屏界面 */
 export default class RecordPage extends zs.fgui.base {
@@ -38,8 +39,8 @@ export default class RecordPage extends zs.fgui.base {
     apply() {
         //停止录屏
         zs.platform.sync.recorderStop();
-        let zs_switch = zs.product.get("zs_switch");
-        let delay_time = zs.product.get("zs_button_delay_time");
+        let zs_switch = ProductKey.zs_switch;
+        let delay_time = ProductKey.zs_button_delay_time;
         if (zs_switch && delay_time > 0) {
             this.node.btn_drop_share.visible = false;
             Laya.timer.once(delay_time, this, () => {

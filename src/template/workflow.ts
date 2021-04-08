@@ -1,6 +1,7 @@
 import exportBinder from "./export/exportBinder";
 import BtnMoreGame from "./BtnMoreGame";
 import RecordPage from "./RecordPage";
+import ProductKey from "./ProductKey";
 
 export default class workflow extends zs.workflow {
 
@@ -29,7 +30,7 @@ export default class workflow extends zs.workflow {
     }
 
     _shareRecordPage: RecordPage = null;
-    
+
     public onShareHandler: Laya.Handler;
 
     registe() {
@@ -60,8 +61,8 @@ export default class workflow extends zs.workflow {
 
     onGamePlay(complete) {
         complete.run();
-        let zs_best_videotape_time = Number(zs.product.get("zs_best_videotape_time")) / 1000;
-        let zs_hide_banner_switch = zs.product.get("zs_hide_banner_switch");
+        let zs_best_videotape_time = ProductKey.zs_best_videotape_time / 1000;
+        let zs_hide_banner_switch = ProductKey.zs_hide_banner_switch;
         //开始录屏
         zs.platform.sync.recorderStart({ maxTime: zs_best_videotape_time });
         //显示单像素banner
@@ -73,13 +74,13 @@ export default class workflow extends zs.workflow {
     onGameSettle(complete) {
         complete.run();
         //预加载插屏
-        zs.platform.sync.initInsert({ id: zs.product.get("zs_full_screen_adunit") });
+        zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
     }
 
     onGameEnd(complete) {
         complete.run();
         zs.core.workflow.next();
-        if (zs.product.get("zs_full_screen_ad") == 1) {
+        if (ProductKey.zs_full_screen_ad) {
             zs.platform.sync.loadInsert({ closeHandler: () => { }, errorHandler: () => { } });
         }
     }
