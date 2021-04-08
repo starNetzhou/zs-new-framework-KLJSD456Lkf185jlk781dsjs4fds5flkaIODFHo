@@ -76,16 +76,17 @@ window.zs.fgui = window.zs.fgui || {};
     }
     class base {
         constructor(component) {
-            if (this.check(component)) {
-                this._view = component;
-                component.baseCtrl = this;
-                this.init();
-            }
+            this._view = component;
+            component.baseCtrl = this;
+            this.init();
         }
         get view() {
             return this._view;
         }
-        static make() {
+        static make(type) {
+            if (type && type.prototype instanceof fairygui.GComponent) {
+                return type.createInstance();
+            }
             return null;
         }
         static type() {
@@ -103,6 +104,8 @@ window.zs.fgui = window.zs.fgui || {};
         apply() { }
         applyConfig() { }
     }
+    base.typeDefine = null;
+
     class window {
         static create(x, y, width, height) {
             if (x == null) {
@@ -136,7 +139,7 @@ window.zs.fgui = window.zs.fgui || {};
             if (ctr == null || this.window == null) {
                 return this;
             }
-            let view = ctr.make();
+            let view = ctr.make(ctr.typeDefine || ctr.type());
             if (index) {
                 this.window.contentPane.addChildAt(view, index);
             } else {
@@ -608,10 +611,8 @@ window.zs.fgui = window.zs.fgui || {};
         }
         constructor(component) {
             super(component);
-            if (component && component instanceof zs.ui.FGUI_msgbox) {
-                component.btn_confirm.onClick(this, this.onConfirmClick);
-                component.btn_cancel.onClick(this, this.onCancelClick);
-            }
+            component.btn_confirm.onClick(this, this.onConfirmClick);
+            component.btn_cancel.onClick(this, this.onCancelClick);
         }
         static make() {
             let view = zs.ui.FGUI_msgbox.createInstance();
