@@ -1,15 +1,16 @@
 import FGUI_full_1 from "./export/FGUI_full_1";
+import ProductKey from "./ProductKey";
 
 export default class exporter_full_1 extends zs.exporter.full {
-	// 拖拽自动弹导出生效距离
+    // 拖拽自动弹导出生效距离
     static readonly checkScrollDistance = 30;
-	// 自动滚动时间
+    // 自动滚动时间
     static readonly autoScrollTime = 3000;
-	// 拖拽恢复时间
+    // 拖拽恢复时间
     static readonly dragRecoverTime = 3;
-	// 自动滚动速度
+    // 自动滚动速度
     static readonly autoScrollSpeed = 50;
-	// 误触偏移
+    // 误触偏移
     static readonly mistakenOffset = 350;
 
     // 列表一长度
@@ -135,8 +136,8 @@ export default class exporter_full_1 extends zs.exporter.full {
         return this;
     }
     onClickContinue() {
-        let fullSwitch = zs.product.get("zs_full_screen_button_switch")
-        let delayTime = zs.product.get("zs_button_delay_time")
+        let fullSwitch = ProductKey.zs_full_screen_button_switch;
+        let delayTime = ProductKey.zs_button_delay_time;
         let view = this.view as FGUI_full_1;
         if (fullSwitch && !this.bClickContinue) {
             view.btn_continue.touchable = false;
@@ -288,7 +289,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     scrollJumpExport() {
         // 滑动跳出
         if (zs.exporter.utils.checkScroll(this.touchX, this.touchY, exporter_full_1.checkScrollDistance)) {
-            var bScrollJump = zs.product.get("zs_slide_jump_switch");
+            var bScrollJump = ProductKey.zs_slide_jump_switch;
             console.log("滑动跳转开关", bScrollJump)
             if (bScrollJump) {
                 this.randomJumpExport();
