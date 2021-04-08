@@ -2,12 +2,16 @@ import FGUI_hot_game from "./export/FGUI_hot_game";
 import FGUI_Side from "./export/FGUI_Side";
 
 export default class exporter_side extends zs.fgui.base {
+
+    static typeDefine = FGUI_Side;
+
     // 导出容器
     content: FGUI_hot_game;
     // 导出列表
     adList: fairygui.GList;
     // 弹出控制器
     btnPopCtrl: fairygui.Controller;
+
     // 是否隐藏侧栏
     bHide: boolean;
     // 导出数据
@@ -20,33 +24,18 @@ export default class exporter_side extends zs.fgui.base {
         if (component && component instanceof FGUI_Side) {
 
             this.content = component.content;
-            this.btnPopCtrl = component.content.btnPop.c1;
             this.adList = component.content.getChild("adList") as fairygui.GList;
+            this.btnPopCtrl = component.content.btnPop.c1;
             component.content.getChild("btnPop").onClick(this, this.onBtnPopClick);
             this.adList.itemRenderer = Laya.Handler.create(this, this.onAdListRender, null, false);
             this.adList.on(fgui.Events.CLICK_ITEM, this, this.onAdListItemClick);
         }
-        // console.log(component);
-    }
-    static make() {
-        let view = FGUI_Side.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_Side;
     }
     dispose() {
         super.dispose();
         Laya.Tween.clearAll(this.content);
         clearTimeout(this.delayHandler);
     }
-    check(component) {
-        if (component instanceof FGUI_Side) {
-            return true;
-        }
-        return false;
-    }
-
     onBtnPopClick() {
         this.bHide = !this.bHide;
         this.updatePos();

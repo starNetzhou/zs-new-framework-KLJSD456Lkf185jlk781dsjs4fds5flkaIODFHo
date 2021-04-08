@@ -1,8 +1,8 @@
 export default class ProductKey {
-    static readonly zs_version = 0;
+    static readonly zs_version = 1;
     static readonly zs_switch = 0;
     static readonly zs_start_game_video_switch = 0; // 开局看视频
-    static readonly zs_banner_vertical_enable = 0; //按钮上移开关 暂时没用上 用的zs_button_delay_time
+    static readonly zs_banner_vertical_enable = 0; //按钮上移开关 暂s时没用上 用的zs_button_delay_time
     static readonly zs_jump_switch = 0; // 导出总开关
     static readonly zs_full_screen1_jump = 0;
     static readonly zs_full_screen2_jump = 0;
@@ -37,4 +37,5 @@ export default class ProductKey {
     static readonly zs_banner_refresh_time = 30000
     static readonly zs_game_start_jump_switch = 0; // 首页导出位开关
     static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
+    static readonly zs_game_banner_show_switch = 1;//游戏界面banner展示开关
 }

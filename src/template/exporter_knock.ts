@@ -2,6 +2,9 @@ import FGUI_donhua from "./export/FGUI_donhua";
 import FGUI_knock_export from "./export/FGUI_knock_export";
 
 export default class exporter_knock extends zs.fgui.base {
+
+    static typeDefine = FGUI_knock_export;
+
     // 导出列表
     listAd: fairygui.GList;
     // 锤子节点
@@ -26,22 +29,9 @@ export default class exporter_knock extends zs.fgui.base {
             component.adList.on(fgui.Events.CLICK_ITEM, this, this.onClickItem);
         }
     }
-    static make() {
-        let view = FGUI_knock_export.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_knock_export;
-    }
     dispose() {
         super.dispose();
         this.stopKnock();
-    }
-    check(component) {
-        if (component instanceof FGUI_knock_export) {
-            return true;
-        }
-        return false;
     }
     apply() {
         zs.exporter.dataMgr.load().then((result) => {

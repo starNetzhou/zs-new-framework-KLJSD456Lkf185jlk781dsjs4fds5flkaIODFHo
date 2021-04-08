@@ -2,6 +2,9 @@ import FGUI_btn_egg from "./export/FGUI_btn_egg";
 import FGUI_common_egg from "./export/FGUI_common_egg";
 
 export default class ad_egg extends zs.fgui.base {
+
+    static typeDefine = FGUI_common_egg;
+    
     // 横幅广告偏移延迟
     static readonly bannerOffsetDelay = 1000;
     // 砸金蛋奖励延迟
@@ -47,13 +50,6 @@ export default class ad_egg extends zs.fgui.base {
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
         }
     }
-    static make() {
-        let view = FGUI_common_egg.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_common_egg;
-    }
     init() {
         super.init();
         this.viewName = "EGG";
@@ -61,12 +57,6 @@ export default class ad_egg extends zs.fgui.base {
     dispose() {
         this.removeEvent();
         super.dispose();
-    }
-    check(component) {
-        if (component instanceof FGUI_common_egg) {
-            return true;
-        }
-        return false;
     }
     setCloseCallback(callback) {
         this.callback = callback;
@@ -107,12 +97,16 @@ export default class ad_egg extends zs.fgui.base {
 
     onBtnClick() {
         if (this.progress + ad_egg.click_add_percent <= 1) {
-
+            let checkInit = !zs.platform.sync.hasBanner();
+            if (checkInit) {
+                zs.platform.sync.updateBanner({ isWait: true, checkInit: true })
+            }
             this.updateRepairPorgress(this.progress + ad_egg.click_add_percent);
-            if (this.progress >= this.showBannerRange && !this.isOpenAd) {
-                this.isOpenAd = zs.platform.sync.updateBannerPos({ toTouch: true });
-                Laya.timer.once(ad_egg.bannerOffsetDelay, this, function () {
-                    zs.platform.sync.updateBannerPos({ toTouch: false });
+            if (this.progress >= this.showBannerRange && !this.isOpenAd && window.zs["wx"] && window.zs["wx"].banner) {
+                this.isOpenAd = true;
+                zs.platform.sync.showBanner();
+                Laya.timer.once(800, this, function () {
+                    Laya.Tween.to(this.btn_click, { y: this.btn_click.y - 240 }, 500);
                 });
             }
         } else {
@@ -124,7 +118,6 @@ export default class ad_egg extends zs.fgui.base {
 
     onFinish() {
         if (this.isGetAward) return;
-
         // 砸金蛋次数需要缓存
         var appId = zs.core.appId;
         var open_award_num = Laya.LocalStorage.getItem(appId + "open_award_num") || 0;

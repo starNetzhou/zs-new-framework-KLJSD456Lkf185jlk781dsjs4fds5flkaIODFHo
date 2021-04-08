@@ -1,6 +1,9 @@
 import FGUI_friend_challenge from "./export/FGUI_friend_challenge";
 
 export default class exporter_friend_challenge extends zs.fgui.base {
+
+    static typeDefine = FGUI_friend_challenge;
+
     // 昵称列表
     static nickList: string[];
     // 导出数据
@@ -15,22 +18,9 @@ export default class exporter_friend_challenge extends zs.fgui.base {
             component.challenge.btnYes.onClick(this, this.onBtnYesClick);
         }
     }
-    static make() {
-        let view = FGUI_friend_challenge.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_friend_challenge;
-    }
     init() {
         super.init();
         zs.platform.sync.hideBanner();
-    }
-    check(component) {
-        if (component instanceof FGUI_friend_challenge) {
-            return true;
-        }
-        return false;
     }
     setGameName(gameName) {
         let view = this.view as FGUI_friend_challenge;

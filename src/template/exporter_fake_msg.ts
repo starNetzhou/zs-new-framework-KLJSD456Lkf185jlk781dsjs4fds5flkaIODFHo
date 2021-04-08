@@ -2,6 +2,8 @@ import FGUI_fake_msg from "./export/FGUI_fake_msg";
 
 export default class exporter_fake_msg extends zs.fgui.base {
 
+    static typeDefine = FGUI_fake_msg;
+
     // 昵称列表
     static nickList: string[];
     // 音效路径
@@ -21,22 +23,9 @@ export default class exporter_fake_msg extends zs.fgui.base {
             component.onClick(this, this.onMsgClick);
         }
     }
-    static make() {
-        let view = FGUI_fake_msg.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_fake_msg;
-    }
     dispose() {
         super.dispose();
         Laya.Tween.clearAll(this.view);
-    }
-    check(component) {
-        if (component instanceof FGUI_fake_msg) {
-            return true;
-        }
-        return false;
     }
     setTitle(title) {
         let view = this.view as FGUI_fake_msg;
