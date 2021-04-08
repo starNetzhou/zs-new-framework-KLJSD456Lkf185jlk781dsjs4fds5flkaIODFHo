@@ -1690,12 +1690,6 @@ declare module zs.platform {
          */
         static updateBanner(params?: any): any;
         /**
-         * 更新横幅广告位置 (wx)
-         * wx
-         * toTouch? boolean 移动到点击位置
-         */
-        static updateBannerPos(params?: any): any;
-        /**
          * 隐藏横幅广告 (wx,op,vv,qq,tt)
          */
         static hideBanner(params?: any): any;
