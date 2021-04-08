@@ -1,5 +1,6 @@
 import msgbox from "./common_msg";
 import QQAd_video_get from "./export/QQAd_video_get";
+import ProductKey from "./ProductKey";
 
 export default class video_view extends zs.fgui.base {
     viewName: string;
@@ -66,7 +67,7 @@ export default class video_view extends zs.fgui.base {
     }
 
     checkVideo() {
-        if (zs.product.get("zs_swich") && zs.product.get("zs_start_video_switch")) {
+        if (ProductKey.zs_switch && ProductKey.zs_start_video_switch) {
             this.playVideo(true);
         }
         else {

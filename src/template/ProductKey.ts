@@ -25,6 +25,7 @@ export default class ProductKey {
     static readonly zs_click_award_num = "0"; // 游戏砸金蛋狂点次数（关卡模式中数字为关卡，无限模式中数字为次数，-1无限制，0无次数）
     static readonly zs_ready_click_num = "0"; // 通用砸金蛋狂点次数（关卡模式中数字为关卡，无限模式中数字为次数，-1无限制，0无次数）
     static readonly zs_click_award_since = 0; // 狂点在新用户几次游戏后出现
+    static readonly zs_click_video_time = "0";
     static readonly zs_button_delay_time = 0; // 按钮延时开关（0为关，单位毫秒）
     static readonly zs_scene_value = "1005|1006|1011|1012|1013|1014|1017|1019|1020|1023|1024|1025|1030|1031|1032|1036|1042|1047|1048|1049|1053|1102|1129"; // 场景值屏蔽
     static readonly zs_revive_way = ""; //复活方式
@@ -37,4 +38,9 @@ export default class ProductKey {
     static readonly zs_banner_refresh_time = 30000
     static readonly zs_game_start_jump_switch = 0; // 首页导出位开关
     static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
+    static readonly zs_box_switch = 0;
+    static readonly zs_start_video_switch = 0;
+    static readonly zs_click_video_switch = 0;
+    static readonly zs_banner_show_number = 3000;
+    static readonly zs_blockAdUnit_id = "";
 }

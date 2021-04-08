@@ -5,6 +5,7 @@ import btn_invite from "./btn_invite";
 import btn_more_game from "./btn_more_game";
 import block_view from "./block_view";
 import video_view from "./video_view";
+import ProductKey from "./ProductKey";
 
 export default class workflow extends zs.workflow {
 
@@ -76,7 +77,7 @@ export default class workflow extends zs.workflow {
 
     onEnterGame(complete) {
         complete.run();
-        if (window["qq"] && zs.product.get("zs_box_switch") && zs.product.get("zs_click_award_num") != 0 && zs.product.get("zs_switch")) {
+        if (window["qq"] && ProductKey.zs_box_switch && ProductKey.zs_click_award_num != "0" && ProductKey.zs_switch) {
             Laya.timer.once(1500, this, () => {
                 zs.platform.sync.showAppBox();
             });
@@ -85,7 +86,7 @@ export default class workflow extends zs.workflow {
 
     onSkinShow(complete) {
         complete.run();
-        if (zs.product.get("zs_switch")) {
+        if (ProductKey.zs_switch) {
             this.showVideoGet();
         } else {
             zs.core.workflow.next();
@@ -93,8 +94,8 @@ export default class workflow extends zs.workflow {
     }
 
     isNumber(val) {
-        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+        let regPos = /^\d+(\.\d+)?$/; //非负浮点数
+        let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
         if (regPos.test(val) || regNeg.test(val)) {
             return true;
         } else {
@@ -104,17 +105,16 @@ export default class workflow extends zs.workflow {
 
     async checkEgg(bCommon) {
         return new Promise(async (resolve, reject) => {
-            var curGameCount = 1;
+            let curGameCount = 1;
             await zs.network.download('LevelInfo').then((res) => {
                 // console.error("level = ", res)
                 curGameCount = res;
             });
-            console.log("--------------", curGameCount)
-            var zs_ready_click_num = zs.product.get("zs_ready_click_num");
-            var zs_click_award_num = zs.product.get("zs_click_award_num");
-            var zs_click_award_since = zs.product.get("zs_click_award_since");
-            var isNew = false;
-            var appId = zs.core.appId;
+            let zs_ready_click_num = ProductKey.zs_ready_click_num;
+            let zs_click_award_num = ProductKey.zs_click_award_num;
+            let zs_click_award_since = ProductKey.zs_click_award_since;
+            let isNew = false;
+            let appId = zs.core.appId;
             if (isNew && zs_click_award_since && zs_click_award_since > 0) {
                 let gameNum = Laya.LocalStorage.getItem(appId + "day_game_num");
                 console.debug("当前局数" + gameNum, zs_click_award_since + "局后开启砸金蛋");
@@ -136,7 +136,7 @@ export default class workflow extends zs.workflow {
             if (Array.isArray(num) && num.length > 0) {
                 if (num.length == 1 && num[0] == -1)
                     return resolve(null);
-                var index = num.indexOf(curGameCount);
+                let index = num.indexOf(curGameCount);
                 if (index != -1) {
                     return resolve(null);
                 }
@@ -147,7 +147,7 @@ export default class workflow extends zs.workflow {
 
     async onOpenEgg(complete) {
         complete.run();
-        var bEgg;
+        let bEgg;
         await this.checkEgg(true).then(() => {
             bEgg = true;
         }).catch(() => {
@@ -163,7 +163,7 @@ export default class workflow extends zs.workflow {
 
     async onOverEgg(complete) {
         complete.run();
-        var bEgg;
+        let bEgg;
         await this.checkEgg(false).then(() => {
             bEgg = true;
         }).catch(() => {
@@ -232,7 +232,7 @@ export default class workflow extends zs.workflow {
                     console.log("关闭砸金蛋")
                     this.hideOverEgg();
                     this.fsm.runNext();
-                    var appId = zs.core.appId;
+                    let appId = zs.core.appId;
                     let num = Laya.LocalStorage.getItem(`${appId}open_award_num`);
                     num || (num = '0');
                     Laya.LocalStorage.setItem(`${appId}open_award_num`, `${Number(num) + 1}`);
@@ -252,7 +252,7 @@ export default class workflow extends zs.workflow {
                             console.log("关闭砸金蛋")
                             this.hideOverEgg();
                             this.fsm.runNext();
-                            var appId = zs.core.appId;
+                            let appId = zs.core.appId;
                             let num = Laya.LocalStorage.getItem(`${appId}open_award_num`);
                             num || (num = '0');
                             Laya.LocalStorage.setItem(`${appId}open_award_num`, `${Number(num) + 1}`);
@@ -275,7 +275,7 @@ export default class workflow extends zs.workflow {
                 .setCloseCallback(Laya.Handler.create(this, () => {
                     this.hideCommonEgg();
                     this.fsm.runNext();
-                    var appId = zs.core.appId;
+                    let appId = zs.core.appId;
                     let num = Laya.LocalStorage.getItem(`${appId}open_ready_num`);
                     num || (num = '0');
                     Laya.LocalStorage.setItem(`${appId}open_ready_num`, `${Number(num) + 1}`);
@@ -294,7 +294,7 @@ export default class workflow extends zs.workflow {
                         .setCloseCallback(Laya.Handler.create(this, () => {
                             this.hideCommonEgg();
                             this.fsm.runNext();
-                            var appId = zs.core.appId;
+                            let appId = zs.core.appId;
                             let num = Laya.LocalStorage.getItem(`${appId}open_ready_num`);
                             num || (num = '0');
                             Laya.LocalStorage.setItem(`${appId}open_ready_num`, `${Number(num) + 1}`);
