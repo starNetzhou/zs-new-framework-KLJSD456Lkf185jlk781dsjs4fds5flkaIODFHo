@@ -1191,6 +1191,7 @@ declare module zs.fgui {
         constructor(component: fairygui.GComponent);
         /**
          * 构建方法
+         * @param type （可选）控件构建类型
          */
         static make(type?: typeof fairygui.GComponent): fairygui.GComponent;
         /**
@@ -1630,6 +1631,11 @@ declare module zs.platform {
          */
         static createBanner(params?: any): any;
         /**
+        * 是否已存在banner
+        * @param params 
+        */
+        static hasBanner(params?: any): any;
+        /**
          * 初始化横幅广告 (wx,op,vv,qq,tt)
          */
         static initBanner(params?: any): any;
@@ -1662,14 +1668,24 @@ declare module zs.platform {
          * 更新横幅广告 (wx,qq)
          * wx
          * isWait? boolean 等待展示
-         * left? number 左部偏移,默认0
-         * bottom? number 底部偏移，默认0
+         * pos? { 展示位置
+         *  left? 左偏移
+         *  right? 右偏移
+         *  top? 顶偏移
+         *  bottom? 底偏移
+         *  centerX? X位置
+         *  centerY? Y位置
+         * }
          * length? number 长度，默认1
          * qq
          * isWait? boolean 等待展示
          * position? { 展示位置
-         *  centerX X位置
-         *  centerY Y位置
+         *  left? 左偏移
+         *  right? 右偏移
+         *  top? 顶偏移
+         *  bottom? 底偏移
+         *  centerX? X位置
+         *  centerY? Y位置
          * }
          */
         static updateBanner(params?: any): any;
