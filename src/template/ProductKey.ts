@@ -31,13 +31,13 @@ export default class ProductKey {
     static readonly zs_revive_num = 0; //复活次数
     static readonly zs_system = "";
     static readonly zs_city = "上海市|广州市|深圳市|成都市|北京市";
-    static readonly zs_time = 0;    
+    static readonly zs_time = 0;
     static readonly zs_banner_banner_time = 1000
     static readonly zs_full_screen_banner_time = 3
     static readonly zs_banner_refresh_time = 30000
     static readonly zs_game_start_jump_switch = 1; // 首页导出位开关
-    static readonly zs_native_btn_text="点击查看";
-    static readonly zs_jump_time=2000;
+    static readonly zs_native_btn_text = "点击查看";
+    static readonly zs_jump_time = 2000;
     static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
     static readonly zs_share_image = "";//: string;                      //分享图片地址
     static readonly zs_full_screen_ad_enable = 0;//: boolean;           //插屏广告开启状态
@@ -59,5 +59,6 @@ export default class ProductKey {
     static readonly zs_button_delay_switch = 0;                        //按钮延迟开关(0关，1开)
     static readonly zs_native_limit_10 = 1;                            //广告拉取间隔10秒
     static readonly zs_more_reward_swich = 0;                      //单选框开关（0关，1开）
-    static readonly zs_native_delay=0;                             //原生广告延迟开关
+    static readonly zs_native_delay = 0;                             //原生广告延迟开关
+    static readonly zs_native_touch_switch = 0;
 }

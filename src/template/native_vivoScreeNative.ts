@@ -1,5 +1,6 @@
 import FGUI_BottomNative from "./export/FGUI_BottomNative";
 import FGUI_ScreeNative from "./export/FGUI_ScreeNative";
+import ProductKey from "./ProductKey";
 
 /*全屏原生导出
 * @ Author: yangcheng
@@ -61,16 +62,16 @@ export default class native_vivoScreeNative extends zs.fgui.base {
         var url = adData.imgUrlList[0];
         console.log("🐑 : --- >>> ", data);
         this.adId = adData.adId;
-        let zs_native_click_switch = zs.product.get('zs_native_click_switch');
-        let zs_jump_time = zs.product.get('zs_jump_time');
-        let zs_native_adunit = zs.product.get('zs_native_adunit');
-        let zs_native_touch_switch = zs.product.get('zs_native_touch_switch');
+        let zs_native_click_switch = ProductKey.zs_native_click_switch;
+        let zs_jump_time = ProductKey.zs_jump_time;
+        let zs_native_adunit = ProductKey.zs_native_adunit;
+        let zs_native_touch_switch = ProductKey.zs_native_touch_switch;
         //icon
         view.btnAdImg.icon = url;
         view.lab_desc.text = adData.desc;
         var btnText;
         if (zs_native_click_switch) {
-            btnText = zs.product.get('zs_native_btn_text') ? zs.product.get('zs_native_btn_text') : (adData.clickBtnTxt ? adData.clickBtnTxt : "点击查看");
+            btnText = ProductKey.zs_native_btn_text ? ProductKey.zs_native_btn_text : (adData.clickBtnTxt ? adData.clickBtnTxt : "点击查看");
         } else {
             btnText = "点击跳过";
         }
@@ -103,7 +104,7 @@ export default class native_vivoScreeNative extends zs.fgui.base {
     }
 
     openAdAndCloseView() {
-        let zs_native_click_switch = zs.product.get('zs_native_click_switch')
+        let zs_native_click_switch = ProductKey.zs_native_click_switch;
         if (zs_native_click_switch) {
             zs.platform.sync.sendReqAdClickReport(this.adUnit, this.adId);
             zs.core.addAppShow(Laya.Handler.create(this, this.closeView));
