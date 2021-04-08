@@ -365,8 +365,8 @@ window.platform = (function () {
         if (!params || !params.data || !params.data.banner) {
             return;
         }
-        var config = params.data.banner;
-        var switchShow = true;
+        let config = params.data.banner;
+        let switchShow = true;
         if (config.switch) {
             if (Array.isArray(config.switch)) {
                 for (let i = 0, n = config.switch.length; i < n; i++) {
@@ -379,16 +379,16 @@ window.platform = (function () {
                 switchShow = false;
             }
         }
-        if (!switchShow) {
+        if (!switchShow || (!config.delay && !config.auto && !config.checkInit)) {
             return;
         }
-        var isWait = config.delay || config.auto == false;
+        let isWait = config.delay || config.auto == false;
         zs.wx.banner.WxBannerMgr.Instance.checkBanner(isWait, config.pos, config.length, config.checkInit);
         if (config.delay) {
             if (zs.product.get("zs_banner_banner_time")) {
                 platform.delayBanner = setTimeout(function () {
                     zs.wx.banner.WxBannerMgr.Instance.showBanner(config.pos, config.length);
-                },zs.product.get("zs_banner_banner_time"));
+                }, zs.product.get("zs_banner_banner_time"));
             } else {
                 zs.wx.banner.WxBannerMgr.Instance.showBanner(config.pos, config.length);
             }

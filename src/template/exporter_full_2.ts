@@ -139,12 +139,17 @@ export default class exporter_full_2 extends zs.exporter.full {
             view.btn_continue.touchable = false;
             this.bClickContinue = true;
             let moveY = view.btn_continue.y - this.mistakenMoveY;
-            Laya.Tween.to(view.btn_continue, { y: moveY }, exporter_full_2.buttonOffsetTime, null, Laya.Handler.create(this, () => {
+            Laya.Tween.to(view.btn_continue, { y: moveY }, 800, null, Laya.Handler.create(this, () => {
                 view.btn_continue.touchable = true;
-            }), Number(delayTime))
+            }), Number(delayTime));
             // 展示banner
-            zs.platform.sync.updateBanner({ isWait: false });
-
+            if (window.zs["wx"] && window.zs["wx"].banner) {
+                var checkInit = !zs.platform.sync.hasBanner();
+                var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
+                Laya.timer.once(bannerTime, this, function () {
+                    zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit })
+                })
+            }
             return;
         }
         this._clickContinue && this._clickContinue.run();

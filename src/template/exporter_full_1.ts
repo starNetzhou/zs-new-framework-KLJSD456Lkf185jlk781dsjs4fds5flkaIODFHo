@@ -71,7 +71,7 @@ export default class exporter_full_1 extends zs.exporter.full {
     delayTimer2: number;
     // 点击继续事件回调
     _clickContinue: Laya.Handler;
-
+    mistakenMoveY: number;
     constructor(component: FGUI_full_1) {
         super(component);
         this.maxList_1 = 3;
@@ -127,26 +127,29 @@ export default class exporter_full_1 extends zs.exporter.full {
         return this;
     }
     setMistaken(moveY = 200) {
-        let view = this.view as FGUI_full_1;
-        view.btn_continue.y += moveY;
+        this.mistakenMoveY = moveY;
+        (this.view as FGUI_full_1).btn_continue.y += this.mistakenMoveY;
         return this;
     }
     onClickContinue() {
         let fullSwitch = zs.product.get("zs_full_screen_button_switch")
+        let delayTime = zs.product.get("zs_button_delay_time")
         let view = this.view as FGUI_full_1;
-        let zs_full_screen_banner_time = zs.product.get("zs_full_screen_banner_time");
         if (fullSwitch && !this.bClickContinue) {
             view.btn_continue.touchable = false;
             this.bClickContinue = true;
-            // 展示banner
-            zs.platform.sync.updateBanner({ isWait: true });
-            this.delayTimer1 = setTimeout(() => {
-                zs.platform.sync.updateBanner({ isWait: false });
-            }, exporter_full_1.updateBannerDelay)
-            this.delayTimer2 = setTimeout(() => {
-                zs.platform.sync.hideBanner();
+            let moveY = view.btn_continue.y - this.mistakenMoveY;
+            Laya.Tween.to(view.btn_continue, { y: moveY }, 800, null, Laya.Handler.create(this, () => {
                 view.btn_continue.touchable = true;
-            }, zs_full_screen_banner_time * 1000)
+            }), Number(delayTime));
+            // 展示banner
+            if (window.zs["wx"] && window.zs["wx"].banner) {
+                var checkInit = !zs.platform.sync.hasBanner();
+                var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
+                Laya.timer.once(bannerTime, this, function () {
+                    zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit })
+                })
+            }
             return;
         }
         this._clickContinue && this._clickContinue.run();

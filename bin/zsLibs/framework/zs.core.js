@@ -377,6 +377,10 @@ window.zs = window.zs || {};
             core.userInfo = await zs.network.init();
             core.userId = core.userInfo.user_id;
             this.progress = 50;
+            zs.log.debug("运营设置", 'Core');
+            let switchs = await zs.network.config(true);
+            zs.product.sync(switchs);
+            this.progress = 60;
             zs.log.debug("加载基础配置", 'Core');
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.configs) {
                 let cfgs = zs.configs.gameCfg.resources.configs;
@@ -387,7 +391,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            this.progress = 60;
+            this.progress = 70;
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.prefabs) {
                 let cfgs = zs.configs.gameCfg.resources.prefabs;
                 for (let key in cfgs) {
@@ -397,10 +401,6 @@ window.zs = window.zs || {};
                     }
                 }
             }
-            this.progress = 70;
-            zs.log.debug("运营设置", 'Core');
-            let switchs = await zs.network.config(true);
-            zs.product.sync(switchs);
             this.progress = 80;
             zs.log.debug("广告组件初始化", 'Core');
             zs.platform.initAds();

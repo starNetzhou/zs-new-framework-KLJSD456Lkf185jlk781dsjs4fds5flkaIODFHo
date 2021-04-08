@@ -36,5 +36,6 @@ export default class ProductKey {
     static readonly zs_full_screen_banner_time = 3
     static readonly zs_banner_refresh_time = 30000
     static readonly zs_game_start_jump_switch = 0; // 首页导出位开关
-    static readonly zs_full_screen_button_switch = 0;
+    static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
+    static readonly zs_game_banner_show_switch = 1;//游戏界面banner展示开关
 }

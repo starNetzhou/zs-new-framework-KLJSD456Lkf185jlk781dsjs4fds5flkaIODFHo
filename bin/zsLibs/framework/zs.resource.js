@@ -175,7 +175,6 @@ window.zs = window.zs || {};
                 });
             }
             if (url == null || isAsync) {
-                console.log("configs load " + key + " : " + path + " : " + url);
                 await zs.resource.load(path)
                     .then((result) => {
                         configs.list[key] = result;
@@ -194,7 +193,6 @@ window.zs = window.zs || {};
                         zs.network.config(false, module, table)
                             .then((result) => {
                                 result && (configs.list[key] = result);
-                                console.log("zs.config remote async load", result);
                             })
                             .catch(() => {
                                 zs.log.warn("远程无法正确加载配置表 " + key + " 路径为 " + url, "Configs");
@@ -205,7 +203,6 @@ window.zs = window.zs || {};
                                 zs.log.warn("远程无法正确加载配置表 " + key + " 路径为 " + url, "Configs");
                             });
                         result && (configs.list[key] = result);
-                        console.log("zs.config remote sync load", result);
                     }
                 }
             }
