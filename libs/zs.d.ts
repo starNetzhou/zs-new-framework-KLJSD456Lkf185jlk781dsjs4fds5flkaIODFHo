@@ -1177,14 +1177,23 @@ declare module zs.fgui {
      */
     class base {
         /**
+         * 类型定义
+         */
+        static typeDefine: typeof fairygui.GComponent;
+        /**
          * 显示组件
          */
         get view(): fairygui.GComponent;
+        /**
+         * 构造方法
+         * @param component 构造FGUI组件
+         */
         constructor(component: fairygui.GComponent);
         /**
          * 构建方法
+         * @param type （可选）控件构建类型
          */
-        static make(): fairygui.GComponent;
+        static make(type?: typeof fairygui.GComponent): fairygui.GComponent;
         /**
          * 类型
          */
@@ -1622,6 +1631,11 @@ declare module zs.platform {
          */
         static createBanner(params?: any): any;
         /**
+        * 是否已存在banner
+        * @param params 
+        */
+        static hasBanner(params?: any): any;
+        /**
          * 初始化横幅广告 (wx,op,vv,qq,tt)
          */
         static initBanner(params?: any): any;
@@ -1654,23 +1668,27 @@ declare module zs.platform {
          * 更新横幅广告 (wx,qq)
          * wx
          * isWait? boolean 等待展示
-         * left? number 左部偏移,默认0
-         * bottom? number 底部偏移，默认0
+         * pos? { 展示位置
+         *  left? 左偏移
+         *  right? 右偏移
+         *  top? 顶偏移
+         *  bottom? 底偏移
+         *  centerX? X位置
+         *  centerY? Y位置
+         * }
          * length? number 长度，默认1
          * qq
          * isWait? boolean 等待展示
          * position? { 展示位置
-         *  centerX X位置
-         *  centerY Y位置
+         *  left? 左偏移
+         *  right? 右偏移
+         *  top? 顶偏移
+         *  bottom? 底偏移
+         *  centerX? X位置
+         *  centerY? Y位置
          * }
          */
         static updateBanner(params?: any): any;
-        /**
-         * 更新横幅广告位置 (wx)
-         * wx
-         * toTouch? boolean 移动到点击位置
-         */
-        static updateBannerPos(params?: any): any;
         /**
          * 隐藏横幅广告 (wx,op,vv,qq,tt)
          */
@@ -1744,16 +1762,6 @@ declare module zs.platform {
          * 返回 bool
          */
         static isNetValid(params?: any): any;
-        /**
-         * 添加显示事件 (wx,op,vv,qq,tt)
-         * showHandler Function 事件回调
-         */
-        static addEventShow(params?: any): any;
-        /**
-         * 添加隐藏事件 (wx,op,vv,qq,tt)
-         * hideHandler Function 事件回调
-         */
-        static addEventHide(params?: any): any;
         /**
          * 显示单像素banner (tt)
          */

@@ -29,9 +29,20 @@ export default class workflow extends zs.workflow {
         return this._windowExport;
     }
 
+    /**添加桌面icon按钮 */
+    static readonly add_btn_deskTopIcon = "add_btn_deskTopIcon";
+    /**添加更多好玩按钮 */
+    static readonly add_btn_moreGame = "add_btn_moreGame";
+    /**添加底部原生 */
+    static readonly add_bottom_native = "add_bottom_native";
+
     registe() {
         // 绑定导出UI
         exportBinder.bindAll();
+
+        zs.fgui.configs.registeBase(workflow.add_btn_deskTopIcon, native_BtnAddDesk);
+        zs.fgui.configs.registeBase(workflow.add_bottom_native, native_oppoBottomNative);
+        zs.fgui.configs.registeBase(workflow.add_btn_moreGame, native_BtnMoreGame);
 
         // 工作流注册
         this.fsm = new zs.fsm()
@@ -53,14 +64,10 @@ export default class workflow extends zs.workflow {
     onGameHome(complete) {
         complete.run();
         this.hideScreeNative();
-        this.onShowMoreGame();
-        this.onShowAddDeskTop();
     }
 
     onGamePrepare(complete) {
         complete.run();
-        this.onHideAddDeskTop();
-        this.onHideMoreGame();
     }
 
     onGamePlay(complete) {
@@ -81,64 +88,6 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.next();
         this.hideBottomNative();
     }
-
-    //#region 添加桌面和更多好玩
-    _addDeaskTopBtn: native_BtnAddDesk = null;
-    onShowAddDeskTop() {
-        if (this._addDeaskTopBtn) {
-            this._addDeaskTopBtn.view.visible = true;
-            this.windowExport
-                .setBase(this._addDeaskTopBtn)
-                .front();
-        } else {
-            this.windowExport
-                .attach(native_BtnAddDesk)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5, 1.5)
-                .update<native_BtnAddDesk>(native_BtnAddDesk, (unit) => {
-                    this._addDeaskTopBtn = unit;
-                    unit.apply();
-
-                })
-                .align(zs.fgui.AlignType.Right)
-                .front();
-        }
-        return this.windowExport;
-    }
-    onHideAddDeskTop() {
-        if (this._addDeaskTopBtn) {
-            this.windowExport.detach(this._addDeaskTopBtn);
-            this._addDeaskTopBtn = null;
-        }
-    }
-    _moreGameBtn: native_BtnMoreGame = null;
-    onShowMoreGame() {
-        if (this._moreGameBtn) {
-            this._moreGameBtn.view.visible = true;
-            this.windowExport
-                .setBase(this._moreGameBtn)
-                .front();
-        } else {
-            this.windowExport
-                .attach(native_BtnMoreGame)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5, 1.5)
-                .update<native_BtnMoreGame>(native_BtnMoreGame, (unit) => {
-                    this._moreGameBtn = unit;
-                    unit.apply();
-                })
-                .align(zs.fgui.AlignType.Left)
-                .front();
-        }
-        return this.windowExport;
-    }
-    onHideMoreGame() {
-        if (this._moreGameBtn) {
-            this.windowExport.detach(this._moreGameBtn);
-            this._moreGameBtn = null;
-        }
-    }
-    //#endregion
 
     //#region 原生的显示和隐藏
     _bottomNative: native_oppoBottomNative = null;

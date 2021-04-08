@@ -9,6 +9,20 @@ window.platform = (function () {
         //-----------------------------------------------------
         if (platform.systemInfo.platformVersionCode < 1051) {
             console.error('版本低于1051 需要手动开启初始化');
+            //这个api低于1051 需要手动开启初始化
+            qg.initAdService({
+                appId: zs.core.appId,
+                isDebug: false,
+                success: function (res) {
+                    console.log("success");
+                },
+                fail: function (res) {
+                    console.log("fail:" + res.code + res.msg);
+                },
+                complete: function (res) {
+                    console.log("complete");
+                }
+            })
         }
     }
     platform.initAds = function () {
@@ -292,18 +306,38 @@ window.platform = (function () {
         zs.log.debug('bannerAd hide"');
         platform.bannerAd && platform.bannerAd.hide();
     }
-
+    platform.delayBanner = null;
     platform.checkBanner = function (params) {
         if (params.data == null) {
             zs.log.warn('方法（ checkBanner ）缺少必要参数（ data ）', 'Platform');
             return;
         }
-
         let data = params.data;
-        platform.hideBanner();
-        if (data && data.banner) {
-            platform.showBanner();
+        if (data) {
+            let args = data.banner
+            if (args) {
+                if (args.isDelay) {
+                    zs.log.debug("延时 banner");
+                    platform.delayBanner = setTimeout(function () {
+                        platform.showBanner();
+                    })
+                } else {
+                    platform.showBanner();
+                }
+            }
+        } else {
+            if (args.lockHide) {
+                platform.hideBanner();
+            } else {
+                platform.hideBanner();
+            }
         }
+    }
+    /**移除延迟 banner */
+    platform.clearDelayBanner = function () {
+        zs.log.debug("清除延时 banner");
+        platform.delayBanner && clearTimeout(platform.delayBanner);
+        platform.delayBanner = null;
     }
     //#endregion
 
@@ -709,7 +743,7 @@ window.platform = (function () {
     platform.showToast = function (value, duration = 2000) {
         qg.showToast({
             title: value,
-            icon: 'success',
+            icon: 'none',
             duration: duration
         })
     }
