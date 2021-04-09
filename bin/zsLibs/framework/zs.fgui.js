@@ -55,6 +55,11 @@ window.zs.fgui = window.zs.fgui || {};
         fairygui.UIConfig.bringWindowToFrontOnClick = false;
         configs.onInit && configs.onInit.run();
         Laya.stage.addChild(fairygui.GRoot.inst.displayObject);
+        Laya.timer.frameLoop(1, fairygui.GRoot.inst, () => {
+            if (Laya.stage.getChildIndex(fairygui.GRoot.inst.displayObject) != Laya.stage.numChildren - 1) {
+                Laya.stage.setChildIndex(fairygui.GRoot.inst.displayObject, Laya.stage.numChildren - 1);
+            }
+        });
     }
     function loadPack(url, fullpath) {
         if (!fullpath) {
