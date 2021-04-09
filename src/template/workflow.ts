@@ -24,7 +24,7 @@ export default class workflow extends zs.workflow {
     static readonly more_game = "more_game";
     static readonly block_view = "block_view";
     static readonly btn_invite = "btn_invite";
-    exporterPack = "QQad/QQad";
+    exporterPack = "export/QQad";
 
     windowFull: zs.fgui.window;
 
