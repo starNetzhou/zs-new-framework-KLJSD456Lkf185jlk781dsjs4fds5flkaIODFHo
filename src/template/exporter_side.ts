@@ -1,7 +1,7 @@
 import FGUI_hot_game from "./export/FGUI_hot_game";
 import FGUI_Side from "./export/FGUI_Side";
 
-export default class exporter_side extends zs.fgui.base {
+export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
 
     static typeDefine = FGUI_Side;
 
@@ -88,8 +88,10 @@ export default class exporter_side extends zs.fgui.base {
             this.adList.numItems = 0;
             this.bHide = true;
             zs.exporter.dataMgr.load().then((result) => {
-                this.adData = result.promotion;
-                this.updateUI();
+                if (!this.disposed) {
+                    this.adData = result.promotion;
+                    this.updateUI();
+                }
 
             });
             this.delayHandler = setTimeout(() => {

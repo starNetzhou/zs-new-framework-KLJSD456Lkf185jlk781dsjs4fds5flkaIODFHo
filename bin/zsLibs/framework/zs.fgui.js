@@ -81,6 +81,7 @@ window.zs.fgui = window.zs.fgui || {};
     }
     class base {
         constructor(component) {
+            this.disposed = false;
             this._view = component;
             component.baseCtrl = this;
             this.init();
@@ -110,6 +111,10 @@ window.zs.fgui = window.zs.fgui || {};
         applyConfig() { }
     }
     base.typeDefine = null;
+
+    class baseGeneric extends base {
+        get view() { return this._view; }
+    }
 
     class window {
         static create(x, y, width, height) {
@@ -700,6 +705,7 @@ window.zs.fgui = window.zs.fgui || {};
     exports.loadPack = loadPack;
     exports.loadPacks = loadPacks;
     exports.base = base;
+    exports.baseGeneric = baseGeneric;
     exports.window = window;
     exports.msgbox = msgbox;
 }(window.zs.fgui = window.zs.fgui || {}));

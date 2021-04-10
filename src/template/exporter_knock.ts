@@ -1,7 +1,7 @@
 import FGUI_donhua from "./export/FGUI_donhua";
 import FGUI_knock_export from "./export/FGUI_knock_export";
 
-export default class exporter_knock extends zs.fgui.base {
+export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_export> {
 
     static typeDefine = FGUI_knock_export;
 
@@ -35,9 +35,11 @@ export default class exporter_knock extends zs.fgui.base {
     }
     apply() {
         zs.exporter.dataMgr.load().then((result) => {
-            this.adData = result.promotion;
-            this.updateUI();
-            this.startKnock();
+            if (!this.disposed) {
+                this.adData = result.promotion;
+                this.updateUI();
+                this.startKnock();
+            }
         });
         return this;
     }

@@ -4,7 +4,7 @@ import FGUI_common_egg from "./export/FGUI_common_egg";
 export default class ad_egg extends zs.fgui.base {
 
     static typeDefine = FGUI_common_egg;
-    
+
     // 横幅广告偏移延迟
     static readonly bannerOffsetDelay = 1000;
     // 砸金蛋奖励延迟

@@ -54,6 +54,10 @@ declare module zs {
          */
         pure: boolean,
         /**
+         * 版本号
+         */
+        version: string;
+        /**
          * 项目名称
          */
         appName: string,
@@ -1172,6 +1176,7 @@ declare module zs.fgui {
      * @param fullpath （可选）是否为全路径
      */
     function loadPacks(packs: string[], fullpath?: boolean): Promise<fairygui.UIPackage[]>;
+
     /**
      * FGUI基类
      */
@@ -1184,6 +1189,10 @@ declare module zs.fgui {
          * 显示组件
          */
         get view(): fairygui.GComponent;
+        /**
+         * 控件是否被销毁
+         */
+        disposed: boolean;
         /**
          * 构造方法
          * @param component 构造FGUI组件
@@ -1219,6 +1228,12 @@ declare module zs.fgui {
          * 执行配置方法
          */
         applyConfig();
+    }
+    /**
+     * FGUI泛型基类
+     */
+    class baseGeneric<T extends fairygui.GComponent> extends base {
+        get view(): T;
     }
     /**
      * FGUI窗口管理类

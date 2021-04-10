@@ -17,7 +17,6 @@ import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
 
 export default class workflow extends zs.workflow {
-
     static readonly GAME_START = 'GAME_START';
     static readonly START_FULL_1 = 'START_FULL_1';
     static readonly START_FULL_2 = 'START_FULL_2';
@@ -96,15 +95,15 @@ export default class workflow extends zs.workflow {
         this.fsm = new zs.fsm()
             .registe(workflow.GAME_START, workflow.START_FULL_1, 0, false, this, this.onStartFull1)
             .registe(workflow.START_FULL_1, workflow.START_FULL_2, 0, false, this, this.onStartFull2)
-            .registe(workflow.START_FULL_2, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+            .registe(workflow.START_FULL_2, workflow.GAME_HOME)
             .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
             .registe(workflow.GAME_PREPARE, workflow.EXPORT_COMMON_EGG, 0, false, this, this.onCommonEgg)
             .registe(workflow.EXPORT_COMMON_EGG, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
             .registe(workflow.GAME_PLAY, workflow.OVER_FULL_1, 0, false, this, this.onOverFull1)
             .registe(workflow.OVER_FULL_1, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.OVER_FULL_2, 0, false, this, this.onOverFull2)
-            .registe(workflow.OVER_FULL_2, workflow.GAME_END, 0, false, this, this.onGameEnd)
-            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+            .registe(workflow.OVER_FULL_2, workflow.GAME_END)
+            .registe(workflow.GAME_END, workflow.GAME_HOME)
             .setDefault(workflow.GAME_START, true);
     }
 
@@ -130,21 +129,18 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    onGameHome(complete) {
-        complete.run();
-    }
-
     onGamePrepare(complete) {
+        complete.run();
         var bVideo = ProductKey.zs_start_game_video_switch;
         console.log("开局视频", bVideo)
         if (bVideo) {
             zs.platform.async.playVideo().then(() => {
-                complete.run();
+                zs.core.workflow.next();
             }).catch(() => {
-                complete.run();
+                zs.core.workflow.next();
             })
         } else {
-            complete.run();
+            zs.core.workflow.next();
         }
     }
 
@@ -281,11 +277,6 @@ export default class workflow extends zs.workflow {
             zs.core.workflow.next();
         }
         this.hideFakeMsg();
-    }
-
-    onGameEnd(complete) {
-        complete.run();
-        zs.core.workflow.next();
     }
 
     hideWindowFull() {
