@@ -6,9 +6,6 @@ import workflow from "./template/workflow";
 
 export default class GameLogic extends Laya.Script {
 
-    gameExporter: zs.fgui.window;
-    workflow: workflow;
-
     constructor() {
         super();
         this.init();
@@ -16,8 +13,7 @@ export default class GameLogic extends Laya.Script {
 
     async init() {
 
-        this.workflow = new workflow;
-        zs.core.workflow = this.workflow;
+        zs.core.workflow = new workflow();
 
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
@@ -91,17 +87,8 @@ export default class GameLogic extends Laya.Script {
 
         zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_HOME");
-            if (this.gameExporter) {
-                this.gameExporter.show();
-            } else {
-                this.gameExporter = zs.fgui.window.create()
-                    .attach(mainPage)
-                    .fit()
-                    .update<mainPage>(mainPage, (unit) => {
-                        console.log(unit);
-                    })
-                    .show();
-            }
+            // zs.fgui.manager.open(mainPage);
+            zs.fgui.manager.show(true, mainPage); 
         }));
 
         zs.core.init(ProductKey);

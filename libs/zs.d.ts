@@ -1122,6 +1122,27 @@ declare module zs.fgui {
         BottomRight
     }
     /**
+     * 全屏适配模式
+     */
+    enum FitType {
+        /**
+         * 不进行全屏适配
+         */
+        None,
+        /**
+         * 尺寸适配
+         */
+        Fit,
+        /**
+         * 缩放适配
+         */
+        ScaleFit,
+        /**
+         * 尺寸与缩放适配
+         */
+        Both
+    }
+    /**
      * 配置类
      */
     class configs {
@@ -1259,10 +1280,14 @@ declare module zs.fgui {
          */
         detach(ctr: base | number): window;
         /**
-         * 设置UI控件
+         * 设置当前UI控件
          * @param ctr UI控件 
          */
         setBase(ctr: zs.fgui.base): window;
+        /**
+         * 获取当前UI控件
+         */
+        getBase(): zs.fgui.base;
         /**
          * 清空UI控件
          */
@@ -1414,6 +1439,31 @@ declare module zs.fgui {
          * 窗口是否显示
          */
         isShowing(): boolean;
+    }
+    /**
+     * FGUI面板管理类
+     */
+    class manager {
+        /**
+         * 打开FGUI面板，将覆盖已有面板
+         * @param type（可选）面板UI控件类型
+         * @param key （可选）面板关键词
+         * @param fit （可选）全屏适配类型
+         */
+        static open(type?: typeof zs.fgui.base, key?: string, fit?: FitType): zs.fgui.window;
+        /**
+         * 展示FGUI面板，不会覆盖已有面板
+         * @param autoCreate （可选）不存在面板时是否自动创建
+         * @param type（可选）面板UI控件类型
+         * @param key （可选）面板关键词
+         * @param fit （可选）全屏适配类型
+         */
+        static show(autoCreate?: boolean, type?: typeof zs.fgui.base, key?: string, fit?: FitType): zs.fgui.window;
+        /**
+         * 隐藏FGUI面板
+         * @param key （可选）面板关键词
+         */
+        static hide(key?: string): zs.fgui.window;
     }
 }
 

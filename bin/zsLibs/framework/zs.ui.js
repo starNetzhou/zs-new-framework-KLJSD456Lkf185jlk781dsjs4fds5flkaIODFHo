@@ -132,10 +132,6 @@ window.zs.ui = window.zs.ui || {};
         static preload() {
             return Promise((resolve, reject) => { resolve(); });
         }
-        static make() {
-            let view = zs.ui.FGUI_Loading.createInstance();
-            return view;
-        }
         updateProgress(value) {
             if (this.view) {
                 this.view.loadingValue.text = value + '%';
@@ -160,6 +156,7 @@ window.zs.ui = window.zs.ui || {};
             return false
         }
     }
+    Loading.typeDefine = FGUI_Loading;
 
     class LayaLoading extends Laya.Script {
         constructor() {
