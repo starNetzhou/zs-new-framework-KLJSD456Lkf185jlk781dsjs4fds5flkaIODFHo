@@ -20,11 +20,9 @@
     "compressJs": true,
     "compressJsFilter": [
         "$basePath/**/*.js",
-        "!$basePath/libs/min/**/*.js",
-        "!$basePath/zsLibs/fairygui/*.js"
+        "!$basePath/libs/min/**/*.js"
     ],
     "compressJsNoteList": [
-        "",
         "",
         ""
     ],
@@ -49,7 +47,7 @@
         ""
     ],
     "packfile": false,
-    "keepPlatformFile": false,
+    "keepPlatformFile": true,
     "packfileFilter": [
         ""
     ],
@@ -71,7 +69,7 @@
     "useMinJsLibs": true,
     "es6toes5": false,
     "projectType": "ts",
-    "pubTime": 1618032423791,
+    "pubTime": 1618193972331,
     "uesEnginePlugin": false,
     "wxOptimize": {
         "useOptimizeOpen": false,
