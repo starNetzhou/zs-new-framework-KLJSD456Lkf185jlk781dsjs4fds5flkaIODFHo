@@ -437,15 +437,7 @@ window.zs.fgui = window.zs.fgui || {};
                 if (childIdx >= 0) {
                     root.setChildIndex(this.window, root.numChildren - 1);
                 }
-
-                if (msgbox.windowInst.isShowing()) {
-                    let msgboxWindow = msgbox.windowInst.window;
-                    let root = msgboxWindow.root;
-                    let childIdx = root.getChildIndex(msgboxWindow);
-                    if (childIdx >= 0) {
-                        root.setChildIndex(msgboxWindow, root.numChildren - 1);
-                    }
-                }
+                this.checkMsgbox();
             }
             return this;
         }
@@ -464,7 +456,7 @@ window.zs.fgui = window.zs.fgui || {};
                 if (this.lastBase instanceof type && this.lastBase.view) {
                     func.call(thisArg, this.lastBase, this.window);
                 } else {
-                    console.warn("UI类型不匹配，无法生成对应系统!", this.lastBase);
+                    zs.log.warn("UI类型不匹配，无法生成对应系统!", this.lastBase);
                 }
             }
             return this;
@@ -472,6 +464,7 @@ window.zs.fgui = window.zs.fgui || {};
         show() {
             if (this.window != null) {
                 this.window.show();
+                this.checkMsgbox();
             }
             return this;
         }
@@ -582,6 +575,16 @@ window.zs.fgui = window.zs.fgui || {};
                 return this.window.isShowing;
             }
             return false;
+        }
+        checkMsgbox() {
+            if (msgbox._windowInst && msgbox._windowInst.isShowing()) {
+                let msgboxWindow = msgbox._windowInst.window;
+                let root = msgboxWindow.root;
+                let childIdx = root.getChildIndex(msgboxWindow);
+                if (childIdx >= 0) {
+                    root.setChildIndex(msgboxWindow, root.numChildren - 1);
+                }
+            }
         }
     }
 
@@ -770,7 +773,6 @@ window.zs.fgui = window.zs.fgui || {};
             return this;
         }
         setConfirmHandler(handler) {
-            console.log("set confirm handler");
             this.confirmHandler = handler;
             return this;
         }

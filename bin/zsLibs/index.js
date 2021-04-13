@@ -1,3 +1,4 @@
+loadLib("zsLibs/framework/zs.scene.js")
 if (typeof wx !== "undefined") {
     loadLib("zsLibs/adapter/tdweapp.js")
     loadLib("zsLibs/adapter/zs.wx.banner.js")
