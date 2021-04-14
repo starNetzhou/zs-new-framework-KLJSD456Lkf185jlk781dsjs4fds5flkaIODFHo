@@ -11,7 +11,7 @@ export default class GameLogic extends Laya.Script {
         this.init();
     }
 
-    async init() {
+    init() {
 
         zs.core.workflow = new workflow();
 
