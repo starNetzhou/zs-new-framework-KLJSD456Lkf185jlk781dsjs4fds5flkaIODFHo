@@ -7,15 +7,17 @@ export default class LayaLoading extends zs.ui.LayaLoading {
 
     static preload(): Promise<void> {
         return new Promise((resolve, reject) => {
-            Laya.Scene.load(this.url, Laya.Handler.create(this, resolve));
+            if (this.loadedScene) { return resolve(); }
+            Laya.Scene.load(this.url, Laya.Handler.create(this, (scene) => {
+                this.loadedScene = scene as Laya.Scene;
+                resolve();
+            }));
         });
     }
 
     static make(): LayaLoading {
-        this.loadedScene = Laya.loader.getRes(this.url);
         if (this.loadedScene == null) { return null; }
         Laya.stage.addChild(this.loadedScene);
-
         let layaLoading = this.loadedScene.getComponent(LayaLoading);
         if (layaLoading == null) {
             layaLoading = this.loadedScene.addComponent(LayaLoading);
