@@ -2,6 +2,7 @@ import exportBinder from "./export/exportBinder";
 import native_vivoBottomNative from "./native_vivoBottomNative";
 import native_vivoScreeNative from "./native_vivoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
+import ProductKey from "./ProductKey";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_START = 'GAME_START';
@@ -68,20 +69,11 @@ export default class workflow extends zs.workflow {
         complete.run();
         this.showScreeNative();
     }
-    // openScreeNative(complete) {
-    //     complete.run();
-    //     zs.platform.sync.hideBanner();
-    //     if (zs.product.get("zs_native_limit")) {
-    //         this.showScreeNative();
-    //     } else {
-    //         zs.core.workflow.next();
-    //     }
-    // }
     onGameEnd(complete) {
         complete.run();
         zs.core.workflow.next();
         this.hideScreeNative();
-        if (zs.product.get("zs_native_limit")) {
+        if (ProductKey.zs_native_limit) {
             this.showScreeNative();
             zs.platform.sync.hideBanner();
         }

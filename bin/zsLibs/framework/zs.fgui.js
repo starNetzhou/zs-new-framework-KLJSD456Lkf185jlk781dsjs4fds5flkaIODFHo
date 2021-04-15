@@ -16,6 +16,14 @@ window.zs.fgui = window.zs.fgui || {};
         AlignType[AlignType["BottomRight"] = 8] = "BottomRight";
     })(AlignType = AlignType || (AlignType = {}));
 
+    let FitType;
+    (function (FitType) {
+        FitType[FitType["None"] = 0] = "None";
+        FitType[FitType["Fit"] = 1] = "Fit";
+        FitType[FitType["ScaleFit"] = 2] = "ScaleFit";
+        FitType[FitType["Both"] = 3] = "Both";
+    })(FitType = FitType || (FitType = {}));
+
     class configs {
         static get bases() {
             if (this._bases == null) {
@@ -76,16 +84,18 @@ window.zs.fgui = window.zs.fgui || {};
     }
     class base {
         constructor(component) {
-            if (this.check(component)) {
-                this._view = component;
-                component.baseCtrl = this;
-                this.init();
-            }
+            this.disposed = false;
+            this._view = component;
+            component.baseCtrl = this;
+            this.init();
         }
         get view() {
             return this._view;
         }
-        static make() {
+        static make(type) {
+            if (type && type.prototype instanceof fairygui.GComponent) {
+                return type.createInstance();
+            }
             return null;
         }
         static type() {
@@ -103,6 +113,12 @@ window.zs.fgui = window.zs.fgui || {};
         apply() { }
         applyConfig() { }
     }
+    base.typeDefine = null;
+
+    class baseGeneric extends base {
+        get view() { return this._view; }
+    }
+
     class window {
         static create(x, y, width, height) {
             if (x == null) {
@@ -136,7 +152,7 @@ window.zs.fgui = window.zs.fgui || {};
             if (ctr == null || this.window == null) {
                 return this;
             }
-            let view = ctr.make();
+            let view = ctr.make(ctr.typeDefine || ctr.type());
             if (index) {
                 this.window.contentPane.addChildAt(view, index);
             } else {
@@ -152,10 +168,10 @@ window.zs.fgui = window.zs.fgui || {};
         }
         detach(ctr) {
             if (ctr == null) { return this; }
-            ctr.dispose();
             if (typeof ctr === 'number') {
                 this.window.contentPane.removeChildAt(ctr, true);
             } else {
+                ctr.dispose();
                 this.window.contentPane.removeChild(ctr.view, true);
             }
             return this;
@@ -167,6 +183,9 @@ window.zs.fgui = window.zs.fgui || {};
                 this.lastBase = null;
             }
             return this;
+        }
+        getBase() {
+            return this.lastBase;
         }
         clearBase() {
             this.lastBase = null;
@@ -413,15 +432,7 @@ window.zs.fgui = window.zs.fgui || {};
                 if (childIdx >= 0) {
                     root.setChildIndex(this.window, root.numChildren - 1);
                 }
-
-                if (msgbox.windowInst.isShowing()) {
-                    let msgboxWindow = msgbox.windowInst.window;
-                    let root = msgboxWindow.root;
-                    let childIdx = root.getChildIndex(msgboxWindow);
-                    if (childIdx >= 0) {
-                        root.setChildIndex(msgboxWindow, root.numChildren - 1);
-                    }
-                }
+                this.checkMsgbox();
             }
             return this;
         }
@@ -440,7 +451,7 @@ window.zs.fgui = window.zs.fgui || {};
                 if (this.lastBase instanceof type && this.lastBase.view) {
                     func.call(thisArg, this.lastBase, this.window);
                 } else {
-                    console.warn("UI类型不匹配，无法生成对应系统!", this.lastBase);
+                    zs.log.warn("UI类型不匹配，无法生成对应系统!", this.lastBase);
                 }
             }
             return this;
@@ -448,6 +459,7 @@ window.zs.fgui = window.zs.fgui || {};
         show() {
             if (this.window != null) {
                 this.window.show();
+                this.checkMsgbox();
             }
             return this;
         }
@@ -559,7 +571,95 @@ window.zs.fgui = window.zs.fgui || {};
             }
             return false;
         }
+        checkMsgbox() {
+            if (msgbox._windowInst && msgbox._windowInst.isShowing()) {
+                let msgboxWindow = msgbox._windowInst.window;
+                let root = msgboxWindow.root;
+                let childIdx = root.getChildIndex(msgboxWindow);
+                if (childIdx >= 0) {
+                    root.setChildIndex(msgboxWindow, root.numChildren - 1);
+                }
+            }
+        }
     }
+
+    class manager {
+        static get list() {
+            if (this._list == null) {
+                this._list = {};
+            }
+            return this._list;
+        }
+
+        static open(type, key, fit) {
+            let panel = this.defaultPanel;
+
+            if (key != null && key.trim().length > 0) {
+                key = key.trim();
+                panel = this.list[key];
+            }
+
+            if (panel != null) {
+                panel.dispose();
+            }
+
+            panel = window.create();
+
+            if (type) {
+                panel.attach(type);
+                if (!fit) { fit = FitType.Both; }
+                switch (fit) {
+                    case FitType.Fit:
+                        panel.fit();
+                        break;
+                    case FitType.ScaleFit:
+                        panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
+                        break;
+                    case FitType.Both:
+                        panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight).fit();
+                        break;
+                }
+            }
+
+            panel.show();
+
+            if (key != null && key.length > 0) {
+                this.list[key] = panel;
+            } else {
+                this.defaultPanel = panel;
+            }
+
+            return panel;
+        }
+
+        static show(autoCreate, type, key, fit) {
+            let panel = this.defaultPanel;
+            if (key != null && key.trim().length > 0) {
+                key = key.trim();
+                panel = this.list[key];
+            }
+
+            if (panel != null) {
+                panel.show();
+            } else if (autoCreate) {
+                return this.open(type, key, fit);
+            }
+
+            return panel;
+        }
+
+        static hide(key) {
+            let panel = this.defaultPanel;
+            if (key != null && key.trim().length > 0) {
+                key = key.trim();
+                panel = this.list[key];
+            }
+
+            if (panel != null) { panel.hide(); }
+            return panel;
+        }
+    }
+    manager.defaultPanel = null;
 
     class msgbox extends base {
         static get msgList() {
@@ -608,10 +708,8 @@ window.zs.fgui = window.zs.fgui || {};
         }
         constructor(component) {
             super(component);
-            if (component && component instanceof zs.ui.FGUI_msgbox) {
-                component.btn_confirm.onClick(this, this.onConfirmClick);
-                component.btn_cancel.onClick(this, this.onCancelClick);
-            }
+            component.btn_confirm.onClick(this, this.onConfirmClick);
+            component.btn_cancel.onClick(this, this.onCancelClick);
         }
         static make() {
             let view = zs.ui.FGUI_msgbox.createInstance();
@@ -670,7 +768,6 @@ window.zs.fgui = window.zs.fgui || {};
             return this;
         }
         setConfirmHandler(handler) {
-            console.log("set confirm handler");
             this.confirmHandler = handler;
             return this;
         }
@@ -694,6 +791,8 @@ window.zs.fgui = window.zs.fgui || {};
     exports.loadPack = loadPack;
     exports.loadPacks = loadPacks;
     exports.base = base;
+    exports.baseGeneric = baseGeneric;
     exports.window = window;
+    exports.manager = manager;
     exports.msgbox = msgbox;
 }(window.zs.fgui = window.zs.fgui || {}));
