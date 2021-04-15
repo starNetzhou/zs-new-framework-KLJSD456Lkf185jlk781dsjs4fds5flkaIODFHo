@@ -151,7 +151,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
 
         static collectExport(appid) {
-            if (zs.platform.config.platformMark == 'wx_' && typeof wx !== 'undefined') { return; }
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
             let sysInfo = null;

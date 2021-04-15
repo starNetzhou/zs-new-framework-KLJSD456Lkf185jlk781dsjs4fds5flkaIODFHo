@@ -237,10 +237,8 @@ window.zs.qq = window.zs.qq || {};
                 }
                 if (banner.isLoad && !banner.showEd && !banner.isShow) {
                     console.log("存在加载完成但未展示的banner");
-                    if (!this.isWait) {
-                        banner.show();
-                        return;
-                    }
+                    eNum++;
+                    break;
                 }
             }
             if (eNum >= 1 || this.inErrTime) {

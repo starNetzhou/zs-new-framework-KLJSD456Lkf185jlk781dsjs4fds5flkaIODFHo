@@ -1,4 +1,5 @@
 import QQAd_blockWindow from "src/template/export/QQAd_blockWindow";
+import ProductKey from "./ProductKey";
 
 export default class block_view extends zs.fgui.base {
     viewName: string;
@@ -29,7 +30,7 @@ export default class block_view extends zs.fgui.base {
 
     applyConfig(config?) {
         if (config) {
-            zs.platform.sync.checkBlockAd(zs.product.get("zs_blockAdUnit_id"), config.orient, config.Num, config.pos, Laya.Handler.create(this, () => {
+            zs.platform.sync.checkBlockAd(ProductKey.zs_blockAdUnit_id, config.orient, config.Num, config.pos, Laya.Handler.create(this, () => {
                 zs.platform.sync.showBlockAd(config.pos);
             }));
         }

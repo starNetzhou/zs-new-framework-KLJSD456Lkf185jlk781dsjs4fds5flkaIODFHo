@@ -1,4 +1,5 @@
 import QQAd_common_egg from "./export/QQAd_common_egg";
+import ProductKey from "./ProductKey";
 
 export default class qq_open_egg extends zs.fgui.base {
 
@@ -88,16 +89,19 @@ export default class qq_open_egg extends zs.fgui.base {
 
     onBtnClick() {
         if (this.repairProgress + this.click_add_percent <= 1) {
-            let str = zs.product.get("zs_click_video_time");
-            str = str.split("|");
+            let clickVideoTime = ProductKey.zs_click_video_time;
+            let str = clickVideoTime.split("|");
             let videoTime = true;
-            for (let i = 0; i < str.length; i++) {
-                if (str[i] && !zs.product.timeCheck(str[i])) {
-                    videoTime = false;
-                    break;
+            if (ProductKey.zs_click_video_switch) {
+                for (let i = 0; i < str.length; i++) {
+                    if (str[i] && !zs.product.timeCheck(str[i])) {
+                        videoTime = false;
+                        break;
+                    }
                 }
+            } else {
+                videoTime = false;
             }
-            videoTime = videoTime && zs.product.get("zs_click_video_switch") == 1;
             if (!this.isCheckBanner && !videoTime) {
                 this.isCheckBanner = true;
                 zs.platform.sync.updateBanner({ isWait: true });

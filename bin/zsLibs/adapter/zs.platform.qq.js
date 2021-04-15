@@ -139,10 +139,10 @@ window.platform = (function () {
         zs.qq.banner.QQBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"));
     }
     platform.showBanner = function (params) {
-        zs.qq.banner.QQBannerMgr.Instance.showBanner(params.position);
+        zs.qq.banner.QQBannerMgr.Instance.showBanner(params ? params.position : null);
     }
     platform.updateBanner = function (params) {
-        zs.qq.banner.QQBannerMgr.Instance.checkBanner(params.isWait, params.position);
+        zs.qq.banner.QQBannerMgr.Instance.checkBanner(params ? params.isWait : null, params ? params.position : null);
     }
     /**检测banner */
     platform.checkBanner = function (params) {
