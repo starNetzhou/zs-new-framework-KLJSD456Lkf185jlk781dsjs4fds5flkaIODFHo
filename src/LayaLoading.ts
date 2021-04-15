@@ -10,7 +10,6 @@ export default class LayaLoading extends zs.ui.LayaLoading {
             if (this.loadedScene) { return resolve(); }
             Laya.Scene.load(this.url, Laya.Handler.create(this, (scene) => {
                 this.loadedScene = scene as Laya.Scene;
-                Laya.stage.addChild(scene);
                 resolve();
             }));
         });
@@ -18,12 +17,15 @@ export default class LayaLoading extends zs.ui.LayaLoading {
 
     static make(): LayaLoading {
         if (this.loadedScene == null) { return null; }
+        Laya.stage.addChild(this.loadedScene);
         let layaLoading = this.loadedScene.getComponent(LayaLoading);
-        if (layaLoading == null) { return null; }
+        if (layaLoading == null) {
+            layaLoading = this.loadedScene.addComponent(LayaLoading);
+        }
 
         this.loadedScene.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, '#000000', '#000000');
         layaLoading.progressText = this.loadedScene.getChildByName("progressText") as Laya.Label;
-        return this.loadedScene.getComponent(LayaLoading);
+        return layaLoading;
     }
 
     updateProgress(value: number) {
