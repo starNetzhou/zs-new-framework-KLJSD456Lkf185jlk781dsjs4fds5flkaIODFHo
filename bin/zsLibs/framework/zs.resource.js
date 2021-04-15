@@ -164,6 +164,9 @@ window.zs = window.zs || {};
         static async init() {
             configs.gameCfg = await zs.resource.load(configs.gameCfgPath);
             configs.productCfg = await zs.resource.load(configs.porductCfgPath);
+            if (!configs.gameCfg.secret) {
+                configs.gameCfg.secret = "7CaD3L23LlGnENd1";
+            }
         }
         static async load(key, path, url, isAsync) {
             if (configs.list == null) {
