@@ -182,7 +182,7 @@ window.zs = window.zs || {};
                 return def.call(this);
             } else {
                 if (def == null) {
-                    zs.log.warn("产品开关 " + key + " 不存在");
+                    zs.log.debug("产品开关 " + key + " 不存在");
                 }
                 return def;
             }

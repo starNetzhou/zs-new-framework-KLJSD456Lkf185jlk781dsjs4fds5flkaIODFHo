@@ -180,7 +180,7 @@ window.zs = window.zs || {};
                 childFSM.init();
                 let productData = zs.configs.productCfg[current];
                 if (productData) {
-                    zs.log.warn(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
+                    zs.log.info(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
                 }
             } else {
                 this.checkBase(current);
@@ -232,7 +232,7 @@ window.zs = window.zs || {};
             let data = zs.configs.productCfg[current];
             if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
                 if (data && data.banner) {
-                    zs.log.warn("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
+                    zs.log.info("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
                 }
                 return;
             }
@@ -242,7 +242,7 @@ window.zs = window.zs || {};
             let data = zs.configs.productCfg[current];
             if (this.exporterIgnoreList && this.exporterIgnoreList.indexOf(current) >= 0) {
                 if (data && data.exporter && data.exporter.length > 0) {
-                    zs.log.warn("状态 " + current + " 在导出忽略列表中，无法自动生成，请自主管理导出展示或将该状态移出忽略列表", "Workflow");
+                    zs.log.info("状态 " + current + " 在导出忽略列表中，无法自动生成，请自主管理导出展示或将该状态移出忽略列表", "Workflow");
                 }
                 return;
             }
@@ -325,6 +325,7 @@ window.zs = window.zs || {};
             this.onConfigInit && this.onConfigInit.run();
             zs.product.init(productDef);
             this._readyStart = false;
+            zs.ui.uiScene.init();
             zs.fgui.init();
             let entry = this.entry ? this.entry : zs.base.entry;
             if (this.loadingPage) {
@@ -424,11 +425,26 @@ window.zs = window.zs || {};
                 this.workListeners = null;
             }
 
+            this.checkGameCfg(switchs);
+
             if (this.onPrepare) {
                 this.onPrepare.run();
             } else {
                 this.readyFinish();
             }
+
+            Laya.timer.frameLoop(1, null, () => {
+                let sortIndex = 1
+                if (zs.ui.uiScene.scene) {
+                    if (Laya.stage.getChildIndex(zs.ui.uiScene.scene) < Laya.stage.numChildren - sortIndex) {
+                        Laya.stage.setChildIndex(zs.ui.uiScene.scene, Laya.stage.numChildren - sortIndex);
+                    }
+                    sortIndex++;
+                }
+                if (Laya.stage.getChildIndex(fairygui.GRoot.inst.displayObject) != Laya.stage.numChildren - sortIndex) {
+                    Laya.stage.setChildIndex(fairygui.GRoot.inst.displayObject, Laya.stage.numChildren - sortIndex);
+                }
+            });
         }
         static readyFinish() {
             this.progress = 100;
@@ -532,6 +548,78 @@ window.zs = window.zs || {};
                     n--;
                     listener.recover();
                 }
+            }
+        }
+        static checkGameCfg(switchs) {
+            let gamecfg = zs.configs.gameCfg;
+            if (gamecfg.appName == null || gamecfg.appName.trim().length <= 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写appName，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.gameId == null || gamecfg.gameId.trim().length <= 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写gameId，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.appId == null || gamecfg.appId.trim().length <= 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写appId，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (!gamecfg.cp && (gamecfg.aldKey == null || gamecfg.aldKey.trim().length <= 0) && zs.platform.config.platformMark == 'wx_') {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写阿拉丁密钥aldKey，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (!gamecfg.cp && (gamecfg.tdKey == null || gamecfg.tdKey.trim().length <= 0) && zs.platform.config.platformMark == 'wx_') {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写TalkingData密钥tdKey，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.secret == null || gamecfg.secret.trim().length <= 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写导出密钥secret，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.version == null || gamecfg.version.trim().length <= 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "未填写版本号version，请在config/gameCfg.json中准确填写",
+                    hideCancel: true
+                });
+            } else if (switchs == null || switchs.length < 0) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "无法获取配置数据，请在config/gameCfg.json中检查版本号version",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.pure) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "当前处于纯净模式，将不会展示广告与导出，可在config/gameCfg.json中修改配置",
+                    hideCancel: true
+                });
+            }
+            if (gamecfg.debug) {
+                return showMsgBox({
+                    title: "提示",
+                    content: "当前处于测试模式，将会影响部分上线功能，可在config/gameCfg.json中修改配置",
+                    hideCancel: true
+                });
             }
         }
     }
