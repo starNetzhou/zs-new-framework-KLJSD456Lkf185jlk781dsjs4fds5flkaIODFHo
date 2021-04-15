@@ -260,7 +260,7 @@ window.zs = window.zs || {};
                         .then((result) => {
                             if (result.user_id) {
                                 loginInfo = result;
-                                zs.log.warn("登陆成功：", "Network", result);
+                                zs.log.debug("登陆成功：", "Network", result);
                             }
                         });
                 }
