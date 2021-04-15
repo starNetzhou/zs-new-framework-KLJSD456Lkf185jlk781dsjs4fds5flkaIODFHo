@@ -1038,6 +1038,69 @@ declare module zs.ui {
          */
         run(progress);
     }
+
+    /**
+     * UI场景管理
+     */
+    class uiScene {
+        /**
+         * UI场景节点
+         */
+        static scene: Laya.Scene3D;
+        /**
+         * UI场景镜头
+         */
+        static camera: Laya.Camera;
+        /**
+         * UI场景灯光
+         */
+        static light: Laya.DirectionLight;
+        /**
+         * 初始化方法（不用主动调用）
+         */
+        static init();
+        /**
+         * 同步镜头或灯光配置
+         * @param object 镜头或灯光对象
+         */
+        static sync(object: Laya.Camera | Laya.DirectionLight);
+        /**
+         * 重置镜头
+         */
+        static resetCamera();
+        /**
+         * 重置灯光
+         */
+        static resetLight();
+        /**
+         * 添加物体
+         * @param sprite 物体
+         * @param position （可选）位置
+         * @param rotationEuler （可选）旋转
+         */
+        static add(sprite: Laya.Sprite3D, position?: Laya.Vector3, rotationEuler?: Laya.Vector3): Laya.Sprite3D;
+        /**
+         * 克隆添加物体
+         * @param sprite 物体
+         * @param position （可选）位置
+         * @param rotationEuler （可选）旋转
+         */
+        static cloneAdd(sprite: Laya.Sprite3D, position?: Laya.Vector3, rotationEuler?: Laya.Vector3): Laya.Sprite3D;
+        /**
+         * 清空场景物体
+         */
+        static clear();
+        /**
+         * 根据索引移除物体
+         * @param index 索引
+         */
+        static removeAt(index: number);
+        /**
+         * 移除物体
+         * @param sprite 物体
+         */
+        static remove(sprite: Laya.Sprite3D);
+    }
 }
 /**
  * 模板类

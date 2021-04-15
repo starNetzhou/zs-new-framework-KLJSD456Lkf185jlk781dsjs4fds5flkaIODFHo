@@ -325,6 +325,7 @@ window.zs = window.zs || {};
             this.onConfigInit && this.onConfigInit.run();
             zs.product.init(productDef);
             this._readyStart = false;
+            zs.ui.uiScene.init();
             zs.fgui.init();
             let entry = this.entry ? this.entry : zs.base.entry;
             if (this.loadingPage) {
@@ -431,6 +432,19 @@ window.zs = window.zs || {};
             } else {
                 this.readyFinish();
             }
+
+            Laya.timer.frameLoop(1, null, () => {
+                let sortIndex = 1
+                if (zs.ui.uiScene.scene) {
+                    if (Laya.stage.getChildIndex(zs.ui.uiScene.scene) < Laya.stage.numChildren - sortIndex) {
+                        Laya.stage.setChildIndex(zs.ui.uiScene.scene, Laya.stage.numChildren - sortIndex);
+                    }
+                    sortIndex++;
+                }
+                if (Laya.stage.getChildIndex(fairygui.GRoot.inst.displayObject) != Laya.stage.numChildren - sortIndex) {
+                    Laya.stage.setChildIndex(fairygui.GRoot.inst.displayObject, Laya.stage.numChildren - sortIndex);
+                }
+            });
         }
         static readyFinish() {
             this.progress = 100;
