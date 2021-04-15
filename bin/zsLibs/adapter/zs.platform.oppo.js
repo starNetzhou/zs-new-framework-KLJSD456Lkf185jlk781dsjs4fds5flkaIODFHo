@@ -485,15 +485,18 @@ window.platform = (function () {
                     reject();
                     return;
                 }
+                platform.gamePortalAd.onLoad(function () {
+                    console.log('互推盒子九宫格广告加载成功');
+                    platform.gamePortalAd.show().then(function () {
+                        console.log("显示互推盒子九宫格广告成功");
+                        platform.gamePortalAdShowTime = Date.now();
+                        resolve();
+                    }).catch(function (error) {
+                        console.log('显示互推盒子九宫格广告fail:' + error.errCode + ',' + error.errMsg)
+                        reject();
+                    })
+                })
                 platform.gamePortalAd.load();
-                platform.gamePortalAd.onLoad(platform.gamePortalAd.show().then(() => {
-                    console.log("显示互推盒子九宫格广告成功");
-                    platform.gamePortalAdShowTime = Date.now();
-                    resolve();
-                }).catch((error) => {
-                    console.log('显示互推盒子九宫格广告fail:' + error.errCode + ',' + error.errMsg)
-                    reject();
-                }));
             } else {
                 reject();
             }
