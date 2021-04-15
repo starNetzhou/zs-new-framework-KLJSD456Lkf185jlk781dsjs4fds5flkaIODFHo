@@ -24,7 +24,7 @@ window.platform = (function () {
         console.log("微信平台初始化...");
     }
 
-    platform.initAds() = function () {
+    platform.initAds = function () {
         platform.initBanner();
         platform.initVideo({ id: zs.product.get("zs_video_adunit") });
     }
@@ -319,7 +319,6 @@ window.platform = (function () {
     platform.request = function _async(params) {
         if (params.url == null || params.url.length <= 0) {
             zs.log.warn('方法（ request ）缺少必要参数（ url ）', 'Platform');
-            platform.bannerAd = null;
             return;
         }
         if (params.data == null) {
@@ -348,70 +347,60 @@ window.platform = (function () {
             });
         });
     }
-
+    platform.hasBanner = function () {
+        return zs.wx.banner.WxBannerMgr.Instance.wxbannerArray.length > 0;
+    }
     platform.initBanner = function () {
         zs.wx.banner.WxBannerMgr.Instance.setAdUnitId(zs.product.get("zs_banner_adunit"), zs.product.get("zs_banner_adunit2"), zs.product.get("zs_banner_adunit3"));
     }
-
+    platform.showBanner = function (params) {
+        zs.wx.banner.WxBannerMgr.Instance.showBanner(params ? params.pos : null, params ? params.length : null);
+    }
+    platform.updateBanner = function (params) {
+        zs.wx.banner.WxBannerMgr.Instance.checkBanner(params ? params.isWait : null, params ? params.pos : null, params ? params.length : null, params ? params.checkInit : null);
+    }
+    /**检测banner */
     platform.checkBanner = function (params) {
-        if (params.data == null) {
-            zs.log.warn('方法（ checkBanner ）缺少必要参数（ data ）', 'Platform');
+        zs.wx.banner.WxBannerMgr.Instance.hideAll();
+        if (!params || !params.data || !params.data.banner) {
             return;
         }
-
-        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-        wxBannerMgr.hideAll();
-        let data = params.data;
-        if (data && data.banner) {
-            let config = data.banner;
-            let switchShow = true;
-            if (config.switch) {
-                if (Array.isArray(config.switch)) {
-                    for (let i = 0, n = config.switch.length; i < n; i++) {
-                        if (!zs.product.get(config.switch[i])) {
-                            switchShow = false;
-                            break;
-                        }
+        let config = params.data.banner;
+        let switchShow = true;
+        if (config.switch) {
+            if (Array.isArray(config.switch)) {
+                for (let i = 0, n = config.switch.length; i < n; i++) {
+                    if (!zs.product.get(config.switch[i])) {
+                        switchShow = false;
+                        break;
                     }
-                } else if (!zs.product.get(config.switch)) {
-                    switchShow = false;
                 }
+            } else if (!zs.product.get(config.switch)) {
+                switchShow = false;
             }
-            if (!switchShow) {
-                wxBannerMgr.isWait = true;
-                return;
+        }
+        if (!switchShow || (!config.delay && !config.auto && !config.checkInit)) {
+            return;
+        }
+        let isWait = config.delay || config.auto == false;
+        zs.wx.banner.WxBannerMgr.Instance.checkBanner(isWait, config.pos, config.length, config.checkInit);
+        if (config.delay) {
+            if (zs.product.get("zs_banner_banner_time")) {
+                platform.delayBanner = setTimeout(function () {
+                    zs.wx.banner.WxBannerMgr.Instance.showBanner(config.pos, config.length);
+                }, zs.product.get("zs_banner_banner_time"));
+            } else {
+                zs.wx.banner.WxBannerMgr.Instance.showBanner(config.pos, config.length);
             }
-            wxBannerMgr.updateBanner(config.delay || !config.auto, config.left, config.bottom, config.length);
-            if (config.delay && zs.product.get("zs_banner_banner_time")) {
-                platform.delayBanner = setTimeout(function () { wxBannerMgr.showBanner(config.left, config.bottom, config.length) }, zs.product.get("zs_banner_banner_time"));
-            }
-        } else {
-            wxBannerMgr.isWait = true;
+
         }
     }
-
+    platform.hideBanner = function () {
+        zs.wx.banner.WxBannerMgr.Instance.hideAll();
+    }
     platform.clearDelayBanner = function () {
         platform.delayBanner && clearTimeout(platform.delayBanner);
         platform.delayBanner = null;
-    }
-
-    platform.showBanner = function (params) {
-        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-        wxBannerMgr.showBanner(params.left, params.bottom, params.length);
-    }
-
-    platform.updateBanner = function (params) {
-        zs.wx.banner.WxBannerMgr.Instance.updateBanner(params.isWait, params.left, params.bottom, params.length);
-    }
-
-    platform.hideBanner = function () {
-        let wxBannerMgr = zs.wx.banner.WxBannerMgr.Instance;
-        wxBannerMgr.hideAll();
-    }
-
-    platform.updateBannerPos = function (params) {
-        zs.wx.banner.WxBannerMgr.Instance.updatePosition(params.toTouch);
-        return true;
     }
 
     platform.navigateToOther = function _async(params) {
