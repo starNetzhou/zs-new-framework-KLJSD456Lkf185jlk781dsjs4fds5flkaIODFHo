@@ -31,70 +31,71 @@ window.zs = window.zs || {};
             for (let key in switchs) {
                 this.registe(key, switchs[key]);
             }
-
-            this.scene = Laya.LocalStorage.getItem(this.firstSceneCache);
-            if (!this.scene) {
-                this.scene = zs.platform.sync.getScene();
-                if (this.scene) {
-                    Laya.LocalStorage.setItem(this.firstSceneCache, this.scene);
-                }
-            }
-
-            let sceneMask = this.sceneCheck(this.keys[product.switchScene]);
-
-            for (let key in this.keys) {
-                if (!sceneMask) {
-                    this.keys[key] = null;
-                    if (this._defines) {
-                        this._defines[key] = null;
+            if (!zs.configs.gameCfg.debug) {
+                this.scene = Laya.LocalStorage.getItem(this.firstSceneCache);
+                if (!this.scene) {
+                    this.scene = zs.platform.sync.getScene();
+                    if (this.scene) {
+                        Laya.LocalStorage.setItem(this.firstSceneCache, this.scene);
                     }
-                    continue;
                 }
 
-                let sceneKey = key + '(' + this.sceneMark + ')';
-                let sceneInfo = this.keys[sceneKey];
-                if (this.scene && sceneInfo && sceneInfo.length > 0) {
-                    let sceneValue = this.sceneCheck(sceneInfo);
-                    this.keys[key] = sceneValue;
-                    if (this._defines) {
-                        this._defines[key] = sceneValue;
-                    }
+                let sceneMask = this.sceneCheck(this.keys[product.switchScene]);
 
-                    if (!sceneValue) { continue; }
-                }
-
-                let cityKey = key + '(' + this.cityMark + ')';
-                let cityInfo = this.keys[cityKey];
-                if (this.city && cityInfo && cityInfo.length > 0) {
-                    let cityValue = this.cityCheck(cityInfo);
-                    this.keys[key] = cityValue;
-                    if (this._defines) {
-                        this._defines[key] = cityValue;
-                    }
-
-                    if (!cityValue) { continue; }
-                }
-
-                let timeKey = key + '(' + this.timeMark + ')';
-                let timeInfo = this.keys[timeKey];
-                if (this.timestamp && timeInfo && timeInfo.length > 0) {
-                    let timeInfoSplit = timeInfo.split(/[|｜]/);
-                    let timeValue = 1;
-                    if (timeInfoSplit.length > 1) {
-                        timeValue = 0;
-                        for (let i = 0, n = timeInfoSplit.length; i < n; i++) {
-                            if (!this.timeCheck(timeInfoSplit[i])) {
-                                timeValue = i + 1;
-                                break;
-                            }
+                for (let key in this.keys) {
+                    if (!sceneMask) {
+                        this.keys[key] = null;
+                        if (this._defines) {
+                            this._defines[key] = null;
                         }
-                    } else {
-                        timeValue = this.timeCheck(timeInfo);
+                        continue;
                     }
 
-                    this.keys[key] = timeValue;
-                    if (this._defines) {
-                        this._defines[key] = timeValue;
+                    let sceneKey = key + '(' + this.sceneMark + ')';
+                    let sceneInfo = this.keys[sceneKey];
+                    if (this.scene && sceneInfo && sceneInfo.length > 0) {
+                        let sceneValue = this.sceneCheck(sceneInfo);
+                        this.keys[key] = sceneValue;
+                        if (this._defines) {
+                            this._defines[key] = sceneValue;
+                        }
+
+                        if (!sceneValue) { continue; }
+                    }
+
+                    let cityKey = key + '(' + this.cityMark + ')';
+                    let cityInfo = this.keys[cityKey];
+                    if (this.city && cityInfo && cityInfo.length > 0) {
+                        let cityValue = this.cityCheck(cityInfo);
+                        this.keys[key] = cityValue;
+                        if (this._defines) {
+                            this._defines[key] = cityValue;
+                        }
+
+                        if (!cityValue) { continue; }
+                    }
+
+                    let timeKey = key + '(' + this.timeMark + ')';
+                    let timeInfo = this.keys[timeKey];
+                    if (this.timestamp && timeInfo && timeInfo.length > 0) {
+                        let timeInfoSplit = timeInfo.split(/[|｜]/);
+                        let timeValue = 1;
+                        if (timeInfoSplit.length > 1) {
+                            timeValue = 0;
+                            for (let i = 0, n = timeInfoSplit.length; i < n; i++) {
+                                if (!this.timeCheck(timeInfoSplit[i])) {
+                                    timeValue = i + 1;
+                                    break;
+                                }
+                            }
+                        } else {
+                            timeValue = this.timeCheck(timeInfo);
+                        }
+
+                        this.keys[key] = timeValue;
+                        if (this._defines) {
+                            this._defines[key] = timeValue;
+                        }
                     }
                 }
             }
@@ -181,7 +182,7 @@ window.zs = window.zs || {};
                 return def.call(this);
             } else {
                 if (def == null) {
-                    zs.log.warn("产品开关 " + key + " 不存在");
+                    zs.log.debug("产品开关 " + key + " 不存在");
                 }
                 return def;
             }

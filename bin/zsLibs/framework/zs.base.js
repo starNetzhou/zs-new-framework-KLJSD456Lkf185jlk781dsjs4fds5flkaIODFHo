@@ -47,14 +47,10 @@ window.zs.base = window.zs.base || {};
     class workflow extends zs.workflow {
         registe() {
             this.fsm = new zs.fsm()
-                .registe(workflow.GAME_HOME, workflow.GAME_PLAY, 0, false, this, (c) => { c.run(); })
-                .registe(workflow.GAME_PLAY, workflow.GAME_END, 0, false, this, (c) => { c.run(); })
-                .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this, (c) => { c.run(); });
-        }
-
-        init() {
-            super.init();
-            this.fsm.init(workflow.GAME_HOME);
+                .registe(workflow.GAME_HOME, workflow.GAME_PLAY)
+                .registe(workflow.GAME_PLAY, workflow.GAME_END)
+                .registe(workflow.GAME_END, workflow.GAME_HOME)
+                .setDefault(workflow.GAME_HOME);
         }
     }
 
