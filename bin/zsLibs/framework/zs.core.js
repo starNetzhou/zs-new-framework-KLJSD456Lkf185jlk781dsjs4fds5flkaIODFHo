@@ -635,16 +635,6 @@ window.zs = window.zs || {};
     core.loadingPage = null;
     core.layaLoadingPage = null;
 
-    core.hint_debug = 1000;
-    core.hint_pure = 1001;
-    core.hint_version_null = 1002;
-    core.hint_version_lost = 1003;
-    core.hint_export_null = 1004;
-    core.hint_td_null = 1005;
-    core.hint_appid_null = 1006;
-    core.hint_gameid_null = 1007;
-    core.hint_appname_null = 1008;
-
     exports.showMsgBox = showMsgBox;
     exports.hideMsgBox = hideMsgBox;
     exports.workflow = workflow;
