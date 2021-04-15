@@ -1,8 +1,98 @@
 {
+    "GAME_START": {
+        
+    },
+    "START_FULL_1": {
+        "banner": {
+
+        }
+    },
+    "START_FULL_2": {
+        "banner": {
+
+        }
+    },
     "GAME_HOME": {
+        "banner": {
+            "auto": true,
+            "isDelay":true
+        },
+        "base": [
+            {
+                "type": "add_btn_deskTopIcon",
+                "window": {
+                    "align": "right",
+                    "scale": [
+                        1.5,
+                        1.5
+                    ]
+                }
+            },
+            {
+                "type": "add_btn_moreGame",
+                "window": {
+                    "align": "left",
+                    "scale": [
+                        1.5,
+                        1.5
+                    ]
+                }
+            }
+        ]
+    },
+    "GAME_PREPARE": {
+
+    },
+    "GAME_START_NATIVE":{
+
+    },
+    "OPEN_SCREE_NATIVE":{
+
+    },
+    "EXPORT_COMMON_EGG": {
+        "banner": {
+
+        }
+    },
+    "GAME_PLAY": {
+        "banner": {
+            "switch": "zs_game_banner_show_switch"
+        }
+    },
+    "EXPORT_GAME_EGG": {
+        "banner": {
+
+        }
+    },
+    "OVER_FULL_1": {
+        "banner": {
+
+        }
+    },
+    "GAME_SETTLE": {
+        "exporter": [
+            {
+                "type": "export_knock",
+                "switch": "zs_finish_jump",
+                "window": {
+                    "align": "center",
+                    "alignoffsety": -30
+                }
+            }
+        ],
+        "base":[
+            {
+                "type": "add_bottom_native",
+                "window": {
+                    "align": "bottom"
+                }
+            }
+        ]
+    },
+    "OVER_FULL_2": {
         "banner": {}
     },
-    "GAME_PLAY.PLAY": {
-        "banner": {}
+    "GAME_END": {
+
     }
 }
