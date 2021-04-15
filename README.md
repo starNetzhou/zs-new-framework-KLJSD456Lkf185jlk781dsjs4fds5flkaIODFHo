@@ -355,7 +355,7 @@ zs.platform.**.js 适配器核心模块，不同平台需要配套使用不同�
     "tdKey": "85C4C654EC184EA984CD3D62CB646ADD", // td密钥
     "tdVersion": "1.0.0", // td版本
     "aldKey": "3d2a2aa3e82651cc2b74df3a47b96e21",  // 阿拉丁密钥
-    "secret": "dZPIQ6FCAyvVGzFK",  // 产品密钥
+    "secret": "dZPIQ6FCAyvVGzFK",  // 产品密钥***非特殊需求，默认可不填***
     "tdConfig": {   // td设置
         "gameComplete": {          // 事件名
             "label": "完成游戏",    // 事件描述
