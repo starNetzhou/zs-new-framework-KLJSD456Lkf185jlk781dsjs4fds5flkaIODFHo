@@ -54,6 +54,10 @@ declare module zs {
          */
         pure: boolean,
         /**
+         * 版本号
+         */
+        version: string;
+        /**
          * 项目名称
          */
         appName: string,
@@ -1034,6 +1038,69 @@ declare module zs.ui {
          */
         run(progress);
     }
+
+    /**
+     * UI场景管理
+     */
+    class uiScene {
+        /**
+         * UI场景节点
+         */
+        static scene: Laya.Scene3D;
+        /**
+         * UI场景镜头
+         */
+        static camera: Laya.Camera;
+        /**
+         * UI场景灯光
+         */
+        static light: Laya.DirectionLight;
+        /**
+         * 初始化方法（不用主动调用）
+         */
+        static init();
+        /**
+         * 同步镜头或灯光配置
+         * @param object 镜头或灯光对象
+         */
+        static sync(object: Laya.Camera | Laya.DirectionLight);
+        /**
+         * 重置镜头
+         */
+        static resetCamera();
+        /**
+         * 重置灯光
+         */
+        static resetLight();
+        /**
+         * 添加物体
+         * @param sprite 物体
+         * @param position （可选）位置
+         * @param rotationEuler （可选）旋转
+         */
+        static add(sprite: Laya.Sprite3D, position?: Laya.Vector3, rotationEuler?: Laya.Vector3): Laya.Sprite3D;
+        /**
+         * 克隆添加物体
+         * @param sprite 物体
+         * @param position （可选）位置
+         * @param rotationEuler （可选）旋转
+         */
+        static cloneAdd(sprite: Laya.Sprite3D, position?: Laya.Vector3, rotationEuler?: Laya.Vector3): Laya.Sprite3D;
+        /**
+         * 清空场景物体
+         */
+        static clear();
+        /**
+         * 根据索引移除物体
+         * @param index 索引
+         */
+        static removeAt(index: number);
+        /**
+         * 移除物体
+         * @param sprite 物体
+         */
+        static remove(sprite: Laya.Sprite3D);
+    }
 }
 /**
  * 模板类
@@ -1118,6 +1185,27 @@ declare module zs.fgui {
         BottomRight
     }
     /**
+     * 全屏适配模式
+     */
+    enum FitType {
+        /**
+         * 不进行全屏适配
+         */
+        None,
+        /**
+         * 尺寸适配
+         */
+        Fit,
+        /**
+         * 缩放适配
+         */
+        ScaleFit,
+        /**
+         * 尺寸与缩放适配
+         */
+        Both
+    }
+    /**
      * 配置类
      */
     class configs {
@@ -1172,6 +1260,7 @@ declare module zs.fgui {
      * @param fullpath （可选）是否为全路径
      */
     function loadPacks(packs: string[], fullpath?: boolean): Promise<fairygui.UIPackage[]>;
+
     /**
      * FGUI基类
      */
@@ -1184,6 +1273,10 @@ declare module zs.fgui {
          * 显示组件
          */
         get view(): fairygui.GComponent;
+        /**
+         * 控件是否被销毁
+         */
+        disposed: boolean;
         /**
          * 构造方法
          * @param component 构造FGUI组件
@@ -1221,6 +1314,12 @@ declare module zs.fgui {
         applyConfig();
     }
     /**
+     * FGUI泛型基类
+     */
+    class baseGeneric<T extends fairygui.GComponent> extends base {
+        get view(): T;
+    }
+    /**
      * FGUI窗口管理类
      */
     class window {
@@ -1244,10 +1343,14 @@ declare module zs.fgui {
          */
         detach(ctr: base | number): window;
         /**
-         * 设置UI控件
+         * 设置当前UI控件
          * @param ctr UI控件 
          */
         setBase(ctr: zs.fgui.base): window;
+        /**
+         * 获取当前UI控件
+         */
+        getBase(): zs.fgui.base;
         /**
          * 清空UI控件
          */
@@ -1399,6 +1502,31 @@ declare module zs.fgui {
          * 窗口是否显示
          */
         isShowing(): boolean;
+    }
+    /**
+     * FGUI面板管理类
+     */
+    class manager {
+        /**
+         * 打开FGUI面板，将覆盖已有面板
+         * @param type（可选）面板UI控件类型
+         * @param key （可选）面板关键词
+         * @param fit （可选）全屏适配类型
+         */
+        static open(type?: typeof zs.fgui.base, key?: string, fit?: FitType): zs.fgui.window;
+        /**
+         * 展示FGUI面板，不会覆盖已有面板
+         * @param autoCreate （可选）不存在面板时是否自动创建
+         * @param type（可选）面板UI控件类型
+         * @param key （可选）面板关键词
+         * @param fit （可选）全屏适配类型
+         */
+        static show(autoCreate?: boolean, type?: typeof zs.fgui.base, key?: string, fit?: FitType): zs.fgui.window;
+        /**
+         * 隐藏FGUI面板
+         * @param key （可选）面板关键词
+         */
+        static hide(key?: string): zs.fgui.window;
     }
 }
 

@@ -33,7 +33,7 @@ window.zs.platform = window.zs.platform || {};
             let key = syncList[i];
             if (sync[key] == null) {
                 sync[key] = function () {
-                    zs.log.warn("Sync方法 " + key + " 在当前平台不存在", 'Platform');
+                    zs.log.debug("Sync方法 " + key + " 在当前平台不存在", 'Platform');
                     return null;
                 }
             }
@@ -43,7 +43,7 @@ window.zs.platform = window.zs.platform || {};
             if (async[key] == null) {
                 async[key] = function _async() {
                     return new Promise((resolve, reject) => {
-                        zs.log.warn("Async方法 " + key + " 在当前平台不存在", 'Platform');
+                        zs.log.debug("Async方法 " + key + " 在当前平台不存在", 'Platform');
                         reject();
                     });
                 }
