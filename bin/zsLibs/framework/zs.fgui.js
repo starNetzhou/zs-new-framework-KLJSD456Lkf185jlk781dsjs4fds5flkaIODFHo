@@ -56,7 +56,7 @@ window.zs.fgui = window.zs.fgui || {};
     }
     configs.onInit = null;
     configs.path_root = 'fgui';
-    configs.pack_basic_exporter = 'basicExporter';
+    configs.pack_basic = 'zs_basic';
 
     function init() {
         fairygui.UIConfig.packageFileExtension = 'bin';
@@ -108,6 +108,12 @@ window.zs.fgui = window.zs.fgui || {};
             Laya.timer.clearAll(this);
             Laya.Tween.clearAll(this);
             this.disposed = true;
+        }
+        show() {
+            this._view && (this._view.visible = true);
+        }
+        hide() {
+            this._view && (this._view.visible = false);
         }
         init() { }
         apply() { }

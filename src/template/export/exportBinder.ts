@@ -17,7 +17,7 @@ import FGUI_knock_export from "./FGUI_knock_export";
 import FGUI_donhua from "./FGUI_donhua";
 import FGUI_fake_exit from "./FGUI_fake_exit";
 import FGUI_common_msg from "./FGUI_common_msg";
-import FGUI_btnComfire from "./FGUI_btnComfire";
+import FGUI_btnConfirm from "./FGUI_btnConfirm";
 import FGUI_btnCancel from "./FGUI_btnCancel";
 import FGUI_full_1 from "./FGUI_full_1";
 import FGUI_item_7 from "./FGUI_item_7";
@@ -45,7 +45,7 @@ export default class exportBinder {
 		fgui.UIObjectFactory.setExtension(FGUI_donhua.URL, FGUI_donhua);
 		fgui.UIObjectFactory.setExtension(FGUI_fake_exit.URL, FGUI_fake_exit);
 		fgui.UIObjectFactory.setExtension(FGUI_common_msg.URL, FGUI_common_msg);
-		fgui.UIObjectFactory.setExtension(FGUI_btnComfire.URL, FGUI_btnComfire);
+		fgui.UIObjectFactory.setExtension(FGUI_btnConfirm.URL, FGUI_btnConfirm);
 		fgui.UIObjectFactory.setExtension(FGUI_btnCancel.URL, FGUI_btnCancel);
 		fgui.UIObjectFactory.setExtension(FGUI_full_1.URL, FGUI_full_1);
 		fgui.UIObjectFactory.setExtension(FGUI_item_7.URL, FGUI_item_7);

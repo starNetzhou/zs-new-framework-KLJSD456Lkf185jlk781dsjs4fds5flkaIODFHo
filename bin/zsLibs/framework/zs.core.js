@@ -362,7 +362,7 @@ window.zs = window.zs || {};
             await zs.td.registeConfig(zs.configs.gameCfg.tdConfig);
             this.progress = 15;
             zs.log.debug("初始化广告与导出组件", 'Core');
-            let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic_exporter);
+            let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic);
             zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
             zs.ui.FGUI_card.bind(basicExportPack);

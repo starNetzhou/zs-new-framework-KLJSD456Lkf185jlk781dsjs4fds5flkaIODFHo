@@ -1292,6 +1292,14 @@ declare module zs.fgui {
          */
         static type(): typeof fairygui.GComponent;
         /**
+         * 显示组件
+         */
+        show();
+        /**
+         * 隐藏组件
+         */
+        hide();
+        /**
          * 检查方法
          * @param component 组件
          */

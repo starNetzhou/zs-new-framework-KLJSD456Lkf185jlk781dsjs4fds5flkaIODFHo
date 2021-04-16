@@ -10,8 +10,6 @@ export default class FGUI_fake_msg extends fgui.GButton {
 	}
 
 	protected onConstruct():void {
-		this.pivotX = 0;
-		this.pivotY = 0;
 		this.desc = <fgui.GTextField>(this.getChild("desc"));
 	}
 }

@@ -15,6 +15,7 @@ import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
+import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_START = 'GAME_START';
@@ -24,7 +25,6 @@ export default class workflow extends zs.workflow {
     static readonly GAME_PREPARE = 'GAME_PREPARE';
     static readonly EXPORT_COMMON_EGG = 'EXPORT_COMMON_EGG';
     static readonly GAME_PLAY = 'GAME_PLAY';
-    static readonly EXPORT_GAME_EGG = 'EXPORT_GAME_EGG';
     static readonly OVER_FULL_1 = 'OVER_FULL_1';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
     static readonly OVER_FULL_2 = 'OVER_FULL_2';
@@ -63,6 +63,7 @@ export default class workflow extends zs.workflow {
     _fakeExit: exporter_fake_exit;
     _commonEgg: ad_egg;
     _gameEgg: ad_egg;
+    _settleBtn: exporter_btn_confirm;
 
     commonMsgList: zs.fgui.window[];
 
@@ -264,6 +265,15 @@ export default class workflow extends zs.workflow {
         if (ProductKey.zs_false_news_switch) {
             this.fakeMsg();
         }
+
+        if (this._settleBtn) {
+            this._commonEgg.view.visible = true;
+        } else {
+            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                .align(zs.fgui.AlignType.Bottom, 0, -150)
+                .front()
+                .getBase() as exporter_btn_confirm;
+        }
     }
 
     onOverFull2(complete) {
@@ -277,6 +287,8 @@ export default class workflow extends zs.workflow {
             zs.core.workflow.next();
         }
         this.hideFakeMsg();
+        this._settleBtn && this.windowExport.detach(this._settleBtn);
+        this._settleBtn = null;
     }
 
     hideWindowFull() {

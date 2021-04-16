@@ -24,7 +24,7 @@
         }
     },
     "fguiPacks": [
-        "fgui/main"
+        "fgui/zs_example"
     ],
     "autoScaleFit": true,
     "designWidth": 1080,
