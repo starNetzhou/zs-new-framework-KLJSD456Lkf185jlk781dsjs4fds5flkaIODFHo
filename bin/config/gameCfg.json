@@ -85,15 +85,10 @@
     },
     "resources": {
         "configs": {
-            "gamedata": [
-                null,
-                "GameDataCfg"
-            ],
-            "nick": [
-                "config/nickname.json",
-                null
-            ]
+            "nick": "config/nickname.json"
         },
-        "prefabs": {}
+        "prefabs": {
+            "ball": "3dres/Conventional/Ball.lh"
+        }
     }
 }

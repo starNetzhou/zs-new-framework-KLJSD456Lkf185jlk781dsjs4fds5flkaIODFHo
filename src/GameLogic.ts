@@ -33,6 +33,9 @@ export default class GameLogic extends Laya.Script {
         zs.core.onPrepare = Laya.Handler.create(this, async () => {
             zs.scene.nodesDef = GameNode;
             zs.scene.inst.load('3dres/Conventional/TestScene.ls', true).then(() => {
+                let ball: Laya.Sprite3D = zs.prefabs.get('ball').clone() as Laya.Sprite3D;
+                zs.scene.inst.current.addChild(ball);
+                ball.transform.position = new Laya.Vector3(0, 2, 0);
                 zs.core.readyFinish();
             });
         });

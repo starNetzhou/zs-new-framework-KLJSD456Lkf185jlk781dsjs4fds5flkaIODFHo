@@ -387,8 +387,12 @@ window.zs = window.zs || {};
                 let cfgs = zs.configs.gameCfg.resources.configs;
                 for (let key in cfgs) {
                     let cfg = cfgs[key];
-                    if (cfg && cfg.length > 0) {
-                        await zs.configs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true);
+                    if (cfg) {
+                        if (Array.isArray(cfg)) {
+                            cfg.length > 0 && cfg[0] != null && cfg[0].trim().length > 0 && (await zs.configs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true));
+                        } else if (typeof cfg === 'string') {
+                            await zs.configs.load(key, cfg, null, true);
+                        }
                     }
                 }
             }
@@ -397,8 +401,12 @@ window.zs = window.zs || {};
                 let cfgs = zs.configs.gameCfg.resources.prefabs;
                 for (let key in cfgs) {
                     let cfg = cfgs[key];
-                    if (cfg && cfg.length > 0) {
-                        await zs.prefabs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true);
+                    if (cfg) {
+                        if (Array.isArray(cfg)) {
+                            cfg.length > 0 && cfg[0] != null && cfg[0].trim().length > 0 && (await zs.prefabs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true));
+                        } else if (typeof cfg === 'string') {
+                            await zs.prefabs.load(key, cfg, null, true);
+                        }
                     }
                 }
             }
