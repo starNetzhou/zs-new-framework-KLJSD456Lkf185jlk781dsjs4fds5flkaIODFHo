@@ -274,6 +274,24 @@ declare module zs {
          */
         off(key: string, handler: Laya.Handler, isBefore?: boolean);
         /**
+         * 注销状态内全部监听
+         * @param key 状态名
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        offAll(key: string, isBefore?: boolean);
+        /**
+         * 注销指定调用者监听
+         * @param caller 调用者
+         * @param key （可选）状态名
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        offAllCaller(caller: any, key?: string, isBefore?: boolean);
+        /**
+         * 清空所有监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        clear(isBefore?: boolean);
+        /**
          * 状态跳转
          * @param target （可选）目标状态名，默认自动跳转
          */
@@ -1292,6 +1310,14 @@ declare module zs.fgui {
          */
         static type(): typeof fairygui.GComponent;
         /**
+         * 显示组件
+         */
+        show(): base;
+        /**
+         * 隐藏组件
+         */
+        hide(): base;
+        /**
          * 检查方法
          * @param component 组件
          */
@@ -1307,11 +1333,11 @@ declare module zs.fgui {
         /**
          * 执行方法
          */
-        apply();
+        apply(): base;
         /**
          * 执行配置方法
          */
-        applyConfig();
+        applyConfig(): base;
     }
     /**
      * FGUI泛型基类

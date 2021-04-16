@@ -6,10 +6,10 @@ export default class FGUI_btnConfirm extends fgui.GButton {
 	public static URL:string = "ui://pt2mjy81la808z";
 
 	public static createInstance():FGUI_btnConfirm {
-		return <FGUI_btnConfirm>(fgui.UIPackage.createObject("export", "btnConfirm"));
+		return <FGUI_btnConfirm>(fgui.UIPackage.createObject("export", "btnComfire"));
 	}
 
 	protected onConstruct():void {
-		this.lblConfirm = <fgui.GTextField>(this.getChild("lblConfirm"));
+		this.lblConfirm = <fgui.GTextField>(this.getChild("lblComfire"));
 	}
 }

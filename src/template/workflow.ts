@@ -2,12 +2,12 @@ import exportBinder from "./export/exportBinder";
 import BtnMoreGame from "./BtnMoreGame";
 import RecordPage from "./RecordPage";
 import ProductKey from "./ProductKey";
+import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
 
     static readonly GAME_START = 'GAME_START';
     static readonly GAME_HOME = 'GAME_HOME';
-    static readonly GAME_PREPARE = 'GAME_PREPARE';
     static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly OPEN_SHARE_RECORD = 'OPEN_SHARE_RECORD';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
@@ -29,6 +29,7 @@ export default class workflow extends zs.workflow {
         return this._windowExport;
     }
 
+    _settleBtn: exporter_btn_confirm;
     _shareRecordPage: RecordPage = null;
 
     public onShareHandler: Laya.Handler;
@@ -37,26 +38,12 @@ export default class workflow extends zs.workflow {
         exportBinder.bindAll();
         zs.fgui.configs.registeBase(workflow.EXPORT_MORE_GAME, BtnMoreGame);
         this.fsm = new zs.fsm()
-            .registe(workflow.GAME_START, workflow.GAME_HOME, 0, false, this, this.onGameHome)
-            .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
-            .registe(workflow.GAME_PREPARE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
+            .registe(workflow.GAME_HOME, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
             .registe(workflow.GAME_PLAY, workflow.OPEN_SHARE_RECORD, 0, false, this, this.onShareRecordPage)
             .registe(workflow.OPEN_SHARE_RECORD, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
-            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this, this.onGameHome);
-    }
-
-    start() {
-        super.start();
-        this.fsm.init(workflow.GAME_START, true);
-    }
-
-    onGameHome(complete) {
-        complete.run();
-    }
-
-    onGamePrepare(complete) {
-        complete.run();
+            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this)
+            .setDefault(workflow.GAME_HOME);
     }
 
     onGamePlay(complete) {
@@ -75,11 +62,19 @@ export default class workflow extends zs.workflow {
         complete.run();
         //预加载插屏
         zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
+        if (this._settleBtn) {
+            this._settleBtn.view.visible = true;
+        } else {
+            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                .align(zs.fgui.AlignType.Bottom, 0, -150)
+                .front()
+                .getBase() as exporter_btn_confirm;
+        }
     }
 
     onGameEnd(complete) {
         complete.run();
-        zs.core.workflow.next();
+        this._settleBtn && (this._settleBtn.view.visible = false);
         if (ProductKey.zs_full_screen_ad) {
             zs.platform.sync.loadInsert({ closeHandler: () => { }, errorHandler: () => { } });
         }

@@ -1,4 +1,3 @@
-import msgbox from "./common_msg";
 import FGUI_RecordPage from "./export/FGUI_RecordPage";
 import ProductKey from "./ProductKey";
 
@@ -36,7 +35,7 @@ export default class RecordPage extends zs.fgui.base {
     }
 
 
-    apply() {
+    apply(): RecordPage {
         //停止录屏
         zs.platform.sync.recorderStop();
         let zs_switch = ProductKey.zs_switch;
@@ -47,6 +46,7 @@ export default class RecordPage extends zs.fgui.base {
                 this.node.btn_drop_share.visible = true;
             });
         }
+        return this;
     }
 
     onCloseClick() {
@@ -62,7 +62,7 @@ export default class RecordPage extends zs.fgui.base {
                 zs.log.log("分享录屏成功！");
                 this.setBtnTouchEnable(true);
                 this.onShareHandler && (this.onShareHandler.run());
-                msgbox.showMsgBox({
+                zs.showMsgBox({
                     title: "",
                     content: "恭喜获得100金币",
                     confirmHandler: Laya.Handler.create(this, this.onCloseClick)

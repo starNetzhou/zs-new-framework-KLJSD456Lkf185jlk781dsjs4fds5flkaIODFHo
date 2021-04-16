@@ -6,7 +6,7 @@
     "version": "2.0.0",
     "secret": "dZPIQ6FCAyvVGzFK",
     "fguiPacks": [
-        "fgui/main"
+        "fgui/zs_example"
     ],
     "autoScaleFit": true,
     "designWidth": 1080,
@@ -64,6 +64,8 @@
     },
     "resources": {
         "configs": {},
-        "prefabs": {}
+        "prefabs":  {
+            "ball": "3dres/Conventional/Ball.lh"
+        }
     }
 }
