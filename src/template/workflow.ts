@@ -3,6 +3,7 @@ import native_oppoBottomNative from "./native_oppoBottomNative";
 import native_oppoScreeNative from "./native_oppoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 import native_BtnMoreGame from "./native_BtnMoreGame";
+import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
 
@@ -35,6 +36,8 @@ export default class workflow extends zs.workflow {
     static readonly add_btn_moreGame = "add_btn_moreGame";
     /**添加底部原生 */
     static readonly add_bottom_native = "add_bottom_native";
+
+    _settleBtn: exporter_btn_confirm;
 
     registe() {
         // 绑定导出UI
@@ -78,6 +81,14 @@ export default class workflow extends zs.workflow {
     onGameSettle(complete) {
         complete.run();
         this.showBottomNative();
+        if (this._settleBtn) {
+            this._settleBtn.view.visible = true;
+        } else {
+            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                .align(zs.fgui.AlignType.Bottom, 0, -150)
+                .front()
+                .getBase() as exporter_btn_confirm;
+        }
     }
     openScreeNative(complete) {
         complete.run();
@@ -85,8 +96,9 @@ export default class workflow extends zs.workflow {
     }
     onGameEnd(complete) {
         complete.run();
-        zs.core.workflow.next();
         this.hideBottomNative();
+        this._settleBtn && (this._settleBtn.view.visible = false);
+        this._settleBtn = null;
     }
 
     //#region 原生的显示和隐藏

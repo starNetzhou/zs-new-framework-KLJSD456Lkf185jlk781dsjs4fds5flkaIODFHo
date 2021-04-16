@@ -1,13 +1,12 @@
-import mainBinder from "./fgui/mainBinder";
-import mainPage from "./fgui/mainPage";
+import zs_example from "./fgui/zs_example";
+import zs_exampleBinder from "./fgui/zs_exampleBinder";
 import GameNode from "./GameNode";
 import ProductKey from "./template/ProductKey";
 import workflow from "./template/workflow";
 
 export default class GameLogic extends Laya.Script {
 
-    gameExporter: zs.fgui.window;
-    workflow: workflow;
+    examplePage: zs_example;
 
     constructor() {
         super();
@@ -15,9 +14,10 @@ export default class GameLogic extends Laya.Script {
     }
 
     async init() {
+        // 新建工作流
+        zs.core.workflow = new workflow();
 
-        this.workflow = new workflow;
-        zs.core.workflow = this.workflow;
+        // 在GAME_PLAY中设置子状态机
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")
@@ -27,66 +27,105 @@ export default class GameLogic extends Laya.Script {
                 .setDefault("START")
         );
 
+        // 绑定示例FGUI资源
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
-            mainBinder.bindAll();
+            zs_exampleBinder.bindAll();
         });
 
+        // 设置准备事件，通常为加载场景
         zs.core.onPrepare = Laya.Handler.create(this, async () => {
+            // 加载场景
             zs.scene.nodesDef = GameNode;
             zs.scene.inst.load('3dres/Conventional/TestScene.ls', true).then(() => {
+                // 加载预制体并放入场景
+                let ball: Laya.Sprite3D = zs.prefabs.get('ball').clone() as Laya.Sprite3D;
+                zs.scene.inst.current.addChild(ball);
+                ball.transform.position = new Laya.Vector3(0, 2, 0);
+                // 开始游戏，执行后将关闭加载界面
                 zs.core.readyFinish();
             });
         });
 
+        // 监听工作流
+        zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== GAME_HOME");
+            // 展示FGUI界面
+            this.examplePage = zs.fgui.manager.show(true, zs_example)
+                .update<zs_example>(zs_example, (unit) => {
+                    // 设置FGUI界面状态
+                    unit.setWorkflowState(workflow.GAME_HOME)
+                        .setBtnText("继续（主状态）")
+                        .setBtnClickEvent(this, this.workflowNext)
+                })
+                .getBase() as zs_example;
+
+            this.examplePage.show();
+        }));
+
         zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_START");
         }));
-
         zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_PREPARE");
+            this.examplePage.setWorkflowState(workflow.GAME_PREPARE).show();
         }));
-
+        zs.core.onWorkflow(workflow.GAME_START_NATIVE, Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_START_NATIVE");
+            this.examplePage.setWorkflowState(workflow.GAME_START_NATIVE).show();
+        }));
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY).show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY START");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.START')
+                .setBtnText("继续（子状态）")
+                .setBtnClickEvent(this, this.workflowChildNext)
+                .show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY READY");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.READY').show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY PLAY");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.PLAY').show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.SETTLE', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY SETTLE");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.SETTLE').show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY END");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.END')
+                .setBtnText("继续（主状态）")
+                .setBtnClickEvent(this, this.workflowNext)
+                .show();
         }));
-
         zs.core.onWorkflow(workflow.GAME_SETTLE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_SETTLE");
+            this.examplePage.setWorkflowState(workflow.GAME_SETTLE, true).show();
         }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_END");
+            this.examplePage.setWorkflowState(workflow.GAME_END).show();
+            zs.core.workflow.next();
+        }));
+        zs.core.onWorkflow(workflow.OPEN_SCREE_NATIVE, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== OPEN_SCREE_NATIVE");
+            this.examplePage.setWorkflowState(workflow.OPEN_SCREE_NATIVE).show();
         }));
 
-        zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_HOME");
-            if (this.gameExporter) {
-                this.gameExporter.show();
-            } else {
-                this.gameExporter = zs.fgui.window.create()
-                    .attach(mainPage)
-                    .fit()
-                    .update<mainPage>(mainPage, (unit) => {
-                        console.log(unit);
-                    })
-                    .show();
-            }
-        }));
-
+        // 启动SDK，开始执行游戏进程
         zs.core.init(ProductKey);
+    }
+
+    workflowNext() {
+        zs.core.workflow.next();
+    }
+
+    workflowChildNext() {
+        zs.core.workflow.childNext();
     }
 }
