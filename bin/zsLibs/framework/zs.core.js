@@ -122,6 +122,65 @@ window.zs = window.zs || {};
                 delete this.listeners[key];
             }
         }
+        offAllCaller(caller, key, isBefore) {
+            if (caller == null) { return; }
+            if (key == null || key.length <= 0) {
+                if (isBefore) {
+                    for (let k in this.preListeners) {
+                        let listener = this.preListeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    for (let k in this.listeners) {
+                        let listener = this.listeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (isBefore) {
+                    let listener = this.preListeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    let listener = this.listeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        clear(isBefore) {
+            if (isBefore) {
+                this.preListeners = null;
+            } else {
+                this.listeners = null;
+            }
+        }
         next(target) {
             if (this.fsm == null) { return; }
             if (target) {
