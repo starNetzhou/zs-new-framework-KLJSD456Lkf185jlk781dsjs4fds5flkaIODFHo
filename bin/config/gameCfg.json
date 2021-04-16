@@ -1,5 +1,6 @@
 {
-    "debug": false,
+    "debug": true,
+    "pure": false,
     "version": "2.0.0",
     "appName": "逃出僵尸城",
     "gameId": "tcjsc",
