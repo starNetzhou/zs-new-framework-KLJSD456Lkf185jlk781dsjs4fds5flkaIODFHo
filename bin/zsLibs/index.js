@@ -19,5 +19,6 @@ loadLib("zsLibs/framework/zs.exporter.js")
 loadLib("zsLibs/framework/zs.core.js")
 loadLib("zsLibs/framework/zs.network.js")
 loadLib("zsLibs/framework/zs.base.js")
+loadLib("zsLibs/framework/zs.scene.js")
 
 loadLib("js/bundle.js");
