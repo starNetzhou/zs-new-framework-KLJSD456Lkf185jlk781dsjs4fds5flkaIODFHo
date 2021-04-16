@@ -12,7 +12,6 @@ loadLib("zsLibs/framework/zs.td.js")
 loadLib("zsLibs/framework/zs.product.js")
 loadLib("zsLibs/framework/zs.fgui.js")
 loadLib("zsLibs/framework/zs.fsm.js")
-loadLib("zsLibs/framework/zs.scene.js")
 loadLib("zsLibs/framework/zs.platform.js")
 
 loadLib("zsLibs/fairygui/fairygui.js")
@@ -21,5 +20,6 @@ loadLib("zsLibs/framework/zs.exporter.js")
 loadLib("zsLibs/framework/zs.core.js")
 loadLib("zsLibs/framework/zs.network.js")
 loadLib("zsLibs/framework/zs.base.js")
+loadLib("zsLibs/framework/zs.scene.js")
 
 loadLib("js/bundle.js");

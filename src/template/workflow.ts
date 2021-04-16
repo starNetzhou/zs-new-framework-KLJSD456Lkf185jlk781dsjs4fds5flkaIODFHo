@@ -3,6 +3,7 @@ import native_vivoBottomNative from "./native_vivoBottomNative";
 import native_vivoScreeNative from "./native_vivoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 import ProductKey from "./ProductKey";
+import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_START = 'GAME_START';
@@ -27,6 +28,8 @@ export default class workflow extends zs.workflow {
         }
         return this._windowExport;
     }
+
+    _settleBtn: exporter_btn_confirm;
 
     registe() {
         // 绑定导出UI
@@ -67,16 +70,25 @@ export default class workflow extends zs.workflow {
 
     onGameSettle(complete) {
         complete.run();
+        if (this._settleBtn) {
+            this._settleBtn.view.visible = true;
+        } else {
+            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                .align(zs.fgui.AlignType.Bottom, 0, -150)
+                .front()
+                .getBase() as exporter_btn_confirm;
+        }
         this.showScreeNative();
     }
     onGameEnd(complete) {
         complete.run();
-        zs.core.workflow.next();
         this.hideScreeNative();
         if (ProductKey.zs_native_limit) {
             this.showScreeNative();
             zs.platform.sync.hideBanner();
         }
+        this._settleBtn && (this._settleBtn.view.visible = false);
+        this._settleBtn = null;
     }
 
     //#region 添加桌面和更多好玩
