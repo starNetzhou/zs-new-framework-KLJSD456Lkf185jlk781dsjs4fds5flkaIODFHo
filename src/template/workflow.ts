@@ -5,8 +5,6 @@ import ProductKey from "./ProductKey";
 import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
-
-    static readonly GAME_START = 'GAME_START';
     static readonly GAME_HOME = 'GAME_HOME';
     static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly OPEN_SHARE_RECORD = 'OPEN_SHARE_RECORD';
