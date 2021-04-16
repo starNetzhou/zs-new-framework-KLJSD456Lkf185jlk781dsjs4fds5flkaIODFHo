@@ -285,7 +285,12 @@ declare module zs {
          * @param key （可选）状态名
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
          */
-        offAllCaller(caller : any, key?: string, isBefore?: boolean);
+        offAllCaller(caller: any, key?: string, isBefore?: boolean);
+        /**
+         * 清空所有监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        clear(isBefore?: boolean);
         /**
          * 状态跳转
          * @param target （可选）目标状态名，默认自动跳转

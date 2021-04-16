@@ -174,6 +174,13 @@ window.zs = window.zs || {};
                 }
             }
         }
+        clear(isBefore) {
+            if (isBefore) {
+                this.preListeners = null;
+            } else {
+                this.listeners = null;
+            }
+        }
         next(target) {
             if (this.fsm == null) { return; }
             if (target) {
