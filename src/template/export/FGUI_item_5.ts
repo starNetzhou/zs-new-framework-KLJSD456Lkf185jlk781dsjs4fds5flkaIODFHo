@@ -2,7 +2,7 @@
 
 import FGUI_icon_4 from "./FGUI_icon_4";
 
-export default class FGUI_item_5 extends zs.ui.FGUI_item {
+export default class FGUI_item_5 extends fgui.GComponent {
 
 	public rank:fgui.GTextField;
 	public desc:fgui.GTextField;

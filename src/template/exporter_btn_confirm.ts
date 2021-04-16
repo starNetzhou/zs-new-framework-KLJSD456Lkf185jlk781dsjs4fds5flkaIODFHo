@@ -1,10 +1,10 @@
 import FGUI_btnCancel from "./export/FGUI_btnCancel";
-import FGUI_btnComfire from "./export/FGUI_btnConfirm";
+import FGUI_btnConfirm from "./export/FGUI_btnConfirm";
 
-export default class exporter_btn_confirm extends zs.fgui.baseGeneric<FGUI_btnComfire>  {
-    static typeDefine = FGUI_btnComfire;
+export default class exporter_btn_confirm extends zs.fgui.baseGeneric<FGUI_btnConfirm>  {
+    static typeDefine = FGUI_btnConfirm;
 
-    constructor(component: FGUI_btnComfire) {
+    constructor(component: FGUI_btnConfirm) {
         super(component);
         component.onClick(this, () => {
             zs.core.workflow.next();

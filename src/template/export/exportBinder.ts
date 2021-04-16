@@ -1,6 +1,5 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
-import FGUI_full_1_content from "./FGUI_full_1_content";
 import FGUI_item_1 from "./FGUI_item_1";
 import FGUI_item_3 from "./FGUI_item_3";
 import FGUI_item_2 from "./FGUI_item_2";
@@ -17,7 +16,7 @@ import FGUI_knock_export from "./FGUI_knock_export";
 import FGUI_donhua from "./FGUI_donhua";
 import FGUI_fake_exit from "./FGUI_fake_exit";
 import FGUI_common_msg from "./FGUI_common_msg";
-import FGUI_btnComfire from "./FGUI_btnComfire";
+import FGUI_btnConfirm from "./FGUI_btnConfirm";
 import FGUI_btnCancel from "./FGUI_btnCancel";
 import FGUI_full_1 from "./FGUI_full_1";
 import FGUI_item_8 from "./FGUI_item_8";
@@ -30,7 +29,6 @@ import FGUI_item_9 from "./FGUI_item_9";
 
 export default class exportBinder {
 	public static bindAll():void {
-		fgui.UIObjectFactory.setExtension(FGUI_full_1_content.URL, FGUI_full_1_content);
 		fgui.UIObjectFactory.setExtension(FGUI_item_1.URL, FGUI_item_1);
 		fgui.UIObjectFactory.setExtension(FGUI_item_3.URL, FGUI_item_3);
 		fgui.UIObjectFactory.setExtension(FGUI_item_2.URL, FGUI_item_2);
@@ -47,7 +45,7 @@ export default class exportBinder {
 		fgui.UIObjectFactory.setExtension(FGUI_donhua.URL, FGUI_donhua);
 		fgui.UIObjectFactory.setExtension(FGUI_fake_exit.URL, FGUI_fake_exit);
 		fgui.UIObjectFactory.setExtension(FGUI_common_msg.URL, FGUI_common_msg);
-		fgui.UIObjectFactory.setExtension(FGUI_btnComfire.URL, FGUI_btnComfire);
+		fgui.UIObjectFactory.setExtension(FGUI_btnConfirm.URL, FGUI_btnConfirm);
 		fgui.UIObjectFactory.setExtension(FGUI_btnCancel.URL, FGUI_btnCancel);
 		fgui.UIObjectFactory.setExtension(FGUI_full_1.URL, FGUI_full_1);
 		fgui.UIObjectFactory.setExtension(FGUI_item_8.URL, FGUI_item_8);

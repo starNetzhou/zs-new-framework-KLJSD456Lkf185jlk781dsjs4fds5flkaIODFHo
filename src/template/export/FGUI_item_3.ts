@@ -1,6 +1,6 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
-export default class FGUI_item_3 extends zs.ui.FGUI_item {
+export default class FGUI_item_3 extends fgui.GComponent {
 
 	public picture:fgui.GLabel;
 	public title:fgui.GTextField;

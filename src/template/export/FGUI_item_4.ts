@@ -2,7 +2,7 @@
 
 import FGUI_icon_4 from "./FGUI_icon_4";
 
-export default class FGUI_item_4 extends zs.ui.FGUI_item {
+export default class FGUI_item_4 extends fgui.GComponent {
 
 	public viewCtrl:fgui.Controller;
 	public imgRankBg:fgui.GLoader;

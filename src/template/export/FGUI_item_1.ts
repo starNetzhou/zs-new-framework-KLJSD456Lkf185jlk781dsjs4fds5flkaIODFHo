@@ -1,6 +1,6 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
-export default class FGUI_item_1 extends zs.ui.FGUI_item {
+export default class FGUI_item_1 extends fgui.GComponent {
 
 	public ditu1:fgui.Controller;
 	public bottomlighting:fgui.GLoader;
