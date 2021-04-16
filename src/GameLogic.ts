@@ -62,13 +62,6 @@ export default class GameLogic extends Laya.Script {
             this.examplePage.show();
         }));
 
-        zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_START");
-        }));
-        zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_PREPARE");
-            this.examplePage.setWorkflowState(workflow.GAME_PREPARE).show();
-        }));
         zs.core.onWorkflow(workflow.GAME_START_NATIVE, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_START_NATIVE");
             this.examplePage.setWorkflowState(workflow.GAME_START_NATIVE).show();

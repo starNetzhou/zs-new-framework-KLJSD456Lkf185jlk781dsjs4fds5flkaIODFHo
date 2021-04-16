@@ -6,10 +6,7 @@ import native_BtnMoreGame from "./native_BtnMoreGame";
 import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
-
-    static readonly GAME_START = 'GAME_START';
     static readonly GAME_HOME = 'GAME_HOME';
-    static readonly GAME_PREPARE = 'GAME_PREPARE';
     static readonly GAME_START_NATIVE = 'GAME_START_NATIVE'
     static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
@@ -49,28 +46,18 @@ export default class workflow extends zs.workflow {
 
         // 工作流注册
         this.fsm = new zs.fsm()
-            .registe(workflow.GAME_START, workflow.GAME_HOME, 0, false, this, this.onGameHome)
-            .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
-            .registe(workflow.GAME_PREPARE, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
+            .registe(workflow.GAME_HOME, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
             .registe(workflow.GAME_START_NATIVE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
             .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
             .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
             .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
-            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome);
-    }
-
-    start() {
-        super.start();
-        this.fsm.init(workflow.GAME_START, true);
+            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+            .setDefault(workflow.GAME_HOME);
     }
 
     onGameHome(complete) {
         complete.run();
         this.hideScreeNative();
-    }
-
-    onGamePrepare(complete) {
-        complete.run();
     }
 
     onGamePlay(complete) {
