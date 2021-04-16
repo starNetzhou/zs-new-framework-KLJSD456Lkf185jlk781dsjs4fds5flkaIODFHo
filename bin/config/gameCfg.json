@@ -7,7 +7,7 @@
     "secret": "lpRWESQdAtw8zs7h",
     "tdConfig": "",
     "fguiPacks": [
-        "fgui/main"
+        "fgui/zs_example"
     ],
     "autoScaleFit": true,
     "designWidth": 1080,
@@ -65,6 +65,8 @@
     },
     "resources": {
         "configs": {},
-        "prefabs": {}
+        "prefabs": {
+            "ball": "3dres/Conventional/Ball.lh"
+        }
     }
 }

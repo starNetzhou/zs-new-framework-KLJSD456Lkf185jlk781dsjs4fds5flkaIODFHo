@@ -1,4 +1,3 @@
-import msgbox from "./common_msg";
 import QQAd_video_get from "./export/QQAd_video_get";
 import ProductKey from "./ProductKey";
 
@@ -56,7 +55,7 @@ export default class video_view extends zs.fgui.base {
                 autoClose && this.closeHandler && this.closeHandler.run();
             }
         }).catch(() => {
-            msgbox.showMsgBox({
+            zs.showMsgBox({
                 title: "错误",
                 content: "视频组件错误",
                 hideCancel: true,

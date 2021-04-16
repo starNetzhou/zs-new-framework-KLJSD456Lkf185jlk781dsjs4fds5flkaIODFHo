@@ -122,6 +122,65 @@ window.zs = window.zs || {};
                 delete this.listeners[key];
             }
         }
+        offAllCaller(caller, key, isBefore) {
+            if (caller == null) { return; }
+            if (key == null || key.length <= 0) {
+                if (isBefore) {
+                    for (let k in this.preListeners) {
+                        let listener = this.preListeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    for (let k in this.listeners) {
+                        let listener = this.listeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (isBefore) {
+                    let listener = this.preListeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    let listener = this.listeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        clear(isBefore) {
+            if (isBefore) {
+                this.preListeners = null;
+            } else {
+                this.listeners = null;
+            }
+        }
         next(target) {
             if (this.fsm == null) { return; }
             if (target) {
@@ -362,7 +421,7 @@ window.zs = window.zs || {};
             await zs.td.registeConfig(zs.configs.gameCfg.tdConfig);
             this.progress = 15;
             zs.log.debug("初始化广告与导出组件", 'Core');
-            let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic_exporter);
+            let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic);
             zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
             zs.ui.FGUI_card.bind(basicExportPack);
@@ -387,8 +446,12 @@ window.zs = window.zs || {};
                 let cfgs = zs.configs.gameCfg.resources.configs;
                 for (let key in cfgs) {
                     let cfg = cfgs[key];
-                    if (cfg && cfg.length > 0) {
-                        await zs.configs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true);
+                    if (cfg) {
+                        if (Array.isArray(cfg)) {
+                            cfg.length > 0 && cfg[0] != null && cfg[0].trim().length > 0 && (await zs.configs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true));
+                        } else if (typeof cfg === 'string') {
+                            await zs.configs.load(key, cfg, null, true);
+                        }
                     }
                 }
             }
@@ -397,8 +460,12 @@ window.zs = window.zs || {};
                 let cfgs = zs.configs.gameCfg.resources.prefabs;
                 for (let key in cfgs) {
                     let cfg = cfgs[key];
-                    if (cfg && cfg.length > 0) {
-                        await zs.prefabs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true);
+                    if (cfg) {
+                        if (Array.isArray(cfg)) {
+                            cfg.length > 0 && cfg[0] != null && cfg[0].trim().length > 0 && (await zs.prefabs.load(key, cfg[0], cfg.length > 1 ? cfg[1] : null, cfg.length > 2 ? cfg[2] : true));
+                        } else if (typeof cfg === 'string') {
+                            await zs.prefabs.load(key, cfg, null, true);
+                        }
                     }
                 }
             }

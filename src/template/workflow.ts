@@ -11,12 +11,10 @@ export default class workflow extends zs.workflow {
 
     static readonly GAME_START = 'GAME_START';
     static readonly GAME_HOME = 'GAME_HOME';
-    static readonly GAME_PREPARE = 'GAME_PREPARE';
     static readonly QQ_OPEN_EGG = 'QQ_OPEN_EGG';
     static readonly QQ_VIDEO = "QQ_VIDEO";
     static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly QQ_OVER_EGG = 'QQ_OVER_EGG';
-    static readonly GAME_SETTLE = 'GAME_SETTLE';
     static readonly GAME_END = 'GAME_END';
 
     static readonly open_egg = "open_egg";
@@ -50,10 +48,6 @@ export default class workflow extends zs.workflow {
         return this._windowExport;
     }
 
-    commonMsgList: zs.fgui.window[];
-
-    fullStack = [];
-
     registe() {
         QQadBinder.bindAll();
         zs.fgui.configs.registeBase(workflow.open_egg, qq_open_egg);
@@ -64,13 +58,11 @@ export default class workflow extends zs.workflow {
 
         this.fsm = new zs.fsm()
             .registe(workflow.GAME_START, workflow.GAME_HOME, 0, false, this, this.onEnterGame)
-            .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this)
-            .registe(workflow.GAME_PREPARE, workflow.QQ_OPEN_EGG, 0, false, this, this.onOpenEgg)
+            .registe(workflow.GAME_HOME, workflow.QQ_OPEN_EGG, 0, false, this, this.onOpenEgg)
             .registe(workflow.QQ_OPEN_EGG, workflow.QQ_VIDEO, 0, false, this, this.onSkinShow)
             .registe(workflow.QQ_VIDEO, workflow.GAME_PLAY, 0, false, this)
             .registe(workflow.GAME_PLAY, workflow.QQ_OVER_EGG, 0, false, this, this.onOverEgg)
-            .registe(workflow.QQ_OVER_EGG, workflow.GAME_SETTLE, 0, false, this)
-            .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
+            .registe(workflow.QQ_OVER_EGG, workflow.GAME_END, 0, false, this, this.onGameEnd)
             .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this)
             .setDefault(workflow.GAME_START, true);
     }
