@@ -1,4 +1,4 @@
-import zs_example from "./fgui/zs_exampla";
+import zs_example from "./fgui/zs_example";
 import zs_exampleBinder from "./fgui/zs_exampleBinder";
 import GameNode from "./GameNode";
 import ProductKey from "./template/ProductKey";
