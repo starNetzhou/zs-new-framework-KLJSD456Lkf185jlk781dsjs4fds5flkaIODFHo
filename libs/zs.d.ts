@@ -1294,11 +1294,11 @@ declare module zs.fgui {
         /**
          * 显示组件
          */
-        show();
+        show(): base;
         /**
          * 隐藏组件
          */
-        hide();
+        hide(): base;
         /**
          * 检查方法
          * @param component 组件
@@ -1315,11 +1315,11 @@ declare module zs.fgui {
         /**
          * 执行方法
          */
-        apply();
+        apply(): base;
         /**
          * 执行配置方法
          */
-        applyConfig();
+        applyConfig(): base;
     }
     /**
      * FGUI泛型基类

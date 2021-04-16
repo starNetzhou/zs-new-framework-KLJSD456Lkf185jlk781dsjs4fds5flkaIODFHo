@@ -111,13 +111,15 @@ window.zs.fgui = window.zs.fgui || {};
         }
         show() {
             this._view && (this._view.visible = true);
+            return this;
         }
         hide() {
             this._view && (this._view.visible = false);
+            return this;
         }
         init() { }
-        apply() { }
-        applyConfig() { }
+        apply() { return this; }
+        applyConfig() { return this; }
     }
     base.typeDefine = null;
 

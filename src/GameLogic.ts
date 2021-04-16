@@ -14,9 +14,10 @@ export default class GameLogic extends Laya.Script {
     }
 
     async init() {
-
+        // 新建工作流
         zs.core.workflow = new workflow();
 
+        // 在GAME_PLAY中设置子状态机
         zs.core.workflow.setFSM(workflow.GAME_PLAY,
             new zs.fsm()
                 .registe("START", "READY")
@@ -26,19 +27,40 @@ export default class GameLogic extends Laya.Script {
                 .setDefault("START")
         );
 
+        // 绑定示例FGUI资源
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
             zs_exampleBinder.bindAll();
         });
 
+        // 设置准备事件，通常为加载场景
         zs.core.onPrepare = Laya.Handler.create(this, async () => {
+            // 加载场景
             zs.scene.nodesDef = GameNode;
             zs.scene.inst.load('3dres/Conventional/TestScene.ls', true).then(() => {
+                // 加载预制体并放入场景
                 let ball: Laya.Sprite3D = zs.prefabs.get('ball').clone() as Laya.Sprite3D;
                 zs.scene.inst.current.addChild(ball);
                 ball.transform.position = new Laya.Vector3(0, 2, 0);
+                // 开始游戏，执行后将关闭加载界面
                 zs.core.readyFinish();
             });
         });
+
+        // 监听工作流
+        zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== GAME_HOME");
+            // 展示FGUI界面
+            this.examplePage = zs.fgui.manager.show(true, zs_example)
+                .update<zs_example>(zs_example, (unit) => {
+                    // 设置FGUI界面状态
+                    unit.setWorkflowState(workflow.GAME_HOME)
+                        .setBtnText("继续（主状态）")
+                        .setBtnClickEvent(this, this.workflowNext)
+                })
+                .getBase() as zs_example;
+
+            this.examplePage.show();
+        }));
 
         zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_START");
@@ -106,19 +128,7 @@ export default class GameLogic extends Laya.Script {
             zs.core.workflow.next();
         }));
 
-        zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_HOME");
-            this.examplePage = zs.fgui.manager.show(true, zs_example)
-                .update<zs_example>(zs_example, (unit) => {
-                    unit.setWorkflowState(workflow.GAME_HOME)
-                        .setBtnText("继续（主状态）")
-                        .setBtnClickEvent(this, this.workflowNext)
-                })
-                .getBase() as zs_example;
-
-            this.examplePage.show();
-        }));
-
+        // 启动SDK，开始执行游戏进程
         zs.core.init(ProductKey);
     }
 
