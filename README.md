@@ -49,10 +49,14 @@ SDK提供了一个 HOME-PLAY-END 三个状态循环的默认状态机用于通�
 
 调用状态监听的方法如下：
 ``` typescript
-// 进入HOME状态时执行相应的方法
+// 进入HOME状态时执行相应的方法，onWorkflow仅在SDK初始化注册才会生效，动态监听工作流请使用zs.core.workflow.on
 zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
     console.log("Workflow ====== GAME_HOME");
     // 打开首页场景
+}));
+// 动态注册工作流监听方法
+zs.core.workflow.on(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
+    console.log("Workflow Dynamic ===== GAME_PLAY");
 }));
 ```
 ### - 子状态机设置
