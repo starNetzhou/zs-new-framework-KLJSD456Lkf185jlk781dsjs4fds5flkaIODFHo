@@ -267,6 +267,13 @@ declare module zs {
          */
         on(key: string, handler: Laya.Handler, isBefore?: boolean);
         /**
+         *  注册工作流单次监听，用于监听工作流状态改变
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        once(key: string, handler: Laya.Handler, isBefore?: boolean);
+        /**
          * 注销工作流监听
          * @param key 状态名
          * @param handler 监听事件

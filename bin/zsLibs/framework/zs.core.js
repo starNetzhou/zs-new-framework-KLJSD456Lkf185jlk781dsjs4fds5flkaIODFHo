@@ -60,6 +60,7 @@ window.zs = window.zs || {};
         }
         on(key, handler, isBefore) {
             if (key == null || key.length <= 0 || handler == null) { return; }
+            handler.once = false;
             if (isBefore) {
                 if (this.preListeners == null) {
                     this.preListeners = {};
@@ -85,6 +86,10 @@ window.zs = window.zs || {};
                 }
                 this.listeners[key].push(handler);
             }
+        }
+        once(key, handler, isBefore) {
+            this.on(key, handler, isBefore);
+            if (handler) { handler.once = true; }
         }
         off(key, handler, isBefore) {
             if (key == null || key.length <= 0 || handler == null) { return; }

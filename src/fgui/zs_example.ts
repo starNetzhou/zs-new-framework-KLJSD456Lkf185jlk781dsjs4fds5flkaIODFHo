@@ -26,8 +26,9 @@ export default class zs_example extends zs.fgui.baseGeneric<FGUI_main> {
     }
 
     onBtnClick() {
-        this.eventThis && (this.eventFunc.call(this.eventThis));
+        this.eventThis && this.eventFunc && (this.eventFunc.call(this.eventThis));
     }
+    
     setBtnClickEvent(thisObj: any, listener: Function): zs_example {
         this.eventThis = thisObj;
         this.eventFunc = listener;
