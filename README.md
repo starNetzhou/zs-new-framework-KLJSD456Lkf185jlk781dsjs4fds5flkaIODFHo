@@ -49,16 +49,31 @@ SDK提供了一个 HOME-PLAY-END 三个状态循环的默认状态机用于通�
 
 调用状态监听的方法如下：
 ``` typescript
-// 进入HOME状态时执行相应的方法，onWorkflow仅在SDK初始化注册才会生效，动态监听工作流请使用zs.core.workflow.on
+// 进入HOME状态时执行相应的方法
 zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
     console.log("Workflow ====== GAME_HOME");
     // 打开首页场景
 }));
-// 动态注册工作流监听方法
+// 另一种注册工作流监听方法,注意该用法在workflow未完成实例化（zs.core.workflow = new workflow();）时会报错
 zs.core.workflow.on(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
     console.log("Workflow Dynamic ===== GAME_PLAY");
 }));
 ```
+如果需要注销工作流监听可以使用off，offAll，offAllCaller和clear进行操作
+注销状态监听的方法如下：
+``` typescript
+// 注销 GAME_HOME 状态中的单个事件，需要在注册监听时保存 handler
+zs.core.workflow.off(workflow.GAME_HOME, handler);
+// 注销 GAME_HOME 状态中的所有事件
+zs.core.workflow.offAll(workflow.GAME_HOME);
+// 注销 GAME_HOME 状态中的所有由 this 发起的监听
+zs.core.workflow.offAllCaller(this, workflow.GAME_HOME);
+// 注销所有状态中的所有由 this 发起的监听
+zs.core.workflow.offAllCaller(this);
+// 清空所有状态中的所有监听
+zs.core.workflow.clear();
+```
+
 ### - 子状态机设置
 由于SDK的工作流状态原则上是不能改变的，为了满足前端自定义状态的开发需求，SDK可以在工作流指定状态中自行设置子状态机。  
 子状态机与主状态机各自独立运作，互不影响，同时子状态机的状态也能通过工作流监听发出响应事件。
