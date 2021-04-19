@@ -502,7 +502,6 @@ window.zs = window.zs || {};
             }
 
             this.checkGameCfg(switchs);
-            Laya.timer.frameLoop(1, null, () => { this.checkPanelSort(); });
 
             if (this.onPrepare) {
                 this.onPrepare.run();
@@ -512,6 +511,7 @@ window.zs = window.zs || {};
         }
         static readyFinish() {
             this.checkPanelSort();
+            Laya.timer.frameLoop(1, null, () => { this.checkPanelSort(); });
             this.progress = 100;
             this._readyStart = true;
         }
@@ -633,6 +633,9 @@ window.zs = window.zs || {};
             }
             if (Laya.stage.getChildIndex(fairygui.GRoot.inst.displayObject) != Laya.stage.numChildren - sortIndex) {
                 Laya.stage.setChildIndex(fairygui.GRoot.inst.displayObject, Laya.stage.numChildren - sortIndex);
+            }
+            if (this.entryInst && this.entryInst.loading && this.entryInst.loading.owner && Laya.stage.getChildIndex(this.entryInst.loading.owner) != Laya.stage.numChildren - sortIndex) {
+                Laya.stage.setChildIndex(this.entryInst.loading.owner, Laya.stage.numChildren - sortIndex);
             }
         }
         static checkGameCfg(switchs) {
