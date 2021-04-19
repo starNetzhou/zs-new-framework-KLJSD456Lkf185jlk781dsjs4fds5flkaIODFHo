@@ -54,7 +54,26 @@ zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
     console.log("Workflow ====== GAME_HOME");
     // 打开首页场景
 }));
+// 另一种注册工作流监听方法,注意该用法在workflow未完成实例化（zs.core.workflow = new workflow();）时会报错
+zs.core.workflow.on(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
+    console.log("Workflow Dynamic ===== GAME_PLAY");
+}));
 ```
+如果需要注销工作流监听可以使用off，offAll，offAllCaller和clear进行操作
+注销状态监听的方法如下：
+``` typescript
+// 注销 GAME_HOME 状态中的单个事件，需要在注册监听时保存 handler
+zs.core.workflow.off(workflow.GAME_HOME, handler);
+// 注销 GAME_HOME 状态中的所有事件
+zs.core.workflow.offAll(workflow.GAME_HOME);
+// 注销 GAME_HOME 状态中的所有由 this 发起的监听
+zs.core.workflow.offAllCaller(this, workflow.GAME_HOME);
+// 注销所有状态中的所有由 this 发起的监听
+zs.core.workflow.offAllCaller(this);
+// 清空所有状态中的所有监听
+zs.core.workflow.clear();
+```
+
 ### - 子状态机设置
 由于SDK的工作流状态原则上是不能改变的，为了满足前端自定义状态的开发需求，SDK可以在工作流指定状态中自行设置子状态机。  
 子状态机与主状态机各自独立运作，互不影响，同时子状态机的状态也能通过工作流监听发出响应事件。
@@ -63,11 +82,20 @@ zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
 zs.core.workflow.setFSM(workflow.GAME_PLAY,
     new zs.fsm()
         .registe("START", "READY")
-        .registe("READY", "PLAY")
+        // READY同时存在两个跳转状态时，建议设置优先级，以避免自动跳转出现问题
+        .registe("READY", "PLAY") // 默认优先级为 0
+        .registe("READY", "PREPARE", -1) // 手动设置优先级到 -1
         .registe("PLAY", "SETTLE")
         .registe("SETTLE", "END")
         .setDefault("START")
 );
+
+// 切换子状态机状态
+// 当状态为READY时使用childNext()，将会自动跳转到优先级最高的PLAY状态
+zs.core.workflow.childNext();
+// 要将READY状态跳转到PREPARE状态，需要在childNext中填入指定状态
+zs.core.workflow.childNext("PREPARE");
+
 // 使用onWorkflow来监听子状态机的事件变化
 zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
     console.log("Workflow ====== GAME_PLAY PLAY");
