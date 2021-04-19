@@ -82,13 +82,13 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
         // 假消息音效，指定路径没有资源会报错
-        exporter_fake_msg.soundShow = "sound/wechat.mp3";
+        exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
         zs.exporter.utils.navigateErrorHandler = Laya.Handler.create(this, () => {
             this.showFull1(false);
         }, null, false);
         // 读取假消息昵称列表
-        zs.configs.load("fake_msg_nick", "config/nickname.json").then((res) => {
+        zs.configs.load("fake_msg_nick", "fgui/export/nickname.json").then((res) => {
             exporter_fake_msg.nickList = res;
             exporter_friend_challenge.nickList = res;
         });

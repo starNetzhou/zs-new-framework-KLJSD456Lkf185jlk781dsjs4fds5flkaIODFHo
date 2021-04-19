@@ -78,15 +78,10 @@
         }
     },
     "subpackages": {
-        "*3dres": "3dres/",
-        "*sound": "sound/",
-        "*main": "fgui/main/",
-        "*entry": "fgui/entry/"
+        "*3dres": "3dres/"
     },
     "resources": {
-        "configs": {
-            "nick": "config/nickname.json"
-        },
+        "configs": {},
         "prefabs": {
             "ball": "3dres/Conventional/Ball.lh"
         }
