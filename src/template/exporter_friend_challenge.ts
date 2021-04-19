@@ -1,6 +1,6 @@
 import FGUI_friend_challenge from "./export/FGUI_friend_challenge";
 
-export default class exporter_friend_challenge extends zs.fgui.base {
+export default class exporter_friend_challenge extends zs.fgui.baseGeneric<FGUI_friend_challenge> {
 
     static typeDefine = FGUI_friend_challenge;
 
@@ -23,37 +23,33 @@ export default class exporter_friend_challenge extends zs.fgui.base {
         zs.platform.sync.hideBanner();
     }
     setGameName(gameName) {
-        let view = this.view as FGUI_friend_challenge;
-        if (gameName && view.challenge.lblGame) {
-            view.challenge.lblGame.text = gameName;
-        } else if (view.challenge.lblGame) {
-            view.challenge.lblGame.text = "";
+        if (gameName && this.view.challenge.lblGame) {
+            this.view.challenge.lblGame.text = gameName;
+        } else if (this.view.challenge.lblGame) {
+            this.view.challenge.lblGame.text = "";
         }
         return this;
     }
     setPlayerName(playerName) {
-        let view = this.view as FGUI_friend_challenge;
-        if (playerName && view.challenge.lblName) {
-            view.challenge.lblName.text = playerName;
-        } else if (view.challenge.lblName) {
-            view.challenge.lblName.text = "";
+        if (playerName && this.view.challenge.lblName) {
+            this.view.challenge.lblName.text = playerName;
+        } else if (this.view.challenge.lblName) {
+            this.view.challenge.lblName.text = "";
         }
         return this;
     }
     setDesc(desc) {
-        let view = this.view as FGUI_friend_challenge;
-        if (desc && view.challenge.lblDesc) {
-            view.challenge.lblDesc.text = desc;
-        } else if (view.challenge.lblDesc) {
-            view.challenge.lblDesc.text = "";
+        if (desc && this.view.challenge.lblDesc) {
+            this.view.challenge.lblDesc.text = desc;
+        } else if (this.view.challenge.lblDesc) {
+            this.view.challenge.lblDesc.text = "";
         }
         return this;
     }
     setGameIcon(url) {
-        let view = this.view as FGUI_friend_challenge;
-        if (url && view.challenge.picture1) {
-            view.challenge.picture1.icon = url;
-        } else if (view.challenge.picture1) {
+        if (url && this.view.challenge.picture1) {
+            this.view.challenge.picture1.icon = url;
+        } else if (this.view.challenge.picture1) {
             // this.view.picture1.text = "";
         }
         return this;

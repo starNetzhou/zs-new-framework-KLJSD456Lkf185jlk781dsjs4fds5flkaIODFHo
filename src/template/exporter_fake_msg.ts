@@ -1,6 +1,6 @@
 import FGUI_fake_msg from "./export/FGUI_fake_msg";
 
-export default class exporter_fake_msg extends zs.fgui.base {
+export default class exporter_fake_msg extends zs.fgui.baseGeneric<FGUI_fake_msg> {
 
     static typeDefine = FGUI_fake_msg;
 
@@ -28,11 +28,10 @@ export default class exporter_fake_msg extends zs.fgui.base {
         Laya.Tween.clearAll(this.view);
     }
     setTitle(title) {
-        let view = this.view as FGUI_fake_msg;
         if (title) {
-            view.title = title;
+            this.view.title = title;
         } else {
-            view.title = "";
+            this.view.title = "";
         }
         return this;
     }
