@@ -420,6 +420,10 @@ declare module zs {
          * @param handler 监听事件
          */
         static removeAppHide(handler);
+        /**
+         * 检查置顶面板层级
+         */
+        static checkPanelSort();
 
         static userInfo: userInfo;
     }
