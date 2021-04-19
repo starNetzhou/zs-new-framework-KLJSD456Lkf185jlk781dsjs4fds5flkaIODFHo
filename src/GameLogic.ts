@@ -38,9 +38,12 @@ export default class GameLogic extends Laya.Script {
             zs.scene.nodesDef = GameNode;
             zs.scene.inst.load('3dres/Conventional/TestScene.ls', true).then(() => {
                 // 加载预制体并放入场景
-                let ball: Laya.Sprite3D = zs.prefabs.get('ball').clone() as Laya.Sprite3D;
-                zs.scene.inst.current.addChild(ball);
-                ball.transform.position = new Laya.Vector3(0, 2, 0);
+                let ball = zs.prefabs.get('ball');
+                if (ball) {
+                    ball.clone() as Laya.Sprite3D;
+                    zs.scene.inst.current.addChild(ball);
+                    ball.transform.position = new Laya.Vector3(0, 2, 0);
+                }
                 // 开始游戏，执行后将关闭加载界面
                 zs.core.readyFinish();
             });
@@ -62,9 +65,23 @@ export default class GameLogic extends Laya.Script {
             this.examplePage.show();
         }));
 
-        zs.core.onWorkflow(workflow.GAME_START_NATIVE, Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_START_NATIVE");
-            this.examplePage.setWorkflowState(workflow.GAME_START_NATIVE).show();
+        zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== GAME_START");
+        }));
+
+        zs.core.onWorkflow(workflow.START_FULL_1, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== START_FULL_1");
+        }));
+        zs.core.onWorkflow(workflow.START_FULL_2, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== START_FULL_2");
+        }));
+        zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== GAME_PREPARE");
+            this.examplePage.setWorkflowState(workflow.GAME_PREPARE).show();
+        }));
+        zs.core.onWorkflow(workflow.EXPORT_COMMON_EGG, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== EXPORT_COMMON_EGG");
+            this.examplePage.setWorkflowState(workflow.EXPORT_COMMON_EGG).show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
@@ -96,18 +113,22 @@ export default class GameLogic extends Laya.Script {
                 .setBtnClickEvent(this, this.workflowNext)
                 .show();
         }));
+        zs.core.onWorkflow(workflow.OVER_FULL_1, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== OVER_FULL_1");
+            this.examplePage.setWorkflowState(workflow.OVER_FULL_2).show();
+        }));
         zs.core.onWorkflow(workflow.GAME_SETTLE, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_SETTLE");
             this.examplePage.setWorkflowState(workflow.GAME_SETTLE, true).show();
+        }));
+        zs.core.onWorkflow(workflow.OVER_FULL_2, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== OVER_FULL_2");
+            this.examplePage.setWorkflowState(workflow.OVER_FULL_2).show();
         }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_END");
             this.examplePage.setWorkflowState(workflow.GAME_END).show();
             zs.core.workflow.next();
-        }));
-        zs.core.onWorkflow(workflow.OPEN_SCREE_NATIVE, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== OPEN_SCREE_NATIVE");
-            this.examplePage.setWorkflowState(workflow.OPEN_SCREE_NATIVE).show();
         }));
 
         // 启动SDK，开始执行游戏进程
