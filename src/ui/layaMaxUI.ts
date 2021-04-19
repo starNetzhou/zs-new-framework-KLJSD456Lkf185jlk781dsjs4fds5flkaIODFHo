@@ -12,4 +12,12 @@ export module ui.example {
         }
     }
     REG("ui.example.ExampleUIUI",ExampleUIUI);
+    export class LoadingUI extends Scene {
+        constructor(){ super()}
+        createChildren():void {
+            super.createChildren();
+            this.loadScene("example/Loading");
+        }
+    }
+    REG("ui.example.LoadingUI",LoadingUI);
 }
