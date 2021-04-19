@@ -11,9 +11,7 @@
     "aldKey": null,
     "secret": null,
     "tdConfig": {},
-    "fguiPacks": [
-        "fgui/zs_example"
-    ],
+    "fguiPacks": [],
     "autoScaleFit": true,
     "designWidth": 1080,
     "designHeight": 1920,
@@ -27,8 +25,6 @@
     "subpackages": {},
     "resources": {
         "configs": {},
-        "prefabs": {
-			"ball": "3dres/Conventional/Ball.lh"
-		}
+        "prefabs": {}
     }
 }
