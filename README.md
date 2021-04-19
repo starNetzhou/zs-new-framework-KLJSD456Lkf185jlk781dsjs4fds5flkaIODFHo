@@ -82,11 +82,20 @@ zs.core.workflow.clear();
 zs.core.workflow.setFSM(workflow.GAME_PLAY,
     new zs.fsm()
         .registe("START", "READY")
-        .registe("READY", "PLAY")
+        // READY同时存在两个跳转状态时，建议设置优先级，以避免自动跳转出现问题
+        .registe("READY", "PLAY") // 默认优先级为 0
+        .registe("READY", "PREPARE", -1) // 手动设置优先级到 -1
         .registe("PLAY", "SETTLE")
         .registe("SETTLE", "END")
         .setDefault("START")
 );
+
+// 切换子状态机状态
+// 当状态为READY时使用childNext()，将会自动跳转到优先级最高的PLAY状态
+zs.core.workflow.childNext();
+// 要将READY状态跳转到PREPARE状态，需要在childNext中填入指定状态
+zs.core.workflow.childNext("PREPARE");
+
 // 使用onWorkflow来监听子状态机的事件变化
 zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
     console.log("Workflow ====== GAME_PLAY PLAY");
