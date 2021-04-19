@@ -12,14 +12,17 @@ export default class GameLogic extends Laya.Script {
     }
 
     init() {
-        Laya.Scene.open(this.exampleSceneURL, true, null, Laya.Handler.create(this, (s) => {
-            let scene = s as Laya.Scene;
-            scene.height = Laya.stage.height;
-            this.exampleUI = new ExampleUI(scene);
-            this.exampleUI.setBtnClickEvent(this, () => {
-                this.exampleUI.setWorkflowState("btn clicked")
-                console.log("Test Example Btn Click");
-            })
-        }));
+        Laya.Scene3D.load("Conventional/TestScene.ls", Laya.Handler.create(this, (s) => {
+            Laya.stage.addChild(s);
+            Laya.Scene.open(this.exampleSceneURL, true, null, Laya.Handler.create(this, (s) => {
+                let scene = s as Laya.Scene;
+                scene.height = Laya.stage.height;
+                this.exampleUI = new ExampleUI(scene);
+                this.exampleUI.setBtnClickEvent(this, () => {
+                    this.exampleUI.setWorkflowState("btn clicked")
+                    console.log("Test Example Btn Click");
+                })
+            }));
+        }))
     }
 }
