@@ -260,14 +260,14 @@ declare module zs {
          */
         setFSM(key: string, fsm: zs.fsm);
         /**
-         * 注册工作流监听，用于监听工作流状态改变
+         * 注册工作流监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
          */
         on(key: string, handler: Laya.Handler, isBefore?: boolean);
         /**
-         *  注册工作流单次监听，用于监听工作流状态改变
+         *  注册工作流单次监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否

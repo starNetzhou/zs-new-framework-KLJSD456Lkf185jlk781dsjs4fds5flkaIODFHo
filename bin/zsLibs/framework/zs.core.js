@@ -492,7 +492,11 @@ window.zs = window.zs || {};
             if (this.workListeners) {
                 for (let i = 0, n = this.workListeners.length; i < n; i++) {
                     let workListener = this.workListeners[i];
-                    this.workflow.on(workListener.key, workListener.handler, workListener.isBefore);
+                    if (workListener.handler.once) {
+                        this.workflow.once(workListener.key, workListener.handler, workListener.isBefore);
+                    } else {
+                        this.workflow.on(workListener.key, workListener.handler, workListener.isBefore);
+                    }
                 }
                 this.workListeners = null;
             }
@@ -535,24 +539,32 @@ window.zs = window.zs || {};
             if (this.workListeners == null) {
                 this.workListeners = [];
             }
-            handler.once = false;
-            this.workListeners.push({
-                key: key,
-                handler: handler,
-                isBefore: isBefore
-            });
+            if (this.workflow) {
+                this.workflow.on(key, handler, isBefore);
+            } else {
+                handler.once = false;
+                this.workListeners.push({
+                    key: key,
+                    handler: handler,
+                    isBefore: isBefore
+                });
+            }
         }
         static onceWorkflow(key, handler, isBefore) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             if (this.workListeners == null) {
                 this.workListeners = [];
             }
-            handler.once = true;
-            this.workListeners.push({
-                key: key,
-                handler: handler,
-                isBefore: isBefore
-            });
+            if (this.workflow) {
+                this.workflow.once(key, handler, isBefore);
+            } else {
+                handler.once = true;
+                this.workListeners.push({
+                    key: key,
+                    handler: handler,
+                    isBefore: isBefore
+                });
+            }
         }
         static onAppShow(result) {
             if (this.appShowListeners == null || this.appShowListeners.length <= 0) { return; }
