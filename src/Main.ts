@@ -1,8 +1,5 @@
 import GameConfig from "./GameConfig";
-import GameLogic from "./GameLogic";
-import LayaLoading from "./LayaLoading";
-import Loading from "./Loading";
-
+import GameLogic from "./script/GameLogic";
 class Main {
 	constructor() {
 		//根据IDE设置初始化引擎		
@@ -32,10 +29,8 @@ class Main {
 		Laya.AtlasInfoManager.enable("fileconfig.json", Laya.Handler.create(this, this.onConfigLoaded));
 	}
 
-	async onConfigLoaded() {
-		zs.core.loadingPage = Loading;
-		// Laya UI兼容
-		// zs.core.layaLoadingPage = LayaLoading;
+	onConfigLoaded(): void {
+		//加载IDE指定的场景
 		Laya.stage.addComponent(GameLogic);
 	}
 }

@@ -2,8 +2,8 @@
 //是否使用IDE自带的node环境和插件，设置false后，则使用自己环境(使用命令行方式执行)
 const useIDENode = process.argv[0].indexOf("LayaAir") > -1 ? true : false;
 const useCMDNode = process.argv[1].indexOf("layaair2-cmd") > -1 ? true : false;
-function useOtherNode() {
-	return useIDENode || useCMDNode;
+function useOtherNode(){
+	return useIDENode||useCMDNode;
 }
 //获取Node插件和工作路径
 const ideModuleDir = useOtherNode() ? process.argv[1].replace("gulp\\bin\\gulp.js", "").replace("gulp/bin/gulp.js", "") : "";
@@ -123,7 +123,7 @@ gulp.task("loadConfig", function (cb) {
 			let projInfo = fs.readFileSync(projInfoPath, "utf8");
 			projInfo = projInfo && JSON.parse(projInfo);
 			isOpendataProj = projInfo.layaProType === 12;
-		} catch (e) { }
+		} catch (e) {}
 	}
 	// 其他变量的初始化
 	let layarepublicPath = path.join(ideModuleDir, "../", "code", "layarepublic");
@@ -194,7 +194,7 @@ gulp.task("clearReleaseDir", ["compile"], function (cb) {
 			let vvProjSrc = path.join(vvProj, "src");
 			// 这里不是node-glob语法，详见: https://github.com/sindresorhus/del
 			delList = [`${vvProj}/engine/**`, `${vvProj}/laya-library/**`, `${vvProj}/config/**`,
-			`${vvProjSrc}/**`, `!${vvProjSrc}`, `!${vvProjSrc}/{game.js,manifest.json}`];
+						`${vvProjSrc}/**`, `!${vvProjSrc}`, `!${vvProjSrc}/{game.js,manifest.json}`];
 		} else if (platform === "hwgame") {
 			let hwProjSrc = path.join(releaseDir, config.hwInfo.projName);
 			delList = [`${hwProjSrc}/**`, `!${hwProjSrc}`, `!${hwProjSrc}/{game.js,manifest.json}`];
@@ -212,8 +212,8 @@ gulp.task("clearReleaseDir", ["compile"], function (cb) {
 				// 删除 pages/index 下除 game.js,game.json,game.axml 外所有文件
 				// release/taobaominiapp/node_modules/layaengine/adapter.js 必更新
 				delList = [`${releaseDir}/node_modules/layaengine/libs`, `${releaseDir}/node_modules/layaengine/laya.js`,
-				// `${releaseDir}/node_modules/layaengine`, `!${releaseDir}/node_modules/layaengine`, `!${releaseDir}/node_modules/layaengine/{adapter.js,index.js/package.json}`,
-				`${releaseDir}/pages/index/**`, `!${releaseDir}/pages/index`, `!${releaseDir}/pages/index/{game.js,game.json,game.axml}`];
+							// `${releaseDir}/node_modules/layaengine`, `!${releaseDir}/node_modules/layaengine`, `!${releaseDir}/node_modules/layaengine/{adapter.js,index.js/package.json}`,
+							`${releaseDir}/pages/index/**`, `!${releaseDir}/pages/index`, `!${releaseDir}/pages/index/{game.js,game.json,game.axml}`];
 			}
 		}
 		del(delList, { force: true }).then(paths => {
@@ -252,7 +252,7 @@ gulp.task("copyFile", ["clearReleaseDir"], function () {
 		releaseDir = global.tempReleaseDir = path.join(releaseDir, "temprelease").replace(/\\/g, "/");
 	}
 	if (config.exclude) { // 排除文件
-		config.excludeFilter.forEach(function (item, index, list) {
+		config.excludeFilter.forEach(function(item, index, list) {
 			releaseDir = releaseDir.replace(/\\/g, "/");
 			config.excludeFilter[index] = item.replace(releaseDir, binPath);
 		});
@@ -283,7 +283,7 @@ gulp.task("useMinJsLibs", ["copyFile"], function () {
 	if (!libsList) {
 		return;
 	}
-	let
+	let 
 		item,
 		libsName = "",
 		minLibsName = "";
@@ -316,7 +316,7 @@ gulp.task("copyLibsJsFile", ["useMinJsLibs"], function () {
 	if (!libsList) {
 		libsList = [];
 	}
-	let
+	let 
 		item,
 		libsName = "",
 		libsStr = "";
@@ -353,7 +353,7 @@ gulp.task("copyPlatformLibsJsFile", ["copyLibsJsFile"], function () {
 	if (platform === "web") {
 		return;
 	}
-
+	
 	let platformLibName = "";
 	switch (platform) {
 		case "wxgame":
@@ -401,29 +401,24 @@ gulp.task("copyPlatformLibsJsFile", ["copyLibsJsFile"], function () {
 });
 
 // es6toes5
-gulp.task("es6toes5", platformCopyTask, function () {
+gulp.task("es6toes5", platformCopyTask, function() {
 	if (config.es6toes5) {
 		return gulp.src(`${releaseDir}/**/*.js`, { base: releaseDir })
-			.pipe(babel({
-				presets: ['@babel/env'],
-				compact: false // 1) 为规避500K限制，不能为"auto" 2) 为便于调试，并防止开发者误解已经经过压缩，调整为false
-			}))
-			.on('error', function (err) {
-				console.warn(err.toString());
-			})
-			.pipe(gulp.dest(releaseDir));
+		.pipe(babel({
+			presets: ['@babel/env'],
+			compact: false // 1) 为规避500K限制，不能为"auto" 2) 为便于调试，并防止开发者误解已经经过压缩，调整为false
+		})) 
+		.on('error', function (err) {
+			console.warn(err.toString());
+		})
+		.pipe(gulp.dest(releaseDir));
 	}
 })
 
 // 压缩json
 gulp.task("compressJson", ["es6toes5"], function () {
 	if (config.compressJson) {
-		let compressJsonFilter = config.compressJsonFilter;
-		index = compressJsonFilter.indexOf(`${releaseDir}/**/*.{ls,lh,lmat}`)
-		if (index === -1) {
-			compressJsonFilter.push(`${releaseDir}/**/*.{ls,lh,lmat}`);
-		}
-		return gulp.src(compressJsonFilter, { base: releaseDir })
+		return gulp.src(config.compressJsonFilter, { base: releaseDir })
 			.pipe(jsonminify())
 			.pipe(gulp.dest(releaseDir));
 	}
@@ -445,16 +440,8 @@ gulp.task("compressJs", ["compressJson"], function () {
 			if (index !== -1) {
 				compressJsFilter.splice(index, 1);
 			}
-			index = compressJsFilter.indexOf(`!${releaseDir}/zsLibs/fairygui/*.js`)
-			if (index !== -1) {
-				compressJsFilter.push(`!${releaseDir}/zsLibs/fairygui/*.js`);
-			}
 		} else {
 			compressJsFilter = config.compressJsFilter;
-			index = compressJsFilter.indexOf(`!${releaseDir}/zsLibs/fairygui/*.js`)
-			if (index === -1) {
-				compressJsFilter.push(`!${releaseDir}/zsLibs/fairygui/*.js`);
-			}
 		}
 	}
 	if (!compressJsFilter) {
@@ -463,13 +450,13 @@ gulp.task("compressJs", ["compressJson"], function () {
 
 	let options = {
 		mangle: {
-			keep_fnames: true
+			keep_fnames:true
 		}
 	}
 	if ("taobaominiapp" === platform) {
 		options = {
 			mangle: {
-				keep_fnames: true,
+				keep_fnames:true,
 				// sequences: false, // 不使用逗号
 				reserved: ["window"]
 			}
@@ -529,7 +516,7 @@ gulp.task("renameIndexJs", ["version1"], function (cb) {
 		let versionCon = fs.readFileSync(versionPath, "utf8");
 		versionCon = JSON.parse(versionCon);
 		let indexJSPath;
-		let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] : "index.js";
+		let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] :  "index.js";
 		indexJSPath = releaseDir + "/" + indexJsStr;
 
 		return new Promise((resolve, reject) => {
@@ -538,8 +525,8 @@ gulp.task("renameIndexJs", ["version1"], function (cb) {
 				.pipe(revCollector())
 				.pipe(gulp.dest(releaseDir));
 			setTimeout(resolve, 1500);
-		}).then(function () {
-			return new Promise(async function (resolve, reject) {
+		}).then(function() {
+			return new Promise(async function(resolve, reject) {
 				// index-xxx.js => index.js
 				let indexJsOrigin = path.join(releaseDir, "index.js")
 				fs.renameSync(indexJSPath, indexJsOrigin);
@@ -554,7 +541,7 @@ gulp.task("renameIndexJs", ["version1"], function (cb) {
 					.pipe(gulp.dest("./")); // 注意，这里不能是releaseDir (https://segmentfault.com/q/1010000002876613)
 				setTimeout(cb, 2000);
 			})
-		}).catch(function (e) {
+		}).catch(function(e) {
 			throw e;
 		})
 	} else {
@@ -573,7 +560,7 @@ gulp.task("version2", ["renameIndexJs"], function () {
 		let indexJSPath;
 		let versionCon = fs.readFileSync(versionPath, "utf8");
 		versionCon = JSON.parse(versionCon);
-		let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] : "index.js";
+		let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] :  "index.js";
 		indexJSPath = releaseDir + "/" + indexJsStr;
 		// 替换config.packfileFullValue中的路径
 		let packfileStr = JSON.stringify(config.packfileFullValue).replace(/\\\\/g, "/");
@@ -597,7 +584,7 @@ gulp.task("version2", ["renameIndexJs"], function () {
 });
 
 // 筛选4M包
-gulp.task("packfile", platformTask, function () {
+gulp.task("packfile", platformTask, function() {
 	if (config.version) {
 		if ("taobaominiapp" === platform) {
 			releaseDir = releaseDir.replace("temprelease", "pages/index");
@@ -626,6 +613,6 @@ gulp.task("packfile", platformTask, function () {
 });
 
 // 起始任务
-gulp.task("publish", ["packfile"], function () {
+gulp.task("publish", ["packfile"] , function () {
 	console.log("All tasks completed!");
 });

@@ -3,21 +3,13 @@ import View=Laya.View;
 import Dialog=Laya.Dialog;
 import Scene=Laya.Scene;
 var REG: Function = Laya.ClassUtils.regClass;
-export module ui.test {
-    export class LoadingUI extends Scene {
+export module ui.example {
+    export class ExampleUIUI extends Scene {
         constructor(){ super()}
         createChildren():void {
             super.createChildren();
-            this.loadScene("test/Loading");
+            this.loadScene("example/ExampleUI");
         }
     }
-    REG("ui.test.LoadingUI",LoadingUI);
-    export class MainEntryUI extends Scene {
-        constructor(){ super()}
-        createChildren():void {
-            super.createChildren();
-            this.loadScene("test/MainEntry");
-        }
-    }
-    REG("ui.test.MainEntryUI",MainEntryUI);
+    REG("ui.example.ExampleUIUI",ExampleUIUI);
 }
