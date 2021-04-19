@@ -7,7 +7,6 @@ import workflow from "./template/workflow";
 export default class GameLogic extends Laya.Script {
 
     examplePage: zs_example;
-    workflow: workflow;
 
     constructor() {
         super();
