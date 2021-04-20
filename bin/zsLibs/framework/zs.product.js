@@ -43,6 +43,9 @@ window.zs = window.zs || {};
                 let sceneMask = this.sceneCheck(this.keys[product.switchScene]);
 
                 for (let key in this.keys) {
+
+                    if (!this.keys[key]) { continue; }
+
                     if (!sceneMask) {
                         this.keys[key] = null;
                         if (this._defines) {
