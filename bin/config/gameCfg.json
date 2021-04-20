@@ -11,7 +11,9 @@
     "aldKey": null,
     "secret": null,
     "tdConfig": {},
-    "fguiPacks": [],
+    "fguiPacks": [
+        "fgui/zs_example"
+    ],
     "autoScaleFit": true,
     "designWidth": 1080,
     "designHeight": 1920,
