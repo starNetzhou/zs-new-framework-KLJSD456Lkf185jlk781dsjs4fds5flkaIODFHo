@@ -4,6 +4,7 @@ import native_oppoScreeNative from "./native_oppoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 import native_BtnMoreGame from "./native_BtnMoreGame";
 import exporter_btn_confirm from "./exporter_btn_confirm";
+import ProductKey from "./ProductKey";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_HOME = 'GAME_HOME';
@@ -67,14 +68,18 @@ export default class workflow extends zs.workflow {
 
     onGameSettle(complete) {
         complete.run();
-        this.showBottomNative();
-        if (this._settleBtn) {
-            this._settleBtn.view.visible = true;
+        if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
+            this.showBottomNative();
+            if (this._settleBtn) {
+                this._settleBtn.view.visible = true;
+            } else {
+                this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                    .align(zs.fgui.AlignType.Bottom, 0, -150)
+                    .front()
+                    .getBase() as exporter_btn_confirm;
+            }
         } else {
-            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
-                .align(zs.fgui.AlignType.Bottom, 0, -150)
-                .front()
-                .getBase() as exporter_btn_confirm;
+            zs.core.workflow.next();
         }
     }
     openScreeNative(complete) {
