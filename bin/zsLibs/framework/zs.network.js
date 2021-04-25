@@ -416,7 +416,9 @@ window.zs = window.zs || {};
                                     key = params.key;
                                     break;
                             }
-                            if (rep != null && rep != "") {
+                            if (rep == null || rep == "" || (typeof rep == "Array" && rep.length == 0)) {
+                                rep = network.getLocalData(route, key);
+                            } else {
                                 network.setLocalData(route, rep, key);
                             }
                             resolve(rep);
