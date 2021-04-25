@@ -19,6 +19,10 @@ export default class ad_egg extends zs.fgui.base {
     static readonly repair_click_num = [0.3, 0.7];
     // 回退间隔时间
     static readonly cutBackInterval = 20;
+    // 砸金蛋按钮初始偏移
+    static readonly btnKnockOriginOffset = 370;
+    // 砸金蛋按钮广告偏移
+    static readonly btnKnockBannerOffset = 240;
 
 
     // 砸金蛋进度条
@@ -46,6 +50,7 @@ export default class ad_egg extends zs.fgui.base {
             this.progressBar = component.bar;
             this.btnKnock = component.btn_click;
             this.btnKnock.onClick(this, this.onBtnClick);
+            this.btnKnock.y += ad_egg.btnKnockOriginOffset;
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
         }
@@ -106,7 +111,7 @@ export default class ad_egg extends zs.fgui.base {
                 this.isOpenAd = true;
                 zs.platform.sync.showBanner();
                 Laya.timer.once(800, this, function () {
-                    Laya.Tween.to(this.btn_click, { y: this.btn_click.y - 240 }, 500);
+                    Laya.Tween.to(this.btnKnock, { y: this.btnKnock.y - ad_egg.btnKnockBannerOffset }, 500);
                 });
             }
         } else {
