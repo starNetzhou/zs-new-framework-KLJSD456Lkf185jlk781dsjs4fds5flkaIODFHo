@@ -501,7 +501,9 @@ window.zs = window.zs || {};
                 this.workListeners = null;
             }
 
-            this.checkGameCfg(switchs);
+            if (zs.platform.proxy) {
+                this.checkGameCfg(switchs);
+            }
 
             if (this.onPrepare) {
                 this.onPrepare.run();
