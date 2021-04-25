@@ -58,15 +58,19 @@ export default class workflow extends zs.workflow {
 
     onGameSettle(complete) {
         complete.run();
-        //预加载插屏
-        zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
-        if (this._settleBtn) {
-            this._settleBtn.view.visible = true;
+        if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
+            //预加载插屏
+            zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
+            if (this._settleBtn) {
+                this._settleBtn.view.visible = true;
+            } else {
+                this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                    .align(zs.fgui.AlignType.Bottom, 0, -150)
+                    .front()
+                    .getBase() as exporter_btn_confirm;
+            }
         } else {
-            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
-                .align(zs.fgui.AlignType.Bottom, 0, -150)
-                .front()
-                .getBase() as exporter_btn_confirm;
+            zs.core.workflow.next();
         }
     }
 

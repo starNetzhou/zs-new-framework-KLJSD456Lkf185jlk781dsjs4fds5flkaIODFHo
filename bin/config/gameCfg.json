@@ -1,5 +1,6 @@
 {
     "debug": true,
+    "pure": false,
     "appName": "逃出僵尸城",
     "gameId": "tcjsc",
     "appId": "ttc643b0fe597894a6",
@@ -64,7 +65,7 @@
     },
     "resources": {
         "configs": {},
-        "prefabs":  {
+        "prefabs": {
             "ball": "3dres/Conventional/Ball.lh"
         }
     }
