@@ -1,7 +1,8 @@
 export default class ProductKey {
     static readonly zs_version = 1;
     static readonly zs_switch = 0;
-    static readonly zs_start_game_video_switch = 1; // 开局看视频
+    static readonly zs_skip_settle = 0;
+    static readonly zs_start_game_video_switch = 0; // 开局看视频
     static readonly zs_banner_vertical_enable = 0; //按钮上移开关 暂时没用上 用的zs_button_delay_time
     static readonly zs_jump_switch = 1; // 导出总开关
     static readonly zs_full_screen1_jump = 0;
