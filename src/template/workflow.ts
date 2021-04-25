@@ -255,24 +255,28 @@ export default class workflow extends zs.workflow {
 
     onGameSettle(complete) {
         complete.run();
-        var bFakeExit = ProductKey.zs_history_list_jump;
-        console.log("假退出开关", ProductKey.zs_history_list_jump)
-        // bFakeExit = true;
-        if (bFakeExit) {
-            this.fakeExit();
-        }
-        console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
-        if (ProductKey.zs_false_news_switch) {
-            this.fakeMsg();
-        }
+        if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
+            var bFakeExit = ProductKey.zs_history_list_jump;
+            console.log("假退出开关", ProductKey.zs_history_list_jump)
+            // bFakeExit = true;
+            if (bFakeExit) {
+                this.fakeExit();
+            }
+            console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
+            if (ProductKey.zs_false_news_switch) {
+                this.fakeMsg();
+            }
 
-        if (this._settleBtn) {
-            this._commonEgg.view.visible = true;
+            if (this._settleBtn) {
+                this._commonEgg.view.visible = true;
+            } else {
+                this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                    .align(zs.fgui.AlignType.Bottom, 0, -150)
+                    .front()
+                    .getBase() as exporter_btn_confirm;
+            }
         } else {
-            this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
-                .align(zs.fgui.AlignType.Bottom, 0, -150)
-                .front()
-                .getBase() as exporter_btn_confirm;
+            zs.core.workflow.next();
         }
     }
 
