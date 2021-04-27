@@ -1,1 +1,22 @@
-{}
+{
+    "GAME_PLAY": {
+        "states": [
+            "START",
+            [
+                "READY",
+                "PLAY",
+                "SETTLE"
+            ],
+            [
+                "PLAY",
+                "SETTLE",
+                "START"
+            ],
+            [
+                "SETTLE",
+                "READY",
+                "START"
+            ]
+        ]
+    }
+}

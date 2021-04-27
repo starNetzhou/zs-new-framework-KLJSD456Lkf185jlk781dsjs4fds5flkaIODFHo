@@ -18,14 +18,14 @@ export default class GameLogic extends Laya.Script {
         zs.core.workflow = new workflow();
 
         // 在GAME_PLAY中设置子状态机
-        zs.core.workflow.setFSM(workflow.GAME_PLAY,
-            new zs.fsm()
-                .registe("START", "READY")
-                .registe("READY", "PLAY")
-                .registe("PLAY", "SETTLE")
-                .registe("SETTLE", "END")
-                .setDefault("START")
-        );
+        // zs.core.workflow.setFSM(workflow.GAME_PLAY,
+        //     new zs.fsm()
+        //         .registe("START", "READY")
+        //         .registe("READY", "PLAY")
+        //         .registe("PLAY", "SETTLE")
+        //         .registe("SETTLE", "END")
+        //         .setDefault("START")
+        // );
 
         // 绑定示例FGUI资源
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
