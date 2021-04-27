@@ -238,6 +238,10 @@ declare module zs {
          */
         exporterPack: string;
         /**
+         * 获取工作流窗口
+         */
+        get exportWindow(): zs.fgui.window;
+        /**
          * 获取工作流状态
          */
         get state(): string;

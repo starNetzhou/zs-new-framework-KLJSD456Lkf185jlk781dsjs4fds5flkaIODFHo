@@ -161,7 +161,7 @@ window.zs.fgui = window.zs.fgui || {};
                 return this;
             }
             let view = ctr.make(ctr.typeDefine || ctr.type());
-            if (index) {
+            if (index != null && index != undefined) {
                 this.window.contentPane.addChildAt(view, index);
             } else {
                 this.window.contentPane.addChild(view);
