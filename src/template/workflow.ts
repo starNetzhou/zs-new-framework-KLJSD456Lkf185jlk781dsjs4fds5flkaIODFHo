@@ -538,7 +538,8 @@ export default class workflow extends zs.workflow {
     }
 
     hideBackground() {
-        this._background && (this._background.view.visible = false);
+        this._background && zs.core.workflow.exportWindow.detach(this._background);
+        this._background = null;
     }
 
 }
