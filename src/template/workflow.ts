@@ -16,6 +16,7 @@ import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
 import exporter_btn_confirm from "./exporter_btn_confirm";
+import exporter_background from "./exporter_background";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_START = 'GAME_START';
@@ -63,6 +64,7 @@ export default class workflow extends zs.workflow {
     _fakeExit: exporter_fake_exit;
     _commonEgg: ad_egg;
     _gameEgg: ad_egg;
+    _background: exporter_background;
     _settleBtn: exporter_btn_confirm;
 
     commonMsgList: zs.fgui.window[];
@@ -267,6 +269,8 @@ export default class workflow extends zs.workflow {
                 this.fakeMsg();
             }
 
+            this.showBackground();
+
             if (this._settleBtn) {
                 this._commonEgg.view.visible = true;
             } else {
@@ -290,6 +294,7 @@ export default class workflow extends zs.workflow {
         } else {
             zs.core.workflow.next();
         }
+        this.hideBackground();
         this.hideFakeMsg();
         this._settleBtn && this.windowExport.detach(this._settleBtn);
         this._settleBtn = null;
@@ -532,6 +537,20 @@ export default class workflow extends zs.workflow {
     hideFakeExit() {
         this._fakeExit && this.windowExport.detach(this._fakeExit);
         this._fakeExit = null;
+    }
+
+    showBackground(alpha?: number, color?: string) {
+        if (!this._background) {
+            this._background = this.windowExport.attach(exporter_background).getBase() as exporter_background;
+        } else {
+            this._background.view.visible = true;
+        }
+        alpha && (this._background.alpha = alpha);
+        color && (this._background.color = color);
+    }
+
+    hideBackground() {
+        this._background && (this._background.view.visible = false);
     }
 
 }

@@ -96,7 +96,7 @@ window.zs.fgui = window.zs.fgui || {};
             if (type && type.prototype instanceof fairygui.GComponent) {
                 return type.createInstance();
             }
-            return null;
+            return new fairygui.GComponent();
         }
         static type() {
             return fairygui.GComponent;
