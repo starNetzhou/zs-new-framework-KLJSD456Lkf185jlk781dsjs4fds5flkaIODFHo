@@ -16,6 +16,7 @@ import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
 import exporter_btn_confirm from "./exporter_btn_confirm";
+import exporter_background from "./exporter_background";
 
 export default class workflow extends zs.workflow {
     static readonly GAME_START = 'GAME_START';
@@ -46,26 +47,21 @@ export default class workflow extends zs.workflow {
 
     windowFull: zs.fgui.window;
 
-    _windowExport: zs.fgui.window;
-
-    get windowExport(): zs.fgui.window {
-        if (this._windowExport == null) {
-            this._windowExport = zs.fgui.window
-                .create()
-                .fit()
-                .show();
-        }
-        return this._windowExport;
-    }
-
     _challengeExport: exporter_friend_challenge;
     _fakeMsg: exporter_fake_msg;
     _fakeExit: exporter_fake_exit;
     _commonEgg: ad_egg;
     _gameEgg: ad_egg;
+    _background: exporter_background;
     _settleBtn: exporter_btn_confirm;
+    _panel: zs.fgui.window;
 
-    commonMsgList: zs.fgui.window[];
+    get panel() {
+        if (this._panel == null) {
+            this._panel = zs.fgui.window.create().show();
+        }
+        return this._panel;
+    }
 
     registe() {
         // 绑定工作流FGUI组件
@@ -267,10 +263,12 @@ export default class workflow extends zs.workflow {
                 this.fakeMsg();
             }
 
+            this.showBackground();
+
             if (this._settleBtn) {
                 this._commonEgg.view.visible = true;
             } else {
-                this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
+                this._settleBtn = this.panel.attach(exporter_btn_confirm)
                     .align(zs.fgui.AlignType.Bottom, 0, -150)
                     .front()
                     .getBase() as exporter_btn_confirm;
@@ -290,8 +288,9 @@ export default class workflow extends zs.workflow {
         } else {
             zs.core.workflow.next();
         }
+        this.hideBackground();
         this.hideFakeMsg();
-        this._settleBtn && this.windowExport.detach(this._settleBtn);
+        this._settleBtn && this.panel.detach(this._settleBtn);
         this._settleBtn = null;
     }
 
@@ -376,9 +375,9 @@ export default class workflow extends zs.workflow {
                     Laya.LocalStorage.setItem(`${appId}open_ready_num`, `${Number(num) + 1}`);
                 }))
                 .apply()
-            this.windowExport.setBase(this._commonEgg);
+            this.panel.setBase(this._commonEgg);
         } else {
-            this.windowExport
+            this.panel
                 .attach(ad_egg)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
                 .fit()
@@ -394,11 +393,11 @@ export default class workflow extends zs.workflow {
                         .apply()
                 });
         }
-        return this.windowExport.front();
+        return this.panel.front();
     }
 
     hideCommonEgg() {
-        this._commonEgg && (this.windowExport.detach(this._commonEgg));
+        this._commonEgg && (this.panel.detach(this._commonEgg));
         this._commonEgg = null;
     }
 
@@ -412,9 +411,9 @@ export default class workflow extends zs.workflow {
                     this.fsm.runNext();
                 }))
                 .apply();
-            this.windowExport.setBase(this._gameEgg);
+            this.panel.setBase(this._gameEgg);
         } else {
-            this.windowExport
+            this.panel
                 .attach(ad_egg)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
                 .block(true)
@@ -434,11 +433,11 @@ export default class workflow extends zs.workflow {
                         .apply()
                 });
         }
-        return this.windowExport.front();
+        return this.panel.front();
     }
 
     hideGameEgg() {
-        this._gameEgg && this.windowExport.detach(this._gameEgg);
+        this._gameEgg && this.panel.detach(this._gameEgg);
         this._gameEgg = null;
     }
 
@@ -446,11 +445,11 @@ export default class workflow extends zs.workflow {
         if (this._fakeMsg) {
             this._fakeMsg.view.visible = true;
             this._fakeMsg.apply();
-            this.windowExport
+            this.panel
                 .setBase(this._fakeMsg)
                 .front();
         } else {
-            this.windowExport
+            this.panel
                 .attach(exporter_fake_msg)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
                 .update<exporter_fake_msg>(exporter_fake_msg, (unit) => {
@@ -466,11 +465,11 @@ export default class workflow extends zs.workflow {
                 .align(zs.fgui.AlignType.Top)
                 .front();
         }
-        return this.windowExport;
+        return this.panel;
     }
 
     hideFakeMsg() {
-        this._fakeMsg && this.windowExport.detach(this._fakeMsg);
+        this._fakeMsg && this.panel.detach(this._fakeMsg);
         this._fakeMsg = null
     }
 
@@ -478,11 +477,11 @@ export default class workflow extends zs.workflow {
         if (this._challengeExport) {
             this._challengeExport.view.visible = true;
             this._challengeExport.apply();
-            this.windowExport
+            this.panel
                 .setBase(this._challengeExport)
                 .front();
         } else {
-            this.windowExport
+            this.panel
                 .attach(exporter_friend_challenge)
                 .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
                 .fit()
@@ -498,22 +497,22 @@ export default class workflow extends zs.workflow {
                 .show()
                 .front();
         }
-        return this.windowExport;
+        return this.panel;
     }
 
     hideChallenge() {
-        this._challengeExport && this.windowExport.detach(this._challengeExport);
+        this._challengeExport && this.panel.detach(this._challengeExport);
         this._challengeExport = null;
     }
 
     fakeExit() {
         if (this._fakeExit) {
             this._fakeExit.view.visible = true;
-            this.windowExport
+            this.panel
                 .setBase(this._fakeExit)
                 .front();
         } else {
-            this.windowExport
+            this.panel
                 .attach(exporter_fake_exit)
                 .update<exporter_fake_exit>(exporter_fake_exit, (unit) => {
                     this._fakeExit = unit;
@@ -526,12 +525,27 @@ export default class workflow extends zs.workflow {
                 .front();
         }
 
-        return this.windowExport;
+        return this.panel;
     }
 
     hideFakeExit() {
-        this._fakeExit && this.windowExport.detach(this._fakeExit);
+        this._fakeExit && this.panel.detach(this._fakeExit);
         this._fakeExit = null;
+    }
+
+    showBackground(alpha?: number, color?: string) {
+        if (!this._background) {
+            this._background = this.exportWindow.attach(exporter_background, 0).front().getBase() as exporter_background;
+        } else {
+            this._background.view.visible = true;
+        }
+        alpha && (this._background.alpha = alpha);
+        color && (this._background.color = color);
+    }
+
+    hideBackground() {
+        this._background && this.exportWindow.detach(this._background);
+        this._background = null;
     }
 
 }
