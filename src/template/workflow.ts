@@ -242,13 +242,8 @@ export default class workflow extends zs.workflow {
 
     onGameSettle() {
         if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
-            if (ProductKey.zs_history_list_jump) {
-                this.fakeExit();
-            }
-            if (ProductKey.zs_false_news_switch) {
-                this.fakeMsg();
-            }
-
+            ProductKey.zs_history_list_jump && this.fakeExit();
+            ProductKey.zs_false_news_switch && this.fakeMsg();
 
             if (this._settleBtn) {
                 this._settleBtn.view.visible = true;
