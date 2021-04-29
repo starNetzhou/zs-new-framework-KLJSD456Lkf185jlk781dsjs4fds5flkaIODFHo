@@ -1,7 +1,16 @@
 {
-    "GAME_START": {},
-    "START_FULL_1": {},
-    "START_FULL_2": {},
+    "PRODUCT_START": {
+        "states": [
+            "FULL_1",
+            "FULL_2"
+        ]
+    },
+    "PRODUCT_HOME_PLAY": {
+        "states": [
+            "VIDEO",
+            "EGG"
+        ]
+    },
     "GAME_HOME": {
         "base": [],
         "exporter": [
@@ -57,8 +66,6 @@
             }
         ]
     },
-    "GAME_PREPARE": {},
-    "EXPORT_COMMON_EGG": {},
     "GAME_PLAY.PLAY": {
         "banner": {
             "switch": "zs_game_banner_show_switch"
@@ -81,9 +88,14 @@
             }
         ]
     },
-    "EXPORT_GAME_EGG": {},
-    "OVER_FULL_1": {},
-    "GAME_SETTLE": {
+    "PRODUCT_PLAY_END": {
+        "states": [
+            "FULL_1",
+            "SETTLE",
+            "FULL_2"
+        ]
+    },
+    "PRODUCT_PLAY_END.SETTLE": {
         "banner": {
             "delay": true
         },
@@ -97,7 +109,5 @@
                 }
             }
         ]
-    },
-    "OVER_FULL_2": {},
-    "GAME_END": {}
+    }
 }

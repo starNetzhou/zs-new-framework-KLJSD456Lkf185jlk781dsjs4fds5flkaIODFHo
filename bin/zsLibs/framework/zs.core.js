@@ -44,7 +44,18 @@ window.zs = window.zs || {};
             this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
         }
-        registe() { }
+        registe() {
+            this.fsm = new zs.fsm()
+                .registe(zs.workflow.PRODUCT_START, zs.workflow.PRODUCT_BEGIN)
+                .registe(zs.workflow.PRODUCT_BEGIN, zs.workflow.GAME_HOME)
+                .registe(zs.workflow.GAME_HOME, zs.workflow.PRODUCT_HOME_PLAY)
+                .registe(zs.workflow.PRODUCT_HOME_PLAY, zs.workflow.GAME_PLAY)
+                .registe(zs.workflow.GAME_PLAY, zs.workflow.PRODUCT_PLAY_END)
+                .registe(zs.workflow.PRODUCT_PLAY_END, zs.workflow.GAME_END)
+                .registe(zs.workflow.GAME_END, zs.workflow.PRODUCT_FINISH)
+                .registe(zs.workflow.PRODUCT_FINISH, zs.workflow.PRODUCT_BEGIN)
+                .setDefault(zs.workflow.PRODUCT_START);
+        }
         start() {
             if (this.fsm) {
                 this.fsm.onBeforeChange = Laya.Handler.create(this, this.onBeforeChange, null, false);
@@ -58,9 +69,55 @@ window.zs = window.zs || {};
         setFSM(key, fsm) {
             this.fsmList[key] = fsm;
         }
-        on(key, handler, isBefore) {
+        registeChildFSM() {
+            let config = zs.configs.productCfg;
+            for (let key in config) {
+                if (this.fsmList[key]) { continue; }
+                let info = config[key].states;
+                if (!info || info.length <= 0) { continue; }
+                let defaultState = null;
+                let lastState = null;
+                let fsm = new zs.fsm();
+                for (let i = 0, n = info.length; i < n; i++) {
+                    let state = info[i];
+                    if (state == null || state.length <= 0) { continue; }
+                    if (!defaultState) {
+                        if (Array.isArray(state)) {
+                            lastState = state[0];
+                            defaultState = state[0];
+                        } else {
+                            lastState = state;
+                            defaultState = state;
+                        }
+                        continue;
+                    }
+                    if (Array.isArray(state)) {
+                        for (let k = 0, kn = state.length; k < kn; k++) {
+                            if (k == 0) {
+                                fsm.registe(lastState, state[k]);
+                            } else {
+                                fsm.registe(lastState, state[k], -1);
+                            }
+                        }
+                        lastState = state[0];
+                    } else {
+                        fsm.registe(lastState, state);
+                        lastState = state;
+                    }
+                }
+                if (defaultState) {
+                    fsm.setDefault(defaultState);
+                    this.fsmList[key] = fsm;
+                }
+            }
+        }
+        on(key, handler, isBefore, priority) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             handler.once = false;
+            priority = priority || 0;
+            handler.priority = priority;
+            let insertIdx = -1;
+            let listener = null;
             if (isBefore) {
                 if (this.preListeners == null) {
                     this.preListeners = {};
@@ -68,11 +125,7 @@ window.zs = window.zs || {};
                 if (this.preListeners[key] == null) {
                     this.preListeners[key] = [];
                 }
-                let listener = this.preListeners[key];
-                for (let i = 0, n = listener.length; i < n; i++) {
-                    if (listener[i]._id == handler._id) { return; }
-                }
-                this.preListeners[key].push(handler);
+                listener = this.preListeners[key];
             } else {
                 if (this.listeners == null) {
                     this.listeners = {};
@@ -80,15 +133,26 @@ window.zs = window.zs || {};
                 if (this.listeners[key] == null) {
                     this.listeners[key] = [];
                 }
-                let listener = this.listeners[key];
+                listener = this.listeners[key];
+            }
+            if (listener) {
                 for (let i = 0, n = listener.length; i < n; i++) {
                     if (listener[i]._id == handler._id) { return; }
+                    let p = listener[i].priority || 0;
+                    if (insertIdx < 0 && priority > p) {
+                        insertIdx = i;
+                        break;
+                    }
                 }
-                this.listeners[key].push(handler);
+                if (insertIdx < 0) {
+                    listener.push(handler);
+                } else {
+                    listener.splice(insertIdx, 0, handler);
+                }
             }
         }
-        once(key, handler, isBefore) {
-            this.on(key, handler, isBefore);
+        once(key, handler, isBefore, priority) {
+            this.on(key, handler, isBefore, priority);
             if (handler) { handler.once = true; }
         }
         off(key, handler, isBefore) {
@@ -187,25 +251,53 @@ window.zs = window.zs || {};
             }
         }
         next(target) {
-            if (this.fsm == null) { return; }
-            if (target) {
-                this.fsm.runTransition(target);
-            } else {
-                this.fsm.runNext();
-            }
+            this.wantNext = 1;
+            this.nextTarget = target;
+            this.step();
         }
         childNext(target) {
-            if (this.fsm == null) { return; }
-            let childFSM = this.fsmList[this.fsm.current];
-            if (childFSM) {
-                if (target) {
-                    childFSM.runTransition(target);
-                } else {
-                    childFSM.runNext();
-                }
+            if (this.wantNext) { return; }
+            this.wantNext = 2;
+            this.nextTarget = target;
+            this.step();
+        }
+        step() {
+            if (this.lockStep) { return; }
+            let target = this.nextTarget;
+            let nextCmd = this.wantNext;
+            this.wantNext = 0;
+            this.nextTarget = null;
+            switch (nextCmd) {
+                case 1:
+                    if (this.fsm != null) {
+                        let lastState = this.fsm.current;
+                        if (this.nextTarget) {
+                            if (!this.fsm.runTransition(target)) {
+                                zs.log.error("无法执行从 " + lastState + " 到 " + target + " 的工作流，请检查是否完整注册流程!", "Core");
+                            }
+                        } else {
+                            if (!this.fsm.runNext()) {
+                                zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    if (this.fsm != null) {
+                        let childFSM = this.fsmList[this.fsm.current];
+                        if (childFSM && ((target && !childFSM.runTransition(target)) || !childFSM.runNext())) {
+                            console.log("run next child");
+                            let lastState = this.fsm.current;
+                            if (!this.fsm.runNext()) {
+                                zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
+                            }
+                        }
+                    }
+                    break;
             }
         }
         onBeforeChange(target, current) {
+            this.lockStep = true;
             if (this.preListeners != null && this.preListeners[target] != null) {
                 let list = this.preListeners[target];
                 for (let i = 0, n = list.length; i < n; i++) {
@@ -222,8 +314,11 @@ window.zs = window.zs || {};
             // banner销毁
             zs.platform.sync.hideBanner();
             zs.platform.sync.clearDelayBanner();
+            this.lockStep = false;
+            this.step();
         }
         onChanged(current) {
+            this.lockStep = true;
             zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
             if (this.listeners != null && this.listeners[current] != null) {
                 let list = this.listeners[current];
@@ -251,9 +346,12 @@ window.zs = window.zs || {};
                 zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
+            this.lockStep = false;
+            this.step();
         }
         onChildFSMBeforeChanged(target, current) {
             if (this.fsm == null) { return; }
+            this.lockStep = true;
             let childKey = this.fsm.current + '.' + target;
             if (this.preListeners != null && this.preListeners[childKey] != null) {
                 let list = this.preListeners[childKey];
@@ -271,9 +369,12 @@ window.zs = window.zs || {};
             // banner销毁
             zs.platform.sync.hideBanner();
             zs.platform.sync.clearDelayBanner();
+            this.lockStep = false;
+            this.step();
         }
         onChildFSMChanged(current) {
             if (this.fsm == null) { return; }
+            this.lockStep = true;
             let childKey = this.fsm.current + '.' + current;
             zs.td.justTrack(zs.td.workflowKey + childKey, zs.td.workflowDesc + childKey);
             if (this.listeners != null && this.listeners[childKey] != null) {
@@ -291,6 +392,8 @@ window.zs = window.zs || {};
             this.checkBase(childKey);
             zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
+            this.lockStep = false;
+            this.step();
         }
         checkBanner(current) {
             let data = zs.configs.productCfg[current];
@@ -311,6 +414,7 @@ window.zs = window.zs || {};
                 return;
             }
             if (data && data.exporter && data.exporter.length > 0) {
+                console.log("show exporter " + current, data.exporter);
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
                     if (config.switch) {
@@ -361,7 +465,14 @@ window.zs = window.zs || {};
     }
     workflow.exporterList = "export_list";
     workflow.exporterCard = "export_card";
-
+    workflow.PRODUCT_START = "PRODUCT_START";
+    workflow.PRODUCT_BEGIN = "PRODUCT_BEGIN";
+    workflow.GAME_HOME = "GAME_HOME";
+    workflow.PRODUCT_HOME_PLAY = "PRODUCT_HOME_PLAY";
+    workflow.GAME_PLAY = "GAME_PLAY";
+    workflow.PRODUCT_PLAY_END = "PRODUCT_PLAY_END";
+    workflow.GAME_END = "GAME_END";
+    workflow.PRODUCT_FINISH = "PRODUCT_FINISH";
     class core {
         static async init(productDef) {
             zs.platform.init();
@@ -482,12 +593,13 @@ window.zs = window.zs || {};
             zs.log.debug("业务流程拼装", 'Core');
             this.progress = 95;
             if (this.workflow == null) {
-                this.workflow = new zs.base.workflow();
+                this.workflow = new zs.workflow();
             }
             if (this.workflow.exporterPack) {
                 await zs.fgui.loadPack(this.workflow.exporterPack);
             }
             this.workflow.registe();
+            this.workflow.registeChildFSM();
 
             if (this.workListeners) {
                 for (let i = 0, n = this.workListeners.length; i < n; i++) {
@@ -513,9 +625,12 @@ window.zs = window.zs || {};
         }
         static readyFinish() {
             this.checkPanelSort();
-            Laya.timer.frameLoop(1, null, () => { this.checkPanelSort(); });
+            Laya.timer.frameLoop(1, this, this.step);
             this.progress = 100;
             this._readyStart = true;
+        }
+        static step() {
+            this.checkPanelSort();
         }
         static start() {
             zs.log.debug("启动业务", 'Core');
@@ -525,34 +640,36 @@ window.zs = window.zs || {};
                 zs.td.justTrack(zs.td.gameStartKey, zs.td.gameStartDesc, { uid: core.userId });
             }
         }
-        static onWorkflow(key, handler, isBefore) {
+        static onWorkflow(key, handler, isBefore, priority) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             if (this.workListeners == null) {
                 this.workListeners = [];
             }
             if (this.workflow) {
-                this.workflow.on(key, handler, isBefore);
+                this.workflow.on(key, handler, isBefore, priority);
             } else {
                 handler.once = false;
                 this.workListeners.push({
                     key: key,
                     handler: handler,
+                    priority: priority,
                     isBefore: isBefore
                 });
             }
         }
-        static onceWorkflow(key, handler, isBefore) {
+        static onceWorkflow(key, handler, isBefore, priority) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             if (this.workListeners == null) {
                 this.workListeners = [];
             }
             if (this.workflow) {
-                this.workflow.once(key, handler, isBefore);
+                this.workflow.once(key, handler, isBefore, priority);
             } else {
                 handler.once = true;
                 this.workListeners.push({
                     key: key,
                     handler: handler,
+                    priority: priority,
                     isBefore: isBefore
                 });
             }

@@ -33,7 +33,7 @@ window.zs = window.zs || {};
                 transition = (complete) => { complete.run(); }
             }
             this.list[from][to] = {
-                priority: priority,
+                priority: priority || 0,
                 thisObj: thisObj,
                 transition: transition,
                 condition: condition,
@@ -88,12 +88,14 @@ window.zs = window.zs || {};
             zs.log.debug('runTransition: ' + this.current + ' - ' + this.target);
             this.onBeforeChange && this.onBeforeChange.runWith(this.target);
             transition.transition.call(transition.thisObj, Laya.Handler.create(this, this.onTransitionComplete));
+            return true;
         }
         runNext() {
             if (this.current == null || this.current.length <= 0) {
                 return null;
             }
             let fsm = this.list[this.current];
+            console.log(this.list, this.current);
             if (fsm == null) { return null; }
             if (this.target != null) {
                 if (fsm != null) {
@@ -134,7 +136,7 @@ window.zs = window.zs || {};
                 zs.log.debug('runNext: ' + this.current + ' - ' + this.target);
                 this.onBeforeChange && this.onBeforeChange.runWith([this.target, this.current]);
                 transition.transition.call(transition.thisObj, Laya.Handler.create(this, this.onTransitionComplete));
-                return this.target;
+                return keys[i];
             }
 
             return null;

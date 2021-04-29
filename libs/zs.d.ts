@@ -218,6 +218,38 @@ declare module zs {
          */
         static readonly exporterCard: string;
         /**
+         * 工作流-产品（启动）
+         */
+        static readonly PRODUCT_START: string;
+        /**
+         * 工作流-产品（开始）
+         */
+        static readonly PRODUCT_BEGIN: string;
+        /**
+         * 工作流-游戏（首页）
+         */
+        static readonly GAME_HOME: string;
+        /**
+         * 工作流-产品（首页到游玩）
+         */
+        static readonly PRODUCT_HOME_PLAY: string;
+        /**
+         * 工作流-游戏（游玩）
+         */
+        static readonly GAME_PLAY: string;
+        /**
+         * 工作流-产品（游玩到结束）
+         */
+        static readonly PRODUCT_PLAY_END: string;
+        /**
+         * 工作流-游戏（结束）
+         */
+        static readonly GAME_END: string;
+        /**
+         * 工作流-产品（结束）
+         */
+        static readonly PRODUCT_FINISH: string;
+        /**
          * 导出位忽略列表
          */
         exporterIgnoreList: string[];
@@ -238,7 +270,7 @@ declare module zs {
          */
         exporterPack: string;
         /**
-         * 获取工作流窗口
+         * 工作流主窗口
          */
         get exportWindow(): zs.fgui.window;
         /**
@@ -268,15 +300,17 @@ declare module zs {
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
          */
-        on(key: string, handler: Laya.Handler, isBefore?: boolean);
+        on(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
          *  注册工作流单次监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
          */
-        once(key: string, handler: Laya.Handler, isBefore?: boolean);
+        once(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
          * 注销工作流监听
          * @param key 状态名
@@ -395,15 +429,17 @@ declare module zs {
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
          */
-        static onWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean);
+        static onWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
          * 单次监听工作流事件
          * @param key 状态名
          * @param handler 监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
          */
-        static onceWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean);
+        static onceWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
          * 添加应用展示监听
          * @param handler 监听事件
@@ -1153,14 +1189,6 @@ declare module zs.base {
          */
         static init(type: typeof zs.ui.Loading, thisArg: any, event: (loading: zs.ui.Loading) => void, complete: () => void): zs.base.entry;
     }
-    /**
-     * 模板工作流类
-     */
-    class workflow extends zs.workflow {
-        static readonly GAME_HOME: string;
-        static readonly GAME_PLAY: string;
-        static readonly GAME_END: string;
-    }
 }
 
 interface msgboxParams {
@@ -1548,6 +1576,12 @@ declare module zs.fgui {
      * FGUI面板管理类
      */
     class manager {
+        /**
+         * 获取FGUI面板
+         * @param key （可选）面板关键词
+         * @param autoCreate （可选）不存在面板时是否自动创建
+         */
+        static get(key?: string, autoCreate?: boolean): zs.fgui.window;
         /**
          * 打开FGUI面板，将覆盖已有面板
          * @param type（可选）面板UI控件类型

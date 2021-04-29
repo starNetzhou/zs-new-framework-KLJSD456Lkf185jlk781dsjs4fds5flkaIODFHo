@@ -599,6 +599,25 @@ window.zs.fgui = window.zs.fgui || {};
             return this._list;
         }
 
+        static get(key, autoCreate) {
+            let panel = this.defaultPanel;
+            if (key != null && key.trim().length > 0) {
+                key = key.trim();
+                panel = this.list[key];
+            }
+
+            if (panel == null && autoCreate) {
+                panel = window.create();
+                if (key != null && key.trim().length > 0) {
+                    this.list[key] = panel;
+                } else {
+                    this.defaultPanel = panel;
+                }
+            }
+
+            return panel;
+        }
+
         static open(type, key, fit) {
             let panel = this.defaultPanel;
 
@@ -631,7 +650,7 @@ window.zs.fgui = window.zs.fgui || {};
 
             panel.show();
 
-            if (key != null && key.length > 0) {
+            if (key != null && key.trim().length > 0) {
                 this.list[key] = panel;
             } else {
                 this.defaultPanel = panel;
@@ -648,6 +667,21 @@ window.zs.fgui = window.zs.fgui || {};
             }
 
             if (panel != null) {
+                if (type) {
+                    panel.attach(type);
+                    if (!fit) { fit = FitType.Both; }
+                    switch (fit) {
+                        case FitType.Fit:
+                            panel.fit();
+                            break;
+                        case FitType.ScaleFit:
+                            panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
+                            break;
+                        case FitType.Both:
+                            panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight).fit();
+                            break;
+                    }
+                }
                 panel.show();
             } else if (autoCreate) {
                 return this.open(type, key, fit);
@@ -794,6 +828,7 @@ window.zs.fgui = window.zs.fgui || {};
     }
 
     exports.AlignType = AlignType;
+    exports.FitType = FitType;
     exports.configs = configs;
     exports.init = init;
     exports.loadPack = loadPack;
