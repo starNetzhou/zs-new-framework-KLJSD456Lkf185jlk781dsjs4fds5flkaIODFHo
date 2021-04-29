@@ -151,8 +151,52 @@ window.zs = window.zs || {};
                 }
             }
         }
+        onLater(key, handler, isBefore, priority) {
+            if (key == null || key.length <= 0 || handler == null) { return; }
+            handler.once = false;
+            priority = priority || 0;
+            handler.priority = priority;
+            let insertIdx = -1;
+            let listener = null;
+            if (isBefore) {
+                if (this.laterPreListeners == null) {
+                    this.laterPreListeners = {};
+                }
+                if (this.laterPreListeners[key] == null) {
+                    this.laterPreListeners[key] = [];
+                }
+                listener = this.laterPreListeners[key];
+            } else {
+                if (this.laterListeners == null) {
+                    this.laterListeners = {};
+                }
+                if (this.laterListeners[key] == null) {
+                    this.laterListeners[key] = [];
+                }
+                listener = this.laterListeners[key];
+            }
+            if (listener) {
+                for (let i = 0, n = listener.length; i < n; i++) {
+                    if (listener[i]._id == handler._id) { return; }
+                    let p = listener[i].priority || 0;
+                    if (insertIdx < 0 && priority > p) {
+                        insertIdx = i;
+                        break;
+                    }
+                }
+                if (insertIdx < 0) {
+                    listener.push(handler);
+                } else {
+                    listener.splice(insertIdx, 0, handler);
+                }
+            }
+        }
         once(key, handler, isBefore, priority) {
             this.on(key, handler, isBefore, priority);
+            if (handler) { handler.once = true; }
+        }
+        onceLater(key, handler, isBefore, priority) {
+            this.onLater(key, handler, isBefore, priority);
             if (handler) { handler.once = true; }
         }
         off(key, handler, isBefore) {
@@ -179,6 +223,30 @@ window.zs = window.zs || {};
                 }
             }
         }
+        offLater(key, handler, isBefore) {
+            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (isBefore) {
+                if (this.laterPreListeners == null) { return; }
+                if (this.laterPreListeners[key] == null) { return; }
+                let listener = this.laterPreListeners[key];
+                for (let i = 0, n = listener.length; i < n; i++) {
+                    if (listener[i]._id == handler._id) {
+                        listener.splice(i, 1);
+                        return;
+                    }
+                }
+            } else {
+                if (this.laterListeners == null) { return; }
+                if (this.laterListeners[key] == null) { return; }
+                let listener = this.laterListeners[key];
+                for (let i = 0, n = listener.length; i < n; i++) {
+                    if (listener[i]._id == handler._id) {
+                        listener.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+        }
         offAll(key, isBefore) {
             if (key == null || key.length <= 0) { return; }
             if (isBefore) {
@@ -189,6 +257,18 @@ window.zs = window.zs || {};
                 if (this.listeners == null) { return; }
                 if (this.listeners[key] == null) { return; }
                 delete this.listeners[key];
+            }
+        }
+        offAllLater(key, isBefore) {
+            if (key == null || key.length <= 0) { return; }
+            if (isBefore) {
+                if (this.laterPreListeners == null) { return; }
+                if (this.laterPreListeners[key] == null) { return; }
+                delete this.laterPreListeners[key];
+            } else {
+                if (this.laterListeners == null) { return; }
+                if (this.laterListeners[key] == null) { return; }
+                delete this.laterListeners[key];
             }
         }
         offAllCaller(caller, key, isBefore) {
@@ -243,11 +323,70 @@ window.zs = window.zs || {};
                 }
             }
         }
+        offAllCallerLater(caller, key, isBefore) {
+            if (caller == null) { return; }
+            if (key == null || key.length <= 0) {
+                if (isBefore) {
+                    for (let k in this.laterPreListeners) {
+                        let listener = this.laterPreListeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    for (let k in this.laterListeners) {
+                        let listener = this.laterListeners[k];
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (isBefore) {
+                    let listener = this.laterPreListeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                } else {
+                    let listener = this.laterListeners[key];
+                    if (listener) {
+                        for (let i = 0, n = listener.length; i < n; i++) {
+                            if (listener[i].caller == caller) {
+                                listener.splice(i, 1);
+                                i--;
+                                n--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         clear(isBefore) {
             if (isBefore) {
                 this.preListeners = null;
             } else {
                 this.listeners = null;
+            }
+        }
+        clearLater(isBefore) {
+            if (isBefore) {
+                this.laterPreListeners = null;
+            } else {
+                this.laterListeners = null;
             }
         }
         next(target) {
@@ -286,7 +425,6 @@ window.zs = window.zs || {};
                     if (this.fsm != null) {
                         let childFSM = this.fsmList[this.fsm.current];
                         if (childFSM && ((target && !childFSM.runTransition(target)) || !childFSM.runNext())) {
-                            console.log("run next child");
                             let lastState = this.fsm.current;
                             if (!this.fsm.runNext()) {
                                 zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
@@ -314,6 +452,18 @@ window.zs = window.zs || {};
             // banner销毁
             zs.platform.sync.hideBanner();
             zs.platform.sync.clearDelayBanner();
+            if (this.laterPreListeners != null && this.laterPreListeners[target] != null) {
+                let list = this.laterPreListeners[target];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
             this.lockStep = false;
             this.step();
         }
@@ -346,6 +496,18 @@ window.zs = window.zs || {};
                 zs.product.get(this.switchExporter) && this.checkExporter(current);
                 this.checkBanner(current);
             }
+            if (this.laterListeners != null && this.laterListeners[current] != null) {
+                let list = this.laterListeners[current];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
             this.lockStep = false;
             this.step();
         }
@@ -369,6 +531,18 @@ window.zs = window.zs || {};
             // banner销毁
             zs.platform.sync.hideBanner();
             zs.platform.sync.clearDelayBanner();
+            if (this.laterPreListeners != null && this.laterPreListeners[childKey] != null) {
+                let list = this.laterPreListeners[childKey];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
             this.lockStep = false;
             this.step();
         }
@@ -392,6 +566,18 @@ window.zs = window.zs || {};
             this.checkBase(childKey);
             zs.product.get(this.switchExporter) && this.checkExporter(childKey);
             this.checkBanner(childKey);
+            if (this.laterListeners != null && this.laterListeners[childKey] != null) {
+                let list = this.laterListeners[childKey];
+                for (let i = 0, n = list.length; i < n; i++) {
+                    let once = list[i].once;
+                    list[i].run();
+                    if (once) {
+                        list.splice(i, 1);
+                        i--;
+                        n--;
+                    }
+                }
+            }
             this.lockStep = false;
             this.step();
         }
@@ -605,9 +791,17 @@ window.zs = window.zs || {};
                 for (let i = 0, n = this.workListeners.length; i < n; i++) {
                     let workListener = this.workListeners[i];
                     if (workListener.handler.once) {
-                        this.workflow.once(workListener.key, workListener.handler, workListener.isBefore);
+                        if (workListener.later) {
+                            this.workflow.onceLater(workListener.key, workListener.handler, workListener.isBefore);
+                        } else {
+                            this.workflow.once(workListener.key, workListener.handler, workListener.isBefore);
+                        }
                     } else {
-                        this.workflow.on(workListener.key, workListener.handler, workListener.isBefore);
+                        if (workListener.later) {
+                            this.workflow.onLater(workListener.key, workListener.handler, workListener.isBefore);
+                        } else {
+                            this.workflow.on(workListener.key, workListener.handler, workListener.isBefore);
+                        }
                     }
                 }
                 this.workListeners = null;
@@ -657,6 +851,24 @@ window.zs = window.zs || {};
                 });
             }
         }
+        static onWorkflowLater(key, handler, isBefore, priority) {
+            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (this.workListeners == null) {
+                this.workListeners = [];
+            }
+            if (this.workflow) {
+                this.workflow.onLater(key, handler, isBefore, priority);
+            } else {
+                handler.once = false;
+                this.workListeners.push({
+                    key: key,
+                    handler: handler,
+                    priority: priority,
+                    isBefore: isBefore,
+                    later: true
+                });
+            }
+        }
         static onceWorkflow(key, handler, isBefore, priority) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             if (this.workListeners == null) {
@@ -671,6 +883,24 @@ window.zs = window.zs || {};
                     handler: handler,
                     priority: priority,
                     isBefore: isBefore
+                });
+            }
+        }
+        static onceWorkflowLater(key, handler, isBefore, priority) {
+            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (this.workListeners == null) {
+                this.workListeners = [];
+            }
+            if (this.workflow) {
+                this.workflow.onceLater(key, handler, isBefore, priority);
+            } else {
+                handler.once = true;
+                this.workListeners.push({
+                    key: key,
+                    handler: handler,
+                    priority: priority,
+                    isBefore: isBefore,
+                    later: true
                 });
             }
         }

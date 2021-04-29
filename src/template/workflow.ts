@@ -30,6 +30,7 @@ export default class workflow extends zs.workflow {
     static readonly GAME_END = "GAME_END";
     static readonly PRODUCT_FINISH = "PRODUCT_FINISH";
 
+    static readonly exporterBackground = "export_background";
     static readonly exporterSide = "export_side";
     static readonly exporterKnock = "export_knock";
 
@@ -51,7 +52,6 @@ export default class workflow extends zs.workflow {
     _fakeExit: exporter_fake_exit;
     _commonEgg: ad_egg;
     _gameEgg: ad_egg;
-    _background: exporter_background;
     _settleBtn: exporter_btn_confirm;
 
     static showPanel(type?: typeof zs.fgui.base, fit?: zs.fgui.FitType): zs.fgui.window {
@@ -70,6 +70,7 @@ export default class workflow extends zs.workflow {
         exportBinder.bindAll();
 
         // 注册模块
+        zs.fgui.configs.registeBase(workflow.exporterBackground, exporter_background);
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
         // 注册控件
@@ -91,32 +92,6 @@ export default class workflow extends zs.workflow {
             exporter_fake_msg.nickList = res;
             exporter_friend_challenge.nickList = res;
         });
-        // // 注册工作流状态
-        // this.fsm = new zs.fsm()
-        //     .registe(workflow.GAME_START, workflow.START_FULL_1, 0, false, this, this.onStartFull1)
-        //     .registe(workflow.START_FULL_1, workflow.START_FULL_2, 0, false, this, this.onStartFull2)
-        //     .registe(workflow.START_FULL_2, workflow.GAME_HOME)
-        //     .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
-        //     .registe(workflow.GAME_PREPARE, workflow.EXPORT_COMMON_EGG, 0, false, this, this.onCommonEgg)
-        //     .registe(workflow.EXPORT_COMMON_EGG, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-        //     .registe(workflow.GAME_PLAY, workflow.OVER_FULL_1, 0, false, this, this.onOverFull1)
-        //     .registe(workflow.OVER_FULL_1, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-        //     .registe(workflow.GAME_SETTLE, workflow.OVER_FULL_2, 0, false, this, this.onOverFull2)
-        //     .registe(workflow.OVER_FULL_2, workflow.GAME_END)
-        //     .registe(workflow.GAME_END, workflow.GAME_HOME)
-        //     .setDefault(workflow.GAME_START, true);
-
-        // zs.core.onWorkflow(zs.workflow.PRODUCT_START, Laya.Handler.create(this, () => {
-        //     console.log("update workflow 2");
-        // }), false, -1);
-
-        // zs.core.onWorkflow(zs.workflow.PRODUCT_START, Laya.Handler.create(this, () => {
-        //     console.log("update workflow 1");
-        // }));
-
-        // zs.core.onWorkflow(zs.workflow.PRODUCT_START, Laya.Handler.create(this, () => {
-        //     console.log("update workflow 0");
-        // }), false, 1);
 
         zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_1", Laya.Handler.create(this, this.onStartFull1));
         zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_2", Laya.Handler.create(this, this.onStartFull2));
@@ -124,7 +99,7 @@ export default class workflow extends zs.workflow {
         zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".VIDEO", Laya.Handler.create(this, this.onGameVideo));
         zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".EGG", Laya.Handler.create(this, this.onCommonEgg));
         zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_1", Laya.Handler.create(this, this.onOverFull1));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".SETTLE", Laya.Handler.create(this, this.onGameSettle));
+        zs.core.onWorkflowLater(zs.workflow.PRODUCT_PLAY_END + ".SETTLE", Laya.Handler.create(this, this.onGameSettle));
         zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_2", Laya.Handler.create(this, this.onOverFull2));
     }
 
@@ -266,20 +241,14 @@ export default class workflow extends zs.workflow {
     }
 
     onGameSettle() {
-        return zs.core.workflow.childNext();
         if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
-            var bFakeExit = ProductKey.zs_history_list_jump;
-            console.log("假退出开关", ProductKey.zs_history_list_jump)
-            // bFakeExit = true;
-            if (bFakeExit) {
+            if (ProductKey.zs_history_list_jump) {
                 this.fakeExit();
             }
-            console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
             if (ProductKey.zs_false_news_switch) {
                 this.fakeMsg();
             }
 
-            // this.showBackground();
 
             if (this._settleBtn) {
                 this._settleBtn.view.visible = true;
@@ -287,7 +256,10 @@ export default class workflow extends zs.workflow {
                 this._settleBtn = workflow.showPanel(exporter_btn_confirm, zs.fgui.FitType.None)
                     .align(zs.fgui.AlignType.Bottom, 0, -150)
                     .front()
-                    .getBase() as exporter_btn_confirm;
+                    .getBase<exporter_btn_confirm>()
+                    .setClickEvent(this, () => {
+                        zs.core.workflow.childNext();
+                    });
             }
         } else {
             zs.core.workflow.childNext();
@@ -296,14 +268,11 @@ export default class workflow extends zs.workflow {
 
     onOverFull2() {
         this.hideFakeExit();
-        console.log("结束全屏2", ProductKey.zs_jump_switch, ProductKey.zs_full_screen2_jump)
-        var bOpenFull = ProductKey.zs_full_screen2_jump;
-        if (bOpenFull) {
+        if (ProductKey.zs_full_screen2_jump) {
             this.showFull2(true);
         } else {
             zs.core.workflow.childNext();
         }
-        this.hideBackground();
         this.hideFakeMsg();
         this._settleBtn && workflow.getPanel().detach(this._settleBtn);
         this._settleBtn = null;
@@ -525,23 +494,5 @@ export default class workflow extends zs.workflow {
     hideFakeExit() {
         this._fakeExit && (workflow.getPanel().detach(this._fakeExit));
         this._fakeExit = null;
-    }
-
-    showBackground(alpha?: number, color?: string) {
-        if (!this._background) {
-            this._background = workflow.getPanel()
-                .attach(exporter_background, 0)
-                .front()
-                .getBase() as exporter_background;
-        } else {
-            this._background.view.visible = true;
-        }
-        alpha && (this._background.alpha = alpha);
-        color && (this._background.color = color);
-    }
-
-    hideBackground() {
-        this._background && (workflow.getPanel().detach(this._background));
-        this._background = null;
     }
 }

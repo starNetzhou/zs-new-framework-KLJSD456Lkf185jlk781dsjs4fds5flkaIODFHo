@@ -62,7 +62,6 @@ export default class exporter_full_2 extends zs.exporter.full {
 
     constructor(component) {
         super(component);
-        console.log("component", component);
         if (component && component instanceof FGUI_full_2) {
             component.rank1.onClick(this, this.onClickItem, [component.rank1]);
             component.rank3.onClick(this, this.onClickItem, [component.rank3]);

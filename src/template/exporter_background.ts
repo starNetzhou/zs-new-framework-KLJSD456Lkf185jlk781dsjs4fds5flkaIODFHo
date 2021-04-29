@@ -12,6 +12,7 @@ export default class exporter_background extends zs.fgui.base {
         graphBack.y = -fairygui.GRoot.inst.height * 0.25;
         graphBack.width = fairygui.GRoot.inst.width * 2;
         graphBack.height = fairygui.GRoot.inst.height * 2;
+        this.background = graphBack;
     }
 
     get color(): string {

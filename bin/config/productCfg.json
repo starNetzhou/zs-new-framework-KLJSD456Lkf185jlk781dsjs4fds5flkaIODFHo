@@ -101,6 +101,12 @@
         },
         "exporter": [
             {
+                "type": "export_background",
+                "window": {
+                    "align": "topleft"
+                }
+            },
+            {
                 "type": "export_knock",
                 "switch": "zs_finish_jump",
                 "window": {

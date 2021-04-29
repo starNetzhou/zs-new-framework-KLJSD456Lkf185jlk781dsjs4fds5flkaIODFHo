@@ -95,7 +95,6 @@ window.zs = window.zs || {};
                 return null;
             }
             let fsm = this.list[this.current];
-            console.log(this.list, this.current);
             if (fsm == null) { return null; }
             if (this.target != null) {
                 if (fsm != null) {

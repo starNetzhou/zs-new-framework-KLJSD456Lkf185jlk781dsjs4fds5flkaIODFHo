@@ -634,7 +634,7 @@ window.zs.fgui = window.zs.fgui || {};
 
             if (type) {
                 panel.attach(type);
-                if (!fit) { fit = FitType.Both; }
+                if (fit == null || fit == undefined) { fit = FitType.Both; }
                 switch (fit) {
                     case FitType.Fit:
                         panel.fit();
@@ -669,7 +669,7 @@ window.zs.fgui = window.zs.fgui || {};
             if (panel != null) {
                 if (type) {
                     panel.attach(type);
-                    if (!fit) { fit = FitType.Both; }
+                    if (fit == null || fit == undefined) { fit = FitType.Both; }
                     switch (fit) {
                         case FitType.Fit:
                             panel.fit();
@@ -681,6 +681,7 @@ window.zs.fgui = window.zs.fgui || {};
                             panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight).fit();
                             break;
                     }
+                    console.log(type, fit);
                 }
                 panel.show();
             } else if (autoCreate) {

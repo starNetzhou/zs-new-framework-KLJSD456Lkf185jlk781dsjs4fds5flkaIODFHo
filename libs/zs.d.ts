@@ -304,6 +304,14 @@ declare module zs {
          */
         on(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
+         * 注册工作流延迟监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
+         */
+        onLater(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
+        /**
          *  注册工作流单次监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
@@ -312,6 +320,14 @@ declare module zs {
          */
         once(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
+         * 注册工作流单次延迟监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
+         */
+        onceLater(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
+        /**
          * 注销工作流监听
          * @param key 状态名
          * @param handler 监听事件
@@ -319,11 +335,24 @@ declare module zs {
          */
         off(key: string, handler: Laya.Handler, isBefore?: boolean);
         /**
+         * 注销工作流延迟监听
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        offLater(key: string, handler: Laya.Handler, isBefore?: boolean);
+        /**
          * 注销状态内全部监听
          * @param key 状态名
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
          */
         offAll(key: string, isBefore?: boolean);
+        /**
+         * 注销状态内全部延迟监听
+         * @param key 状态名
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        offAllLater(key: string, isBefore?: boolean);
         /**
          * 注销指定调用者监听
          * @param caller 调用者
@@ -332,10 +361,22 @@ declare module zs {
          */
         offAllCaller(caller: any, key?: string, isBefore?: boolean);
         /**
+         * 注销指定调用者延迟监听
+         * @param caller 调用者
+         * @param key （可选）状态名
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        offAllCallerLater(caller: any, key?: string, isBefore?: boolean);
+        /**
          * 清空所有监听事件
          * @param isBefore （可选）是否在状态开始改变前响应，默认为否
          */
         clear(isBefore?: boolean);
+        /**
+         * 清空所有延迟监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         */
+        clearLater(isBefore?: boolean);
         /**
          * 状态跳转
          * @param target （可选）目标状态名，默认自动跳转
@@ -433,6 +474,14 @@ declare module zs {
          */
         static onWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
+         * 监听延迟工作流事件
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
+         */
+        static onWorkflowLater(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
+        /**
          * 单次监听工作流事件
          * @param key 状态名
          * @param handler 监听事件
@@ -440,6 +489,14 @@ declare module zs {
          * @param priority （可选）设置工作流响应优先级，默认为0
          */
         static onceWorkflow(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
+        /**
+         * 单次监听延迟工作流事件
+         * @param key 状态名
+         * @param handler 监听事件
+         * @param isBefore （可选）是否在状态开始改变前响应，默认为否
+         * @param priority （可选）设置工作流响应优先级，默认为0
+         */
+        static onceWorkflowLater(key: string, handler: Laya.Handler, isBefore?: boolean, priority?: number);
         /**
          * 添加应用展示监听
          * @param handler 监听事件
@@ -1419,7 +1476,7 @@ declare module zs.fgui {
         /**
          * 获取当前UI控件
          */
-        getBase(): zs.fgui.base;
+        getBase<T extends zs.fgui.base>(): T;
         /**
          * 清空UI控件
          */
