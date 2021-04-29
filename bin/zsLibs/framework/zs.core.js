@@ -63,6 +63,7 @@ window.zs = window.zs || {};
             }
             zs.fgui.configs.registeBase(workflow.exporterList, zs.exporter.list);
             zs.fgui.configs.registeBase(workflow.exporterCard, zs.exporter.card);
+            zs.fgui.configs.registeBase(workflow.exporterBackground, zs.exporter.background);
             core.addAppShow(Laya.Handler.create(this, zs.platform.sync.clearDelayBanner, null, false));
             this.fsm.init();
         }
@@ -592,6 +593,7 @@ window.zs = window.zs || {};
             data && (zs.platform.sync.checkBanner({ data: data }));
         }
         checkExporter(current) {
+            console.log(this.exportWindow);
             let data = zs.configs.productCfg[current];
             if (this.exporterIgnoreList && this.exporterIgnoreList.indexOf(current) >= 0) {
                 if (data && data.exporter && data.exporter.length > 0) {
@@ -600,7 +602,6 @@ window.zs = window.zs || {};
                 return;
             }
             if (data && data.exporter && data.exporter.length > 0) {
-                console.log("show exporter " + current, data.exporter);
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
                     if (config.switch) {
@@ -651,6 +652,8 @@ window.zs = window.zs || {};
     }
     workflow.exporterList = "export_list";
     workflow.exporterCard = "export_card";
+    workflow.exporterBackground = "export_background";
+
     workflow.PRODUCT_START = "PRODUCT_START";
     workflow.PRODUCT_BEGIN = "PRODUCT_BEGIN";
     workflow.GAME_HOME = "GAME_HOME";

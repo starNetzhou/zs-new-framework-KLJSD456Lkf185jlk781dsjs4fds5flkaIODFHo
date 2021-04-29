@@ -496,11 +496,13 @@ window.zs.fgui = window.zs.fgui || {};
             if (config.window) {
                 config.window.width != null && config.window.width != undefined && (this.setWidth(config.window.width));
                 config.window.height != null && config.window.height != undefined && (this.setHeight(config.window.height));
-                if (zs.configs.gameCfg.autoScaleFit || (config.window.scalefit != null && config.window.scalefit != undefined)) {
-                    if (!config.window.scalefit || !Array.isArray(config.window.scalefit) || config.window.scalefit.length <= 1) {
-                        this.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
-                    } else {
-                        this.scaleFit(config.window.scalefit[0], config.window.scalefit[1]);
+                if (!config.window.ignoreAutoScaleFit) {
+                    if (zs.configs.gameCfg.autoScaleFit || (config.window.scalefit != null && config.window.scalefit != undefined)) {
+                        if (!config.window.scalefit || !Array.isArray(config.window.scalefit) || config.window.scalefit.length <= 1) {
+                            this.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
+                        } else {
+                            this.scaleFit(config.window.scalefit[0], config.window.scalefit[1]);
+                        }
                     }
                 }
                 if (config.window.scale && Array.isArray(config.window.scale) && config.window.scale.length > 1) {
@@ -681,7 +683,6 @@ window.zs.fgui = window.zs.fgui || {};
                             panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight).fit();
                             break;
                     }
-                    console.log(type, fit);
                 }
                 panel.show();
             } else if (autoCreate) {

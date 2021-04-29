@@ -30,7 +30,6 @@ export default class workflow extends zs.workflow {
     static readonly GAME_END = "GAME_END";
     static readonly PRODUCT_FINISH = "PRODUCT_FINISH";
 
-    static readonly exporterBackground = "export_background";
     static readonly exporterSide = "export_side";
     static readonly exporterKnock = "export_knock";
 
@@ -70,7 +69,6 @@ export default class workflow extends zs.workflow {
         exportBinder.bindAll();
 
         // 注册模块
-        zs.fgui.configs.registeBase(workflow.exporterBackground, exporter_background);
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
         // 注册控件

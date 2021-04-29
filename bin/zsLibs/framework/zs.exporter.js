@@ -1434,6 +1434,43 @@ window.zs.exporter = window.zs.exporter || {};
         }
     }
 
+    class background extends zs.fgui.base {
+        constructor(component) {
+            super(component);
+            component.width = zs.configs.gameCfg.designWidth;
+            component.height = zs.configs.gameCfg.designHeight;
+            let graphBack = new fairygui.GGraph();
+            graphBack.drawRect(0, '#000000', '#000000');
+            graphBack.alpha = 0.5;
+            component.addChild(graphBack);
+            graphBack.x = 0;
+            graphBack.y = 0;
+            graphBack.width = component.width;
+            graphBack.height = component.height;
+            graphBack.addRelation(component, fairygui.RelationType.Width);
+            graphBack.addRelation(component, fairygui.RelationType.Height);
+            this.background = graphBack;
+        }
+        get color() {
+            return this.background ? this.background.color : "";
+        }
+        set color(value) {
+            this.background && (this.background.color = value);
+        }
+        get alpha() {
+            return this.background ? this.background.alpha : 0;
+        }
+        set alpha(value) {
+            this.background && (this.background.alpha = value);
+        }
+        applyConfig(config) {
+            if (config) {
+                config.color && (color = config.color);
+                config.alpha && (alpha = config.alpha);
+            }
+        }
+    }
+
     class full extends zs.fgui.base {
         setMistaken() { return this; }
         setClickContinue(handler) {
@@ -1471,6 +1508,7 @@ window.zs.exporter = window.zs.exporter || {};
     exports.dataMgr = dataMgr;
     exports.list = list;
     exports.card = card;
+    exports.background = background;
     exports.full = full;
     exports.AdaptType = AdaptType;
 }(window.zs.exporter = window.zs.exporter || {}));
