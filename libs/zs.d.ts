@@ -1437,7 +1437,7 @@ declare module zs.fgui {
         /**
          * 执行配置方法
          */
-        applyConfig(): base;
+        applyConfig(config): base;
     }
     /**
      * FGUI泛型基类

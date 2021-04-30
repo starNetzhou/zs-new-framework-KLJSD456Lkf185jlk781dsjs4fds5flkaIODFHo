@@ -5,6 +5,31 @@
             "FULL_2"
         ]
     },
+    "PRODUCT_START.FULL_1": {
+        "exporter": [
+            {
+                "type": "special",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -20
+                },
+                "base": {
+                    "event": "FULL_1",
+                    "offsetY": 400,
+                    "childNext": true,
+                    "style": {
+                        "icon": "",
+                        "title": "我就试试",
+                        "size": [],
+                        "scale": [
+                            0.9,
+                            0.9
+                        ]
+                    }
+                }
+            }
+        ]
+    },
     "PRODUCT_HOME_PLAY": {
         "states": [
             "VIDEO",
@@ -54,14 +79,22 @@
                     "height": 270,
                     "max": 10,
                     "marginleft": 10,
-                    "marginright": 10
+                    "marginright": 10,
+                    "background": [
+                        "export/export",
+                        "bottom_icon_background"
+                    ]
                 }
             },
             {
                 "type": "export_side",
                 "window": {
                     "align": "left",
-                    "alignoffsety": 100
+                    "alignoffsety": 100,
+                    "scale": [
+                        0.9,
+                        0.9
+                    ]
                 }
             }
         ]

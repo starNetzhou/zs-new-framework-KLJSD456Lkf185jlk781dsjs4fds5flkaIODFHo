@@ -16,6 +16,7 @@ import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
 import exporter_btn_confirm from "./exporter_btn_confirm";
+import exporter_Special from "./exporter_Special";
 
 export default class workflow extends zs.workflow {
 
@@ -39,6 +40,8 @@ export default class workflow extends zs.workflow {
     static readonly exportItem5 = "export_item_5";
     static readonly exportItem6 = "export_item_6";
     static readonly exportItem7 = "export_item_7";
+
+    static readonly special = "special";
 
     exporterPack = "export/export";
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
@@ -78,6 +81,8 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem5, FGUI_item_5);
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
+        //
+        zs.fgui.configs.registeBase(workflow.special,exporter_Special);
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
