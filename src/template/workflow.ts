@@ -16,7 +16,6 @@ import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import ad_egg from "./ad_egg";
 import exporter_btn_confirm from "./exporter_btn_confirm";
-import exporter_background from "./exporter_background";
 
 export default class workflow extends zs.workflow {
 
