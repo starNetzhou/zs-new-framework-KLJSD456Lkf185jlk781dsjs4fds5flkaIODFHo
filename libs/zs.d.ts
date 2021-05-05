@@ -44,9 +44,6 @@ declare module zs {
     interface gameCfg {
         /**
          * 测试开关
-         * 上线必须为false! 
-         * 上线必须为false! 
-         * 上线必须为false!
          */
         debug: boolean,
         /**
