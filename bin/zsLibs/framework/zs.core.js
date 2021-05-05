@@ -584,6 +584,7 @@ window.zs = window.zs || {};
                         }
                     }
                 }
+                this.checkEvent(current);
                 if (childFSM) {
                     childFSM.onBeforeChange = Laya.Handler.create(this, this.onChildFSMBeforeChanged, null, false);
                     childFSM.onChanged = Laya.Handler.create(this, this.onChildFSMChanged, null, false);
@@ -597,7 +598,7 @@ window.zs = window.zs || {};
                     zs.product.get(this.switchExporter) && this.checkExporter(current);
                     this.checkBanner(current);
                 }
-                this.checkEvent(current);
+                this.checkEvent(current, true);
                 if (this.laterListeners != null && this.laterListeners[current] != null) {
                     let list = this.laterListeners[current];
                     for (let i = 0, n = list.length; i < n; i++) {
@@ -678,6 +679,7 @@ window.zs = window.zs || {};
                 this.checkBase(childKey);
                 zs.product.get(this.switchExporter) && this.checkExporter(childKey);
                 this.checkBanner(childKey);
+                this.checkEvent(childKey, true);
                 if (this.laterListeners != null && this.laterListeners[childKey] != null) {
                     let list = this.laterListeners[childKey];
                     for (let i = 0, n = list.length; i < n; i++) {
@@ -694,10 +696,16 @@ window.zs = window.zs || {};
             this.lockStep = false;
             this.step();
         }
-        checkEvent(current) {
+        checkEvent(current, isLater) {
             let data = zs.configs.productCfg[current];
-            if (data && data.event && data.event.length > 0) {
-                this.runEventConfig(data.event);
+            if (isLater) {
+                if (data && data.laterevent && data.laterevent.length > 0) {
+                    this.runEventConfig(data.laterevent);
+                }
+            } else {
+                if (data && data.event && data.event.length > 0) {
+                    this.runEventConfig(data.event);
+                }
             }
         }
         checkBanner(current) {

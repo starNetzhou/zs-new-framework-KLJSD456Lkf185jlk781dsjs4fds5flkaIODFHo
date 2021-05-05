@@ -179,13 +179,13 @@
         "banner": {
             "delay": true
         },
-        "event": [
+        "laterevent": [
             "event_fake_exit",
             "event_fake_msg"
         ],
         "exporter": [
             {
-                "type": "export_graph",
+                "type": "export_background",
                 "window": {
                     "align": "topleft"
                 }
