@@ -104,6 +104,25 @@ window.zs = window.zs || {};
                 event && (event.func.apply(event.caller, event.args));
             }
         }
+        runEventConfig(event) {
+            if (Array.isArray(event)) {
+                for (let i = 0, n = event.length; i < n; i++) {
+                    let evt = event[i];
+                    if (Array.isArray(evt)) {
+                        let lenEvt = evt.length;
+                        if (lenEvt > 1) {
+                            this.applyEvent(evt[0], evt.slice(1, lenEvt));
+                        } else if (lenEvt > 0) {
+                            this.callEvent(evt[0]);
+                        }
+                    } else {
+                        this.callEvent(evt);
+                    }
+                }
+            } else {
+                this.callEvent(event);
+            }
+        }
         registeChildFSM() {
             let config = zs.configs.productCfg;
             for (let key in config) {
@@ -502,44 +521,93 @@ window.zs = window.zs || {};
             this.lockStep = false;
             this.step();
         }
-        onChanged(current) {
-            this.lockStep = true;
-            zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
-            if (this.listeners != null && this.listeners[current] != null) {
-                let list = this.listeners[current];
-                for (let i = 0, n = list.length; i < n; i++) {
-                    let once = list[i].once;
-                    list[i].run();
-                    if (once) {
-                        list.splice(i, 1);
-                        i--;
-                        n--;
+        checkSwitch(config) {
+            let isPassed = true;
+            if (Array.isArray(config)) {
+                for (let i = 0, n = config.length; i < n; i++) {
+                    let sw = config[i];
+                    if (!sw || sw.length <= 0) { continue; }
+                    if (sw[0] == '!' || sw[0] == '！') {
+                        if (sw.length > 1) {
+                            sw = sw.slice(1, sw.length);
+                            if (zs.product.get(sw)) {
+                                isPassed = false;
+                                break;
+                            }
+                        } else {
+                            isPassed = false;
+                            break;
+                        }
+                    } else if (!zs.product.get(sw)) {
+                        isPassed = false;
+                        break;
+                    }
+                }
+            } else {
+                let sw = config;
+                if (sw && sw.length > 0) {
+                    if (sw[0] == '!' || sw[0] == '！') {
+                        if (sw.length > 1) {
+                            sw = sw.slice(1, sw.length);
+                            if (zs.product.get(sw)) { isPassed = false; }
+                        } else {
+                            isPassed = false;
+                        }
+                    } else if (!zs.product.get(sw)) {
+                        isPassed = false;
                     }
                 }
             }
-            let childFSM = this.fsmList[current];
-            if (childFSM) {
-                childFSM.onBeforeChange = Laya.Handler.create(this, this.onChildFSMBeforeChanged, null, false);
-                childFSM.onChanged = Laya.Handler.create(this, this.onChildFSMChanged, null, false);
-                childFSM.init();
-                let productData = zs.configs.productCfg[current];
-                if (productData) {
-                    zs.log.info(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
-                }
-            } else {
-                this.checkBase(current);
-                zs.product.get(this.switchExporter) && this.checkExporter(current);
-                this.checkBanner(current);
+            return isPassed;
+        }
+        onChanged(current) {
+            this.lockStep = true;
+            zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
+            let productData = zs.configs.productCfg[current];
+            let isSkip = false;
+            if (productData && productData.switch) {
+                isSkip = !this.checkSwitch(productData.switch);
             }
-            if (this.laterListeners != null && this.laterListeners[current] != null) {
-                let list = this.laterListeners[current];
-                for (let i = 0, n = list.length; i < n; i++) {
-                    let once = list[i].once;
-                    list[i].run();
-                    if (once) {
-                        list.splice(i, 1);
-                        i--;
-                        n--;
+            let childFSM = this.fsmList[current];
+            if (isSkip && !childFSM) {
+                this.next();
+            } else {
+                if (this.listeners != null && this.listeners[current] != null) {
+                    let list = this.listeners[current];
+                    for (let i = 0, n = list.length; i < n; i++) {
+                        let once = list[i].once;
+                        list[i].run();
+                        if (once) {
+                            list.splice(i, 1);
+                            i--;
+                            n--;
+                        }
+                    }
+                }
+                if (childFSM) {
+                    childFSM.onBeforeChange = Laya.Handler.create(this, this.onChildFSMBeforeChanged, null, false);
+                    childFSM.onChanged = Laya.Handler.create(this, this.onChildFSMChanged, null, false);
+                    childFSM.init();
+                    let productData = zs.configs.productCfg[current];
+                    if (productData) {
+                        zs.log.info(current + " 状态存在子状态机，无法自动创建应用运营配置，请使用子状态进行配置!", "Workflow", childFSM.list);
+                    }
+                } else {
+                    this.checkBase(current);
+                    zs.product.get(this.switchExporter) && this.checkExporter(current);
+                    this.checkBanner(current);
+                }
+                this.checkEvent(current);
+                if (this.laterListeners != null && this.laterListeners[current] != null) {
+                    let list = this.laterListeners[current];
+                    for (let i = 0, n = list.length; i < n; i++) {
+                        let once = list[i].once;
+                        list[i].run();
+                        if (once) {
+                            list.splice(i, 1);
+                            i--;
+                            n--;
+                        }
                     }
                 }
             }
@@ -586,35 +654,51 @@ window.zs = window.zs || {};
             this.lockStep = true;
             let childKey = this.fsm.current + '.' + current;
             zs.td.justTrack(zs.td.workflowKey + childKey, zs.td.workflowDesc + childKey);
-            if (this.listeners != null && this.listeners[childKey] != null) {
-                let list = this.listeners[childKey];
-                for (let i = 0, n = list.length; i < n; i++) {
-                    let once = list[i].once;
-                    list[i].run();
-                    if (once) {
-                        list.splice(i, 1);
-                        i--;
-                        n--;
+            let productData = zs.configs.productCfg[childKey];
+            let isSkip = false;
+            if (productData && productData.switch) {
+                isSkip = !this.checkSwitch(productData.switch);
+            }
+            if (isSkip) {
+                this.childNext();
+            } else {
+                if (this.listeners != null && this.listeners[childKey] != null) {
+                    let list = this.listeners[childKey];
+                    for (let i = 0, n = list.length; i < n; i++) {
+                        let once = list[i].once;
+                        list[i].run();
+                        if (once) {
+                            list.splice(i, 1);
+                            i--;
+                            n--;
+                        }
                     }
                 }
-            }
-            this.checkBase(childKey);
-            zs.product.get(this.switchExporter) && this.checkExporter(childKey);
-            this.checkBanner(childKey);
-            if (this.laterListeners != null && this.laterListeners[childKey] != null) {
-                let list = this.laterListeners[childKey];
-                for (let i = 0, n = list.length; i < n; i++) {
-                    let once = list[i].once;
-                    list[i].run();
-                    if (once) {
-                        list.splice(i, 1);
-                        i--;
-                        n--;
+                this.checkEvent(childKey);
+                this.checkBase(childKey);
+                zs.product.get(this.switchExporter) && this.checkExporter(childKey);
+                this.checkBanner(childKey);
+                if (this.laterListeners != null && this.laterListeners[childKey] != null) {
+                    let list = this.laterListeners[childKey];
+                    for (let i = 0, n = list.length; i < n; i++) {
+                        let once = list[i].once;
+                        list[i].run();
+                        if (once) {
+                            list.splice(i, 1);
+                            i--;
+                            n--;
+                        }
                     }
                 }
             }
             this.lockStep = false;
             this.step();
+        }
+        checkEvent(current) {
+            let data = zs.configs.productCfg[current];
+            if (data && data.event && data.event.length > 0) {
+                this.runEventConfig(data.event);
+            }
         }
         checkBanner(current) {
             let data = zs.configs.productCfg[current];
@@ -638,18 +722,7 @@ window.zs = window.zs || {};
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
                     if (config.switch) {
-                        if (Array.isArray(config.switch)) {
-                            let skip = false;
-                            for (let i = 0, n = config.switch.length; i < n; i++) {
-                                if (!zs.product.get(config.switch[i])) {
-                                    skip = true;
-                                    break;
-                                }
-                            }
-                            if (skip) { continue; }
-                        } else if (!zs.product.get(config.switch)) {
-                            continue;
-                        }
+                        if (!this.checkSwitch(config.switch)) { continue; }
                     }
                     this.exportWindow
                         .applyConfig(config)
@@ -663,18 +736,7 @@ window.zs = window.zs || {};
                 for (let i = 0, n = data.base.length; i < n; i++) {
                     let config = data.base[i];
                     if (config.switch) {
-                        if (Array.isArray(config.switch)) {
-                            let skip = false;
-                            for (let i = 0, n = config.switch.length; i < n; i++) {
-                                if (!zs.product.get(config.switch[i])) {
-                                    skip = true;
-                                    break;
-                                }
-                            }
-                            if (skip) { continue; }
-                        } else if (!zs.product.get(config.switch)) {
-                            continue;
-                        }
+                        if (!this.checkSwitch(config.switch)) { continue; }
                     }
                     this.exportWindow
                         .applyConfig(config)
@@ -823,8 +885,7 @@ window.zs = window.zs || {};
                 this.workflow = new zs.workflow();
             }
             if (this.workflow.exporterPack) {
-                let pack = await zs.fgui.loadPack(this.workflow.exporterPack);
-                console.log(pack);
+                await zs.fgui.loadPack(this.workflow.exporterPack);
             }
             this.workflow.registe();
             this.workflow.registeChildFSM();

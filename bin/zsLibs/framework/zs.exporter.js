@@ -1671,17 +1671,7 @@ window.zs.exporter = window.zs.exporter || {};
                 if (this.clickalways) {
                     this.view.touchable = true;
                 }
-                if (this.event && zs.core.workflow) {
-                    if (this.eventparams) {
-                        if (Array.isArray(this.eventparams)) {
-                            zs.core.workflow.applyEvent(this.event, this.eventparams);
-                        } else {
-                            zs.core.workflow.callEvent(this.event, this.eventparams);
-                        }
-                    } else {
-                        zs.core.workflow.callEvent(this.event);
-                    }
-                }
+                this.event && zs.core.workflow && zs.core.workflow.runEventConfig(this.event);
             }
         }
         applyConfig(config) {
@@ -1700,7 +1690,6 @@ window.zs.exporter = window.zs.exporter || {};
                 config.clickignore && (this.clickignore = config.clickignore);
                 config.clickalways && (this.clickalways = config.clickalways);
                 config.event && (this.event = config.event);
-                config.eventparams && (this.eventparams = config.eventparams);
             }
             return this;
         }

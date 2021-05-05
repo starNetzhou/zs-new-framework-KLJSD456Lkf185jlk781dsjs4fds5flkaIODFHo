@@ -313,6 +313,11 @@ declare module zs {
          */
         applyEvent(key: string, args?: any[]);
         /**
+         * 按配置执行事件
+         * @param config 配置
+         */
+        runEventConfig(config: string | string[]);
+        /**
          * 注册工作流监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
@@ -1409,6 +1414,10 @@ declare module zs.fgui {
          */
         get view(): fairygui.GComponent;
         /**
+         * 控件ID
+         */
+        get id(): number;
+        /**
          * 控件是否被销毁
          */
         disposed: boolean;
@@ -1488,12 +1497,23 @@ declare module zs.fgui {
         /**
          * 设置当前UI控件
          * @param ctr UI控件 
+         * @param key （可选）关键词
          */
-        setBase(ctr: zs.fgui.base): window;
+        setBase(ctr: zs.fgui.base, key?: string): window;
         /**
          * 获取当前UI控件
          */
         getBase<T extends zs.fgui.base>(): T;
+        /**
+         * 根据关键词获取UI控件
+         * @param key 关键词
+         */
+        getBaseByKey<T extends zs.fgui.base>(key: string): T;
+        /**
+         * 根据类型获取UI空间列表
+         * @param type 类型
+         */
+        getBaseByType<T extends zs.fgui.base>(type: typeof zs.fgui.base): T[];
         /**
          * 清空UI控件
          */

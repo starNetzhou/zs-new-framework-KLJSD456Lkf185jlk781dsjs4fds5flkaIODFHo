@@ -4,20 +4,22 @@ export default class exporter_fake_exit extends zs.fgui.base {
 
     static typeDefine = FGUI_fake_exit;
 
-    // 事件回调
-    callback: Laya.Handler;
+    event: string | string[];
 
     constructor(component) {
         super(component);
-        component.onClick(this, this.onBtnExitClick)
+        component.onClick(this, this.onClicked)
     }
     apply() {
         return this;
     }
-    setClickHandler(callback) {
-        this.callback = callback;
+    applyConfig(config) {
+        if (config) {
+            config.event && (this.event = config.event);
+        }
+        return this;
     }
-    onBtnExitClick() {
-        this.callback && this.callback.run();
+    onClicked() {
+        this.event && zs.core.workflow && zs.core.workflow.runEventConfig(this.event);
     }
 }

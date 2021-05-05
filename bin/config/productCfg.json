@@ -1,7 +1,6 @@
 {
     "PRODUCT_START": {
         "states": [
-            "READY",
             "FULL_1",
             "FULL_2"
         ]
@@ -10,6 +9,7 @@
         "exporter": [
             {
                 "type": "export_button",
+                "key": "test",
                 "window": {
                     "align": "bottom",
                     "alignoffsety": -100
@@ -27,11 +27,45 @@
             }
         ]
     },
+    "PRODUCT_START.FULL_1": {
+        "switch": [
+            "zs_full_screen2_jump",
+            "zs_auto_full_screen_jump_switch"
+        ],
+        "event": "event_full_2"
+    },
+    "PRODUCT_START.FULL_2": {
+        "switch": [
+            "zs_full_screen1_jump",
+            "zs_auto_full_screen_jump_switch"
+        ],
+        "event": "event_full_1"
+    },
     "PRODUCT_HOME_PLAY": {
         "states": [
             "VIDEO",
             "EGG"
         ]
+    },
+    "PRODUCT_BEGIN": {
+        "switch": "!"
+    },
+    "PRODUCT_HOME_PLAY.VIDEO": {
+        "switch": "zs_start_game_video_switch",
+        "event": "event_start_video"
+    },
+    "PRODUCT_HOME_PLAY.EGG": {
+        "event": "event_common_egg"
+    },
+    "GAME_PLAY": {
+        "states": [
+            "START",
+            "READY",
+            "PLAY",
+            "SETTLE",
+            "END"
+        ],
+        "event": "event_fake_exit"
     },
     "GAME_HOME": {
         "base": [],
@@ -125,10 +159,27 @@
             "FULL_2"
         ]
     },
+    "PRODUCT_PLAY_END.FULL_1": {
+        "switch": [
+            "zs_full_screen1_jump"
+        ],
+        "event": "event_full_1"
+    },
+    "PRODUCT_PLAY_END.FULL_2": {
+        "switch": [
+            "zs_full_screen2_jump"
+        ],
+        "event": "event_full_2"
+    },
     "PRODUCT_PLAY_END.SETTLE": {
+        "switch": ["!zs_skip_settle", "zs_version"],
         "banner": {
             "delay": true
         },
+        "event": [
+            "event_fake_exit",
+            "event_fake_msg"
+        ],
         "exporter": [
             {
                 "type": "export_graph",
@@ -142,6 +193,24 @@
                 "window": {
                     "align": "center",
                     "alignoffsety": -30
+                }
+            },
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_childnext",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
                 }
             }
         ]

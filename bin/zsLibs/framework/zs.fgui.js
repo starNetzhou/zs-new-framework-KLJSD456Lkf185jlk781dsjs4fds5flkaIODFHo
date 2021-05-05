@@ -87,10 +87,15 @@ window.zs.fgui = window.zs.fgui || {};
             this.disposed = false;
             this._view = component;
             component.baseCtrl = this;
+            this._id = base.usedId;
+            base.usedId++;
             this.init();
         }
         get view() {
             return this._view;
+        }
+        get id() {
+            return this._id;
         }
         static make(type) {
             if (type && type.prototype instanceof fairygui.GComponent) {
@@ -121,6 +126,7 @@ window.zs.fgui = window.zs.fgui || {};
         apply() { return this; }
         applyConfig() { return this; }
     }
+    base.usedId = 0;
     base.typeDefine = null;
 
     class baseGeneric extends base {
@@ -128,6 +134,18 @@ window.zs.fgui = window.zs.fgui || {};
     }
 
     class window {
+        get listByKeys() {
+            if (this._listByKeys == null) {
+                this._listByKeys = {};
+            }
+            return this._listByKeys;
+        }
+        get list() {
+            if (this._list == null) {
+                this._list = {};
+            }
+            return this._list;
+        }
         static create(x, y, width, height) {
             if (x == null) {
                 x = 0;
@@ -155,7 +173,7 @@ window.zs.fgui = window.zs.fgui || {};
             panel.height = height;
             return win;
         }
-        attach(ctr, index) {
+        attach(ctr, index, key) {
             this.lastBase = null;
             if (ctr == null || this.window == null) {
                 return this;
@@ -172,6 +190,8 @@ window.zs.fgui = window.zs.fgui || {};
                 view.opaque = false;
             }
             this.lastBase = new ctr(view);
+            key && (this.listByKeys[key] = this.lastBase);
+            this.list[key] = this.lastBase;
             return this;
         }
         detach(ctr) {
@@ -182,11 +202,13 @@ window.zs.fgui = window.zs.fgui || {};
                 ctr.dispose();
                 this.window.contentPane.removeChild(ctr.view, true);
             }
+            this.list[ctr.id] && (delete this.list[ctr.id]);
             return this;
         }
-        setBase(ctr) {
+        setBase(ctr, key) {
             if (ctr && ctr.view) {
                 this.lastBase = ctr;
+                key && (this.listByKeys[key] = ctr);
             } else {
                 this.lastBase = null;
             }
@@ -194,6 +216,25 @@ window.zs.fgui = window.zs.fgui || {};
         }
         getBase() {
             return this.lastBase;
+        }
+        getBaseByKey(key) {
+            let ctr = this.listByKeys[key];
+            if (!ctr || ctr.disposed) { return null; }
+            return ctr;
+        }
+        getBaseByType(type) {
+            let result = [];
+            for (let key in this.list) {
+                let ctr = this.list[key];
+                if (!ctr || ctr.disposed) {
+                    delete this.list[key];
+                    continue;
+                }
+                if (ctr instanceof type) {
+                    result.push(ctr);
+                }
+            }
+            return result;
         }
         clearBase() {
             this.lastBase = null;
@@ -492,7 +533,7 @@ window.zs.fgui = window.zs.fgui || {};
         applyConfig(config) {
             let type = configs.bases[config.type];
             if (type == null) { return this; }
-            this.attach(type);
+            this.attach(type, null, config.key);
             if (config.window) {
                 config.window.width != null && config.window.width != undefined && (this.setWidth(config.window.width));
                 config.window.height != null && config.window.height != undefined && (this.setHeight(config.window.height));
