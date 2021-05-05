@@ -82,7 +82,7 @@
                     "marginright": 10,
                     "background": [
                         "export/export",
-                        "bottom_icon_background"
+                        "icon_background"
                     ]
                 }
             },
@@ -134,7 +134,7 @@
         },
         "exporter": [
             {
-                "type": "export_background",
+                "type": "export_graph",
                 "window": {
                     "align": "topleft"
                 }

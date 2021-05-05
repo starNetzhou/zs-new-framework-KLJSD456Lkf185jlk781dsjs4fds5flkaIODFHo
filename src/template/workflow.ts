@@ -82,7 +82,7 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
         //
-        zs.fgui.configs.registeBase(workflow.special,exporter_Special);
+        zs.fgui.configs.registeBase(workflow.special, exporter_Special);
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
@@ -95,14 +95,16 @@ export default class workflow extends zs.workflow {
             exporter_friend_challenge.nickList = res;
         });
 
-        zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_1", Laya.Handler.create(this, this.onStartFull1));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_2", Laya.Handler.create(this, this.onStartFull2));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_BEGIN, Laya.Handler.create(this, () => { zs.core.workflow.next(); }));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".VIDEO", Laya.Handler.create(this, this.onGameVideo));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".EGG", Laya.Handler.create(this, this.onCommonEgg));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_1", Laya.Handler.create(this, this.onOverFull1));
-        zs.core.onWorkflowLater(zs.workflow.PRODUCT_PLAY_END + ".SETTLE", Laya.Handler.create(this, this.onGameSettle));
-        zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_2", Laya.Handler.create(this, this.onOverFull2));
+        zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_1", Laya.Handler.create(this, () => { zs.core.workflow.childNext(); }));
+        zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_2", Laya.Handler.create(this, () => { zs.core.workflow.childNext(); }));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_1", Laya.Handler.create(this, this.onStartFull1));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_START + ".FULL_2", Laya.Handler.create(this, this.onStartFull2));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_BEGIN, Laya.Handler.create(this, () => { zs.core.workflow.next(); }));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".VIDEO", Laya.Handler.create(this, this.onGameVideo));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_HOME_PLAY + ".EGG", Laya.Handler.create(this, this.onCommonEgg));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_1", Laya.Handler.create(this, this.onOverFull1));
+        // zs.core.onWorkflowLater(zs.workflow.PRODUCT_PLAY_END + ".SETTLE", Laya.Handler.create(this, this.onGameSettle));
+        // zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END + ".FULL_2", Laya.Handler.create(this, this.onOverFull2));
     }
 
     onStartFull1() {

@@ -2882,6 +2882,9 @@ declare module zs.exporter {
          */
         setClickHandler(clickHandler: Laya.Handler): card;
     }
+    class graph extends zs.fgui.base {
+
+    }
     class full extends zs.fgui.base {
         setMistaken(): full;
         setClickContinue(handler: Laya.Handler): full;

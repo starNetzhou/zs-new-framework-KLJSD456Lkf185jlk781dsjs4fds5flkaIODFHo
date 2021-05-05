@@ -19,6 +19,8 @@ export default class exporter_fake_msg extends zs.fgui.baseGeneric<FGUI_fake_msg
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_fake_msg) {
+            component.pivotX = 0;
+            component.pivotY = 0;
             this.desc = component.desc;
             component.onClick(this, this.onMsgClick);
         }

@@ -1434,39 +1434,160 @@ window.zs.exporter = window.zs.exporter || {};
         }
     }
 
+    class loader extends zs.fgui.base {
+        constructor(component) {
+            super(component);
+            component.width = zs.configs.gameCfg.designWidth;
+            component.height = zs.configs.gameCfg.designHeight;
+            let loaderInst = new fairygui.GLoader();
+            loaderInst.alpha = 1;
+            loaderInst.x = 0;
+            loaderInst.y = 0;
+            loaderInst.width = component.width;
+            loaderInst.height = component.height;
+            loaderInst.autoSize = false;
+            loaderInst.fill = fairygui.LoaderFillType.ScaleFree;
+            component.addChild(loaderInst);
+            this.loader = loaderInst;
+        }
+        get url() {
+            return this.loader ? this.loader.url : null;
+        }
+        set url(value) {
+            if (this.loader) {
+                if (Array.isArray(value) && value.length > 1) {
+                    zs.fgui.loadPack(value[0]).then((res) => {
+                        this.loader.url = zs.ui.readURL(res, value[1]);
+                    });
+                } else {
+                    this.loader.url = value;
+                }
+            }
+        }
+        get alpha() {
+            return this.loader ? this.loader.alpha : 0;
+        }
+        set alpha(value) {
+            this.loader && (this.loader.alpha = value);
+        }
+        get width() {
+            return this.loader ? this.loader.width : 0;
+        }
+        set width(value) {
+            this.loader && (this.loader.width = value);
+        }
+        get height() {
+            return this.loader ? this.loader.height : 0;
+        }
+        set height(value) {
+            this.loader && (this.loader.height = value);
+        }
+        get x() {
+            return this.loader ? this.loader.x : 0;
+        }
+        set x(value) {
+            this.loader && (this.loader.x = value);
+        }
+        get y() {
+            return this.loader ? this.loader.y : 0;
+        }
+        set y(value) {
+            this.loader && (this.loader.y = value);
+        }
+        get fill() {
+            if (!this.loader) { return null; }
+            let type = "free";
+            switch (this.loader.fill) {
+                case fairygui.LoaderFillType.None:
+                    type = "none";
+                    break;
+                case fairygui.LoaderFillType.Scale:
+                    type = "scale";
+                    break;
+                case fairygui.LoaderFillType.ScaleMatchHeight:
+                    type = "height";
+                    break;
+                case fairygui.LoaderFillType.ScaleMatchWidth:
+                    type = "width";
+                    break;
+                case fairygui.LoaderFillType.ScaleFree:
+                    type = "free";
+                    break;
+                case fairygui.LoaderFillType.ScaleNoBorder:
+                    type = "noborder";
+                    break;
+            }
+            return type;
+        }
+        set fill(value) {
+            if (!this.loader) { return; }
+            let type = fairygui.LoaderFillType.ScaleFree;
+            switch (value) {
+                case "scale":
+                    type = fairygui.LoaderFillType.Scale;
+                    break;
+                case "height":
+                    type = fairygui.LoaderFillType.ScaleMatchHeight;
+                    break;
+                case "width":
+                    type = fairygui.LoaderFillType.ScaleMatchWidth;
+                    break;
+                case "free":
+                    type = fairygui.LoaderFillType.ScaleFree;
+                    break;
+                case "noborder":
+                    type = fairygui.LoaderFillType.ScaleNoBorder;
+                    break;
+                case "none":
+                    type = fairygui.LoaderFillType.None;
+                    break;
+            }
+            this.loader.fill = type;
+        }
+        applyConfig(config) {
+            if (config) {
+                config.alpha && (this.alpha = config.alpha);
+                config.url && (this.url = config.url);
+                config.width && (this.width = config.width);
+                config.height && (this.height = config.height);
+                config.x && (this.x = config.x);
+                config.y && (this.y = config.y);
+                config.fill && (this.fill = config.fill);
+            }
+        }
+    }
+
     class background extends zs.fgui.base {
         constructor(component) {
             super(component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
-            let graphBack = new fairygui.GGraph();
-            graphBack.drawRect(0, '#000000', '#000000');
-            graphBack.alpha = 0.5;
-            component.addChild(graphBack);
-            graphBack.x = 0;
-            graphBack.y = 0;
-            graphBack.width = component.width;
-            graphBack.height = component.height;
-            graphBack.addRelation(component, fairygui.RelationType.Width);
-            graphBack.addRelation(component, fairygui.RelationType.Height);
-            this.background = graphBack;
+            let graphInst = new fairygui.GGraph();
+            this.graph = graphInst;
+            graphInst.alpha = 0.5;
+            graphInst.x = 0;
+            graphInst.y = 0;
+            graphInst.width = component.width;
+            graphInst.height = component.height;
+            this.graph.drawRect(0, '#000000', '#000000');
+            component.addChild(graphInst);
         }
         get color() {
-            return this.background ? this.background.color : "";
+            return this.graph ? this.graph.color : "";
         }
         set color(value) {
-            this.background && (this.background.color = value);
+            this.graph && (this.graph.color = value);
         }
         get alpha() {
-            return this.background ? this.background.alpha : 0;
+            return this.graph ? this.graph.alpha : 0;
         }
         set alpha(value) {
-            this.background && (this.background.alpha = value);
+            this.graph && (this.graph.alpha = value);
         }
         applyConfig(config) {
             if (config) {
-                config.color && (color = config.color);
-                config.alpha && (alpha = config.alpha);
+                config.color && (this.color = config.color);
+                config.alpha && (this.alpha = config.alpha);
             }
         }
     }
@@ -1508,6 +1629,7 @@ window.zs.exporter = window.zs.exporter || {};
     exports.dataMgr = dataMgr;
     exports.list = list;
     exports.card = card;
+    exports.loader = loader;
     exports.background = background;
     exports.full = full;
     exports.AdaptType = AdaptType;
