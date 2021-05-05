@@ -172,7 +172,10 @@
         "event": "event_full_2"
     },
     "PRODUCT_PLAY_END.SETTLE": {
-        "switch": ["!zs_skip_settle", "zs_version"],
+        "switch": [
+            "!zs_skip_settle",
+            "zs_version"
+        ],
         "banner": {
             "delay": true
         },
