@@ -296,6 +296,26 @@ declare module zs {
          */
         setFSM(key: string, fsm: zs.fsm);
         /**
+         * 注册调用事件
+         * @param key 关键词
+         * @param caller 调用者
+         * @param func 调用函数
+         * @param args 调用参数列表
+         */
+        registeEvent(key: string, caller: any, func: Function, ...args: any[]);
+        /**
+         * 调用注册事件
+         * @param key 关键词
+         * @param args 调用参数列表（将覆盖默认参数）
+         */
+        callEvent(key: string, ...args: any[]);
+        /**
+         * 调用注册事件
+         * @param key 关键词
+         * @param args 调用参数列表（将覆盖默认参数）
+         */
+        applyEvent(key: string, args?: any[]);
+        /**
          * 注册工作流监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名
          * @param handler 监听事件
@@ -2882,15 +2902,186 @@ declare module zs.exporter {
          */
         setClickHandler(clickHandler: Laya.Handler): card;
     }
-    class graph extends zs.fgui.base {
-
+    /**
+     * 导出加载器
+     */
+    class loader extends zs.fgui.base {
+        /**
+         * 获取图片URL
+         */
+        get url(): string | string[];
+        /**
+         * 设置图片URL
+         */
+        set url(value: string | string[]);
+        /**
+         * 获取透明度
+         */
+        get alpha(): number;
+        /**
+         * 设置透明度
+         */
+        set alpha(value: number);
+        /**
+         * 获取宽度
+         */
+        get width(): number;
+        /**
+         * 设置宽度
+         */
+        set width(value: number);
+        /**
+         * 获取高度
+         */
+        get height(): number;
+        /**
+         * 设置高度 
+         */
+        set height(value: number);
+        /**
+         * 获取X位置
+         */
+        get x(): number;
+        /**
+         * 设置X位置
+         */
+        set x(value: number);
+        /**
+         * 获取Y位置
+         */
+        get y(): number;
+        /**
+         * 设置Y位置
+         */
+        set y(value: number);
+        /**
+         * 获取适配模式
+         * scale 整体适配
+         * height 适配高度
+         * width 适配宽度
+         * free 自由缩放
+         * noborder 无边框
+         * none 无缩放
+         */
+        get fill(): string;
+        /**
+         * 设置适配模式
+         * scale 整体适配
+         * height 适配高度
+         * width 适配宽度
+         * free 自由缩放
+         * noborder 无边框
+         * none 无缩放
+         */
+        set fill(value: string);
     }
+    /**
+     * 导出背景
+     */
+    class background extends zs.fgui.base {
+        /**
+         * 获取背景颜色（16进制，如 #000000）
+         */
+        get color(): string;
+        /**
+         * 设置背景颜色（16进制，如 #000000）
+         */
+        set color(value: string);
+        /**
+         * 设置透明度
+         */
+        get alpha(): number;
+        /**
+         * 获取透明度
+         */
+        set alpha(value: number);
+    }
+    class button extends zs.fgui.base {
+        /**
+         * 获取底图URL
+         */
+        get url(): string | string[];
+        /**
+         * 设置底图URL
+         */
+        set url(value: string | string[]);
+        /**
+         * 获取底图透明度
+         */
+        get alpha(): number;
+        /**
+         * 设置底图透明度
+         */
+        set alpha(value: number);
+        /**
+         * 获取宽度
+         */
+        get width(): number;
+        /**
+         * 设置宽度
+         */
+        set width(value: number);
+        /**
+         * 获取高度
+         */
+        get height(): number;
+        /**
+         * 设置高度
+         */
+        set height(value: number);
+        /**
+         * 获取字体
+         */
+        get font(): string;
+        /**
+         * 设置字体
+         */
+        set font(value: string);
+        /**
+         * 获取字体大小
+         */
+        get fontsize(): number;
+        /**
+         * 设置字体大小
+         */
+        set fontsize(value: number);
+        /**
+         * 获取按钮文本
+         */
+        get text(): string;
+        /**
+         * 设置按钮文本
+         */
+        set text(value: string);
+        /**
+         * 获取字体颜色（16进制，如 #000000）
+         */
+        get fontcolor(): string;
+        /**
+         * 设置字体颜色（16进制，如 #000000）
+         */
+        set fontcolor(value: string);
+    }
+    /**
+     * 全屏导出基类
+     */
     class full extends zs.fgui.base {
+        /**
+         * 设置误触
+         */
         setMistaken(): full;
+        /**
+         * 设置点击继续事件
+         * @param handler 事件
+         */
         setClickContinue(handler: Laya.Handler): full;
+        /**
+         * 进入导出跳转
+         */
         enterJumpExport(): full;
-        apply(): full;
-
+        /**
+         * 点击继续事件
+         */
         onClickContinue();
     }
 }

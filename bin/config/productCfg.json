@@ -1,31 +1,28 @@
 {
     "PRODUCT_START": {
         "states": [
+            "READY",
             "FULL_1",
             "FULL_2"
         ]
     },
-    "PRODUCT_START.FULL_1": {
+    "PRODUCT_START.READY": {
         "exporter": [
             {
-                "type": "special",
+                "type": "export_button",
                 "window": {
                     "align": "bottom",
-                    "alignoffsety": -20
+                    "alignoffsety": -100
                 },
                 "base": {
-                    "event": "FULL_1",
-                    "offsetY": 400,
-                    "childNext": true,
-                    "style": {
-                        "icon": "",
-                        "title": "我就试试",
-                        "size": [],
-                        "scale": [
-                            0.9,
-                            0.9
-                        ]
-                    }
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_childnext",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
                 }
             }
         ]

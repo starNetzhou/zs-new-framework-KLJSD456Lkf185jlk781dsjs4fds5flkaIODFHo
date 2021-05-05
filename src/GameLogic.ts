@@ -47,11 +47,6 @@ export default class GameLogic extends Laya.Script {
                 // 开始游戏，执行后将关闭加载界面
                 zs.core.readyFinish();
             });
-
-            zs.core.readyFinish();
-
-            
-
         });
 
         // 监听工作流

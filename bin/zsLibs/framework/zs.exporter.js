@@ -1150,12 +1150,6 @@ window.zs.exporter = window.zs.exporter || {};
                     realWidth = Math.min(realWidth, this._cellWidth);
                 }
                 item.width = realWidth;
-                // if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Horizontal) {
-                //     console.log("itemrender 1");
-                //     let scale = realWidth / item.width;
-                //     item.width = realWidth;
-                //     item.height *= scale;
-                // }
             }
             if (this._cellHeight > 0 || (this._adaptScale && item.height > this._effectHeight)) {
                 let realHeight = this._adaptScale ? this._effectHeight : item.height;
@@ -1163,11 +1157,6 @@ window.zs.exporter = window.zs.exporter || {};
                     realHeight = Math.min(realHeight, this._cellHeight);
                 }
                 item.height = realHeight;
-                // if (this.keepRatio == AdaptType.None || this.keepRatio == AdaptType.Vertical) {
-                //     let scale = realHeight / item.height;
-                //     item.height = realHeight;
-                //     item.width *= scale;
-                // }
             }
             if (this.keepRatio == AdaptType.Horizontal) {
                 item.height = item.width * (item.initHeight / item.initWidth);
@@ -1554,6 +1543,7 @@ window.zs.exporter = window.zs.exporter || {};
                 config.y && (this.y = config.y);
                 config.fill && (this.fill = config.fill);
             }
+            return this;
         }
     }
 
@@ -1589,6 +1579,130 @@ window.zs.exporter = window.zs.exporter || {};
                 config.color && (this.color = config.color);
                 config.alpha && (this.alpha = config.alpha);
             }
+            return this;
+        }
+    }
+
+    class button extends zs.fgui.base {
+        static make() {
+            return new fairygui.GButton();
+        }
+        constructor(component) {
+            super(component);
+            component.width = 300;
+            component.height = 80;
+            component._downEffect = 2;
+            component._downEffectValue = 0.9;
+            component.on(Laya.Event.MOUSE_DOWN, component, component.__mousedown);
+            component.setPivot(0.5, 0.5, true);
+            component.onClick(this, this.onClicked);
+            let icon = new fairygui.GLoader();
+            icon.x = 0;
+            icon.y = 0;
+            icon.width = component.width;
+            icon.height = component.height;
+            icon.addRelation(component, fairygui.RelationType.Width);
+            icon.addRelation(component, fairygui.RelationType.Height);
+            icon.alpha = 1;
+            icon.autoSize = false;
+            icon.fill = fairygui.LoaderFillType.ScaleFree;
+            component.addChild(icon);
+            this.icon = icon;
+            this.url = [zs.fgui.configs.pack_basic, "msg_background"];
+
+            let title = new fairygui.GBasicTextField();
+            title.autoSize = fairygui.AutoSizeType.None;
+            title.x = 0;
+            title.y = 0;
+            title.width = component.width;
+            title.height = component.height;
+            title.addRelation(component, fairygui.RelationType.Width);
+            title.addRelation(component, fairygui.RelationType.Height);
+            title.singleLine = true;
+            title.fontSize = 36;
+            title.align = "center";
+            title.valign = "middle";
+            title.color = "#000000";
+            component.addChild(title);
+            this.title = title;
+        }
+        get url() { return this.icon ? this.icon.url : null; }
+        set url(value) {
+            if (this.icon) {
+                if (Array.isArray(value) && value.length > 1) {
+                    zs.fgui.loadPack(value[0]).then((res) => {
+                        this.icon.url = zs.ui.readURL(res, value[1]);
+                    });
+                } else {
+                    this.icon.url = value;
+                }
+            }
+        }
+        get alpha() { return this.icon ? this.icon.alpha : null; }
+        set alpha(value) { this.icon && (this.icon.alpha = value); }
+        get width() { return this.view.width; }
+        set width(value) { this.view.width = value; }
+        get height() { return this.view.height; }
+        set height(value) { this.view.height = value; }
+        get font() { return this.title ? this.title.font : null; }
+        set font(value) { this.title && (this.title.font = value); }
+        get fontsize() { return this.title ? this.title.fontSize : 0; }
+        set fontsize(value) { this.title && (this.title.fontSize = value); }
+        get text() { return this.title ? this.title.text : null; }
+        set text(value) { this.title && (this.title.text = value); }
+        get fontcolor() { return this.title ? this.title.color : null; }
+        set fontcolor(value) { this.title && (this.title.color = value); }
+        onClicked() {
+            this.view.touchable = false;
+            if (this.offsetx || this.offsety) {
+                let targetX = this.view.x + (this.offsetx || 0);
+                let targetY = this.view.y + (this.offsety || 0);
+                Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
+                    this.view.touchable = true;
+                }), Number(zs.product.get("zs_button_delay_time")));
+                this.offsetx = null;
+                this.offsety = null;
+            } else if (this.clickignore) {
+                setTimeout(() => {
+                    this.view.touchable = true;
+                }, Number(zs.product.get("zs_button_delay_time")));
+                this.clickignore = null;
+            } else {
+                if (this.clickalways) {
+                    this.view.touchable = true;
+                }
+                if (this.event && zs.core.workflow) {
+                    if (this.eventparams) {
+                        if (Array.isArray(this.eventparams)) {
+                            zs.core.workflow.applyEvent(this.event, this.eventparams);
+                        } else {
+                            zs.core.workflow.callEvent(this.event, this.eventparams);
+                        }
+                    } else {
+                        zs.core.workflow.callEvent(this.event);
+                    }
+                }
+            }
+        }
+        applyConfig(config) {
+            if (config) {
+                config.url && (this.url = config.url);
+                config.alpha && (this.alpha = config.alpha);
+                config.width && (this.width = config.width);
+                config.height && (this.height = config.height);
+                config.font && (this.font = config.font);
+                config.fontsize && (this.fontsize = config.fontsize);
+                config.fontcolor && (this.fontcolor = config.fontcolor);
+                config.text && (this.text = config.text);
+                config.offsetx && (this.offsetx = config.offsetx);
+                config.offsety && (this.offsety = config.offsety);
+                config.offsettime && (this.offsettime = config.offsettime);
+                config.clickignore && (this.clickignore = config.clickignore);
+                config.clickalways && (this.clickalways = config.clickalways);
+                config.event && (this.event = config.event);
+                config.eventparams && (this.eventparams = config.eventparams);
+            }
+            return this;
         }
     }
 
@@ -1631,6 +1745,7 @@ window.zs.exporter = window.zs.exporter || {};
     exports.card = card;
     exports.loader = loader;
     exports.background = background;
+    exports.button = button;
     exports.full = full;
     exports.AdaptType = AdaptType;
 }(window.zs.exporter = window.zs.exporter || {}));

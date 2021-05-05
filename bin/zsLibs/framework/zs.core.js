@@ -40,6 +40,12 @@ window.zs = window.zs || {};
 
             return null;
         }
+        get eventList() {
+            if (this._eventList == null) {
+                this._eventList = {};
+            }
+            return this._eventList;
+        }
         constructor() {
             this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
@@ -55,6 +61,9 @@ window.zs = window.zs || {};
                 .registe(zs.workflow.GAME_END, zs.workflow.PRODUCT_FINISH)
                 .registe(zs.workflow.PRODUCT_FINISH, zs.workflow.PRODUCT_BEGIN)
                 .setDefault(zs.workflow.PRODUCT_START);
+
+            this.registeEvent(workflow.eventNext, this, (target) => { this.next(target); });
+            this.registeEvent(workflow.eventChildNext, this, (target) => { this.childNext(target); });
         }
         start() {
             if (this.fsm) {
@@ -65,11 +74,35 @@ window.zs = window.zs || {};
             zs.fgui.configs.registeBase(workflow.exporterCard, zs.exporter.card);
             zs.fgui.configs.registeBase(workflow.exporterBackground, zs.exporter.background);
             zs.fgui.configs.registeBase(workflow.exporterLoader, zs.exporter.loader);
+            zs.fgui.configs.registeBase(workflow.exporterButton, zs.exporter.button);
             core.addAppShow(Laya.Handler.create(this, zs.platform.sync.clearDelayBanner, null, false));
             this.fsm.init();
         }
         setFSM(key, fsm) {
             this.fsmList[key] = fsm;
+        }
+        registeEvent(key, caller, func, ...args) {
+            this.eventList[key] = {
+                caller: caller,
+                func: func,
+                args: args
+            }
+        }
+        callEvent(key, ...args) {
+            let event = this.eventList[key];
+            if (args && args.length > 0) {
+                event && (event.func.apply(event.caller, args));
+            } else {
+                event && (event.func.apply(event.caller, event.args));
+            }
+        }
+        applyEvent(key, args) {
+            let event = this.eventList[key];
+            if (args && args.length > 0) {
+                event && (event.func.apply(event.caller, args));
+            } else {
+                event && (event.func.apply(event.caller, event.args));
+            }
         }
         registeChildFSM() {
             let config = zs.configs.productCfg;
@@ -412,7 +445,7 @@ window.zs = window.zs || {};
                 case 1:
                     if (this.fsm != null) {
                         let lastState = this.fsm.current;
-                        if (this.nextTarget) {
+                        if (target) {
                             if (!this.fsm.runTransition(target)) {
                                 zs.log.error("无法执行从 " + lastState + " 到 " + target + " 的工作流，请检查是否完整注册流程!", "Core");
                             }
@@ -654,6 +687,10 @@ window.zs = window.zs || {};
     workflow.exporterCard = "export_card";
     workflow.exporterBackground = "export_background";
     workflow.exporterLoader = "export_loader";
+    workflow.exporterButton = "export_button";
+
+    workflow.eventNext = "event_next";
+    workflow.eventChildNext = "event_childnext";
 
     workflow.PRODUCT_START = "PRODUCT_START";
     workflow.PRODUCT_BEGIN = "PRODUCT_BEGIN";
@@ -786,7 +823,8 @@ window.zs = window.zs || {};
                 this.workflow = new zs.workflow();
             }
             if (this.workflow.exporterPack) {
-                await zs.fgui.loadPack(this.workflow.exporterPack);
+                let pack = await zs.fgui.loadPack(this.workflow.exporterPack);
+                console.log(pack);
             }
             this.workflow.registe();
             this.workflow.registeChildFSM();
