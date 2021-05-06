@@ -3,7 +3,7 @@ window.zs.platform = window.zs.platform || {};
 (function (exports) {
     const proxy = window["platform"];
     const syncList = ['share', 'userInfoHide', 'userInfoShow', 'userInfoDestroy', 'initVideo', 'isVideoEnable',
-        'initInsert', 'loadInsert', 'createBanner', 'initBanner', 'checkBanner', 'clearDelayBanner', 'showBanner',
+        'initInsert', 'loadInsert', 'hasBanner', 'createBanner', 'initBanner', 'checkBanner', 'clearDelayBanner', 'showBanner',
         'updateBanner', 'hideBanner', 'recorderStart', 'recorderStop', 'recorderPause',
         'recorderResume', 'recorderCreate', 'recorderHide', 'canShareRecorder', 'statusBarHeight',
         'screenWidth', 'screenHeight', 'vibrate', 'isNetValid', 'addEventShow', 'addEventHide', 'recorderClip',

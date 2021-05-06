@@ -46,6 +46,12 @@ window.zs = window.zs || {};
             }
             return this._eventList;
         }
+        get checkEventList() {
+            if (this._checkEventList == null) {
+                this._checkEventList = {};
+            }
+            return this._checkEventList;
+        }
         constructor() {
             this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
@@ -61,7 +67,6 @@ window.zs = window.zs || {};
                 .registe(zs.workflow.GAME_END, zs.workflow.PRODUCT_FINISH)
                 .registe(zs.workflow.PRODUCT_FINISH, zs.workflow.PRODUCT_BEGIN)
                 .setDefault(zs.workflow.PRODUCT_START);
-
             this.registeEvent(workflow.eventNext, this, (target) => { this.next(target); });
             this.registeEvent(workflow.eventChildNext, this, (target) => { this.childNext(target); });
         }
@@ -83,6 +88,13 @@ window.zs = window.zs || {};
         }
         registeEvent(key, caller, func, ...args) {
             this.eventList[key] = {
+                caller: caller,
+                func: func,
+                args: args
+            }
+        }
+        registeCheckEvent(key, caller, func, ...args) {
+            this.checkEventList[key] = {
                 caller: caller,
                 func: func,
                 args: args
@@ -521,39 +533,78 @@ window.zs = window.zs || {};
             this.lockStep = false;
             this.step();
         }
-        checkSwitch(config) {
+        checkSwitch(config, checks) {
             let isPassed = true;
-            if (Array.isArray(config)) {
-                for (let i = 0, n = config.length; i < n; i++) {
-                    let sw = config[i];
-                    if (!sw || sw.length <= 0) { continue; }
-                    if (sw[0] == '!' || sw[0] == '！') {
-                        if (sw.length > 1) {
-                            sw = sw.slice(1, sw.length);
-                            if (zs.product.get(sw)) {
+            if (config) {
+                if (Array.isArray(config)) {
+                    for (let i = 0, n = config.length; i < n; i++) {
+                        let sw = config[i];
+                        if (!sw || sw.length <= 0) { continue; }
+                        if (sw[0] == '!' || sw[0] == '！') {
+                            if (sw.length > 1) {
+                                sw = sw.slice(1, sw.length);
+                                if (zs.product.get(sw)) {
+                                    isPassed = false;
+                                    break;
+                                }
+                            } else {
                                 isPassed = false;
                                 break;
                             }
-                        } else {
+                        } else if (!zs.product.get(sw)) {
                             isPassed = false;
                             break;
                         }
-                    } else if (!zs.product.get(sw)) {
-                        isPassed = false;
-                        break;
                     }
-                }
-            } else {
-                let sw = config;
-                if (sw && sw.length > 0) {
-                    if (sw[0] == '!' || sw[0] == '！') {
-                        if (sw.length > 1) {
-                            sw = sw.slice(1, sw.length);
-                            if (zs.product.get(sw)) { isPassed = false; }
-                        } else {
+                } else {
+                    let sw = config;
+                    if (sw && sw.length > 0) {
+                        if (sw[0] == '!' || sw[0] == '！') {
+                            if (sw.length > 1) {
+                                sw = sw.slice(1, sw.length);
+                                if (zs.product.get(sw)) { isPassed = false; }
+                            } else {
+                                isPassed = false;
+                            }
+                        } else if (!zs.product.get(sw)) {
                             isPassed = false;
                         }
-                    } else if (!zs.product.get(sw)) {
+                    }
+                }
+            }
+            if (!isPassed) { return false; }
+            if (checks) {
+                if (Array.isArray(checks)) {
+                    for (let i = 0, n = checks.length; i < n; i++) {
+                        let check = checks[i];
+                        let evt = null;
+                        let args = null;
+                        if (Array.isArray(check)) {
+                            let lenCheck = check.length;
+                            if (lenCheck <= 0) { continue; }
+                            evt = this.checkEventList[check[0]];
+                            if (lenCheck > 1) {
+                                args = check.slice(1, lenCheck);
+                            }
+                        } else {
+                            evt = this.checkEventList[check];
+                        }
+                        if (evt && evt.func) {
+                            let result = true;
+                            if (args && args.length > 0) {
+                                result = evt.func.apply(evt.caller, args);
+                            } else {
+                                result = evt.func.apply(evt.caller.evt.args);
+                            }
+                            if (!result) {
+                                isPassed = false;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    let evt = this.checkEventList[checks];
+                    if (evt && !evt.func.apply(evt.caller, evt.args)) {
                         isPassed = false;
                     }
                 }
@@ -565,8 +616,8 @@ window.zs = window.zs || {};
             zs.td.justTrack(zs.td.workflowKey + current, zs.td.workflowDesc + current);
             let productData = zs.configs.productCfg[current];
             let isSkip = false;
-            if (productData && productData.switch) {
-                isSkip = !this.checkSwitch(productData.switch);
+            if (productData && (productData.switch || productData.check)) {
+                isSkip = !this.checkSwitch(productData.switch, productData.check);
             }
             let childFSM = this.fsmList[current];
             if (isSkip && !childFSM) {
@@ -657,8 +708,8 @@ window.zs = window.zs || {};
             zs.td.justTrack(zs.td.workflowKey + childKey, zs.td.workflowDesc + childKey);
             let productData = zs.configs.productCfg[childKey];
             let isSkip = false;
-            if (productData && productData.switch) {
-                isSkip = !this.checkSwitch(productData.switch);
+            if (productData && (productData.switch || productData.check)) {
+                isSkip = !this.checkSwitch(productData.switch, productData.check);
             }
             if (isSkip) {
                 this.childNext();
@@ -797,7 +848,7 @@ window.zs = window.zs || {};
             this.onConfigInit && this.onConfigInit.run();
             zs.product.init(productDef);
             this._readyStart = false;
-            zs.ui.uiScene.init();
+            zs.ui.UIScene.init();
             zs.fgui.init();
             let entry = this.entry ? this.entry : zs.base.entry;
             if (this.loadingPage) {
@@ -1085,9 +1136,9 @@ window.zs = window.zs || {};
         }
         static checkPanelSort() {
             let sortIndex = 1
-            if (zs.ui.uiScene.scene) {
-                if (Laya.stage.getChildIndex(zs.ui.uiScene.scene) < Laya.stage.numChildren - sortIndex) {
-                    Laya.stage.setChildIndex(zs.ui.uiScene.scene, Laya.stage.numChildren - sortIndex);
+            if (zs.ui.UIScene.scene) {
+                if (Laya.stage.getChildIndex(zs.ui.UIScene.scene) < Laya.stage.numChildren - sortIndex) {
+                    Laya.stage.setChildIndex(zs.ui.UIScene.scene, Laya.stage.numChildren - sortIndex);
                 }
                 sortIndex++;
             }

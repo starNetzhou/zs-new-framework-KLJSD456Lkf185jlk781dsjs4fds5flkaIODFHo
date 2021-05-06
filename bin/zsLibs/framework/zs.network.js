@@ -486,7 +486,7 @@ window.zs = window.zs || {};
             if (key) {
                 storageKey += '>>' + key;
             }
-            let localData = Laya.LocalStorage.getItem('network_' + storageKey);
+            let localData = zs.utils.getItem('network_' + storageKey);
             if (localData) {
                 return JSON.parse(localData);
             }

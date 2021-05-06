@@ -14,9 +14,8 @@ import exporter_fake_msg from "./exporter_fake_msg";
 import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
-import ad_egg from "./ad_egg";
-import exporter_btn_confirm from "./exporter_btn_confirm";
 import exporter_Special from "./exporter_Special";
+import knock_egg from "./knock_egg";
 
 export default class workflow extends zs.workflow {
 
@@ -48,6 +47,8 @@ export default class workflow extends zs.workflow {
     static readonly event_fake_exit = "event_fake_exit";
     static readonly event_fake_msg = "event_fake_msg";
 
+    static readonly check_egg = "check_egg";
+
     static readonly special = "special";
 
     exporterPack = "export/export";
@@ -58,8 +59,7 @@ export default class workflow extends zs.workflow {
     _challengeExport: exporter_friend_challenge;
     _fakeMsg: exporter_fake_msg;
     _fakeExit: exporter_fake_exit;
-    _commonEgg: ad_egg;
-    _gameEgg: ad_egg;
+    _commonEgg: knock_egg;
 
     static showPanel(type?: typeof zs.fgui.base, fit?: zs.fgui.FitType): zs.fgui.window {
         return zs.fgui.manager.show(true, type, "Workflow_Export", fit);
@@ -70,7 +70,6 @@ export default class workflow extends zs.workflow {
     }
 
     registe() {
-
         super.registe();
 
         // 绑定工作流FGUI组件
@@ -91,9 +90,11 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1, true);
         zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2, true);
         zs.core.workflow.registeEvent(workflow.event_start_video, this, this.onGameVideo);
-        zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.onCommonEgg);
+        zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
+
+        zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return value; }, true);
 
         //
         zs.fgui.configs.registeBase(workflow.special, exporter_Special);
@@ -132,62 +133,20 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    async checkEgg(bCommon) {
-        return new Promise(async (resolve, reject) => {
-            var curGameCount = 1;
-            await zs.network.download('LevelInfo').then((res) => {
-                // console.error("level = ", res)
-                curGameCount = res;
-            });
-            console.log("--------------", curGameCount)
-            var zs_ready_click_num = ProductKey.zs_ready_click_num;
-            var zs_click_award_num = ProductKey.zs_click_award_num;
-            var zs_click_award_since = ProductKey.zs_click_award_since;
-            var isNew = false;
-            var appId = zs.core.appId;
-            if (isNew && zs_click_award_since && zs_click_award_since > 0) {
-                let gameNum = Laya.LocalStorage.getItem(appId + "day_game_num");
-                console.debug("当前局数" + gameNum, zs_click_award_since + "局后开启砸金蛋");
-                if (!gameNum || Number(gameNum) < zs_click_award_since) {
-                    return reject();
-                }
-            }
-            let clicknum = bCommon ? zs_ready_click_num : zs_click_award_num;
-            if (clicknum == null || clicknum.trim() == "") { clicknum = "0"; }
-            let num = JSON.parse(clicknum);
-            if (this.isNumber(num)) {
-                let openNum = bCommon ? Laya.LocalStorage.getItem(appId + "open_ready_num") : ((!bCommon) ? Laya.LocalStorage.getItem(appId + "open_award_num") : 0);
-                console.log("bCommon" + bCommon, "限制:" + num, "已:" + openNum);
-                //如果是-1则是无限制
-                if (num == -1) return resolve(null);
-                if (Number(num) > Number(openNum)) return resolve(null);
-            }
-            console.log("限制:" + num);
-            if (Array.isArray(num) && num.length > 0) {
-                if (num.length == 1 && num[0] == -1)
-                    return resolve(null);
-                var index = num.indexOf(curGameCount);
-                if (index != -1) {
-                    return resolve(null);
-                }
-            }
-            return reject();
-        })
-    }
-
-    async onCommonEgg() {
-        var bEgg;
-        await this.checkEgg(true).then(() => {
-            bEgg = true;
-        }).catch(() => {
-            bEgg = false;
-        })
-        console.log("通用砸金蛋", bEgg)
-        if (bEgg) {
-            this.commonEgg();
-        } else {
-            zs.core.workflow.childNext();
-        }
+    onCommonEgg() {
+        this.commonEgg();
+        // var bEgg;
+        // await this.checkEgg(true).then(() => {
+        //     bEgg = true;
+        // }).catch(() => {
+        //     bEgg = false;
+        // })
+        // console.log("通用砸金蛋", bEgg)
+        // if (bEgg) {
+        //     this.commonEgg();
+        // } else {
+        //     zs.core.workflow.childNext();
+        // }
     }
 
     hideWindowFull() {
@@ -202,29 +161,20 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
-        if (this.windowFull) {
-            this.windowFull
-                .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                    unit.enterJumpExport()
-                        .setMistaken();
-                })
-                .show();
-        } else {
-            this.windowFull = zs.fgui.window.create()
-                .attach(exporter_full_1)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .fit()
-                .block(true)
-                .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                    unit.setClickContinue(
-                        Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { zs.core.workflow.childNext(); }
-                        }, null, false))
-                        .apply();
-                })
-                .show();
-        }
+        this.windowFull = zs.fgui.window.create()
+            .attach(exporter_full_1)
+            .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
+            .fit()
+            .block(true)
+            .update<zs.exporter.full>(zs.exporter.full, (unit) => {
+                unit.setClickContinue(
+                    Laya.Handler.create(this, () => {
+                        this.hideWindowFull();
+                        if (auto) { zs.core.workflow.childNext(); }
+                    }, null, false))
+                    .apply();
+            })
+            .show();
         return this.windowFull;
     }
 
@@ -235,104 +185,60 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
-        if (this.windowFull) {
-            this.windowFull
-                .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                    unit.enterJumpExport()
-                        .setMistaken()
-                })
-                .show();
-        } else {
-            this.windowFull = zs.fgui.window.create()
-                .attach(exporter_full_2)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .fit()
-                .block(true)
-                .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                    unit.setClickContinue(
-                        Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { zs.core.workflow.childNext(); }
-                        }, null, false))
-                        .apply();
-                })
-                .show();
-        }
+        this.windowFull = zs.fgui.window.create()
+            .attach(exporter_full_2)
+            .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
+            .fit()
+            .block(true)
+            .update<zs.exporter.full>(zs.exporter.full, (unit) => {
+                unit.setClickContinue(
+                    Laya.Handler.create(this, () => {
+                        this.hideWindowFull();
+                        if (auto) { zs.core.workflow.childNext(); }
+                    }, null, false))
+                    .apply();
+            })
+            .show();
         return this.windowFull;
     }
 
     commonEgg() {
-        if (this._commonEgg) {
-            this._commonEgg.view.visible = true;
-            this._commonEgg
-                .setCloseCallback(Laya.Handler.create(this, () => {
-                    console.log("关闭砸金蛋")
-                    this.hideCommonEgg();
-                    zs.core.workflow.childNext();
-                    var appId = zs.core.appId;
-                    let num = Laya.LocalStorage.getItem(`${appId}open_ready_num`);
-                    num || (num = '0');
-                    Laya.LocalStorage.setItem(`${appId}open_ready_num`, `${Number(num) + 1}`);
-                }))
-                .apply()
-            workflow.getPanel().setBase(this._commonEgg);
-        } else {
-            workflow.showPanel(ad_egg)
-                .block(true)
-                .update<ad_egg>(ad_egg, (unit) => {
-                    this._commonEgg = unit;
-                    unit
-                        .setCloseCallback(Laya.Handler.create(this, () => {
-                            console.log("关闭砸金蛋")
+        if (this._commonEgg) { return; }
+        // return workflow.showPanel(ad_egg)
+        //     .block(true)
+        //     .update<ad_egg>(ad_egg, (unit) => {
+        //         this._commonEgg = unit;
+        //         unit
+        //             .setCloseCallback(Laya.Handler.create(this, () => {
+        //                 console.log("关闭砸金蛋")
+        //                 this.hideCommonEgg();
+        //                 zs.core.workflow.childNext();
+        //             }))
+        //             .apply()
+        //     })
+        //     .front();
+        return workflow.showPanel(knock_egg)
+            .block(true)
+            .update<knock_egg>(knock_egg, (unit) => {
+                this._commonEgg = unit;
+                unit
+                    .setEventHandler(
+                        Laya.Handler.create(this, () => {
+                            console.log("Get Award");
+                        }),
+                        Laya.Handler.create(this, () => {
                             this.hideCommonEgg();
                             zs.core.workflow.childNext();
-                        }))
-                        .apply()
-                });
-        }
-        return workflow.getPanel().front();
+                        })
+                    )
+                    .apply();
+            })
+            .front();
     }
 
     hideCommonEgg() {
         this._commonEgg && (workflow.getPanel().detach(this._commonEgg));
         this._commonEgg = null;
-    }
-
-    gameEgg() {
-        if (this._gameEgg) {
-            this._gameEgg.view.visible = true;
-            this._gameEgg
-                .setCloseCallback(Laya.Handler.create(this, () => {
-                    console.log("关闭砸金蛋")
-                    this.hideGameEgg();
-                    this.fsm.runNext();
-                }))
-                .apply();
-            workflow.getPanel().setBase(this._gameEgg);
-        } else {
-            workflow.showPanel(ad_egg)
-                .block(true)
-                .update<ad_egg>(ad_egg, (unit) => {
-                    this._gameEgg = unit;
-                    unit
-                        .setCloseCallback(Laya.Handler.create(this, () => {
-                            console.log("关闭砸金蛋")
-                            this.hideGameEgg();
-                            this.fsm.runNext();
-                            var appId = zs.core.appId;
-                            let num = Laya.LocalStorage.getItem(`${appId}open_award_num`);
-                            num || (num = '0');
-                            Laya.LocalStorage.setItem(`${appId}open_award_num`, `${Number(num) + 1}`);
-                        }))
-                        .apply()
-                });
-        }
-        return workflow.getPanel().front();
-    }
-
-    hideGameEgg() {
-        this._gameEgg && (workflow.getPanel().detach(this._gameEgg));
-        this._gameEgg = null;
     }
 
     fakeMsg() {

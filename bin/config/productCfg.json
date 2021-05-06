@@ -55,6 +55,7 @@
         "event": "event_start_video"
     },
     "PRODUCT_HOME_PLAY.EGG": {
+        "check": "check_egg",
         "event": "event_common_egg"
     },
     "GAME_PLAY": {

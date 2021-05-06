@@ -301,6 +301,14 @@ declare module zs {
          */
         registeEvent(key: string, caller: any, func: Function, ...args: any[]);
         /**
+         * 注册检查事件
+         * @param key 关键词
+         * @param caller 调用者
+         * @param func 调用函数
+         * @param args 调用参数列表
+         */
+        registeCheckEvent(key: string, caller: any, func: Function, ...args: any[]);
+        /**
          * 调用注册事件
          * @param key 关键词
          * @param args 调用参数列表（将覆盖默认参数）
@@ -741,7 +749,18 @@ declare module zs {
          * @param jsonObj json对象
          * @param numParse （可选）是否尽量转换为数值
          */
-        static flatKVJson(jsonObj, numParse): any;
+        static flatKVJson(jsonObj: string, numParse: boolean): any;
+        /**
+         * 读取本地存储数据
+         * @param key 关键词
+         */
+        static getItem(key: string): string;
+        /**
+         * 存储本地存储数据
+         * @param key 关键词
+         * @param value 数据
+         */
+        static setItem(key: string, value: string);
     }
 
     /**
@@ -1137,6 +1156,79 @@ declare module zs.ui {
         static createInstance();
     }
     /**
+     * 砸金蛋模板
+     */
+    class EggKnock extends zs.fgui.base {
+        /**
+         * 点击百分比
+         */
+        clickPercent: number;
+        /**
+         * 回退百分比
+         */
+        rollbackPercent: number;
+        /**
+         * 回退时间间隔
+         */
+        rollbackInterval: number;
+        /**
+         * Banner展示范围
+         */
+        bannerRange: number[];
+        /**
+         * 奖励延迟范围
+         */
+        awardDelay: number[];
+        /**
+         * 关闭延迟范围
+         */
+        closeDelay: number[];
+        /**
+         * 按钮初始偏移
+         */
+        btnSrcOffset: number;
+        /**
+         * 按钮目标偏移
+         */
+        btnDstOffset: number;
+        /**
+         * 按钮偏移延迟
+         */
+        btnOffsetDelay: number;
+        /**
+         * 按钮偏移时间
+         */
+        btnOffsetTime: number;
+        /**
+         * 忽略按钮偏移
+         */
+        btnIgnoreOffset: boolean;
+        /**
+         * 检查是否咋金蛋
+         */
+        static checkEggOpen(isCommon): boolean;
+        /**
+         * 获取点击按钮
+         */
+        get btnKnock(): fairygui.GButton;
+        /**
+         * 更新进度方法
+         */
+        updateProgress(value: number);
+        /**
+         * 设置事件回调
+         */
+        setEventHandler(evtAward: Laya.Handler, evtClose: Laya.Handler): EggKnock;
+        /**
+         * Banner检查监听
+         */
+        onBannerCheck();
+        /**
+         * 销毁检查监听
+         */
+        onDispose();
+    }
+    /**
      * 加载页面
      */
     class Loading extends zs.fgui.base {
@@ -1190,7 +1282,7 @@ declare module zs.ui {
     /**
      * UI场景管理
      */
-    class uiScene {
+    class UIScene {
         /**
          * UI场景节点
          */
