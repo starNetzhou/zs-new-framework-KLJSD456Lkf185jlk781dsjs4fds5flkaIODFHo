@@ -133,27 +133,27 @@ export default class exporter_full_2 extends zs.exporter.full {
         return this;
     }
     onClickContinue() {
-        let fullSwitch = ProductKey.zs_full_screen_button_switch;
-        let delayTime = ProductKey.zs_button_delay_time;
-        let view = this.view as FGUI_full_2;
-        if (fullSwitch && !this.bClickContinue) {
-            view.btn_continue.touchable = false;
-            this.bClickContinue = true;
-            let moveY = view.btn_continue.y - this.mistakenMoveY;
-            Laya.Tween.to(view.btn_continue, { y: moveY }, 800, null, Laya.Handler.create(this, () => {
-                view.btn_continue.touchable = true;
-            }), Number(delayTime));
-            // 展示banner
-            if (window.zs["wx"] && window.zs["wx"].banner) {
-                var checkInit = !zs.platform.sync.hasBanner();
-                var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
-                Laya.timer.once(bannerTime, this, function () {
-                    zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit })
-                })
-            }
-            return;
-        }
-        this._clickContinue && this._clickContinue.run();
+        // let fullSwitch = ProductKey.zs_full_screen_button_switch;
+        // let delayTime = ProductKey.zs_button_delay_time;
+        // let view = this.view as FGUI_full_2;
+        // if (fullSwitch && !this.bClickContinue) {
+        //     view.btn_continue.touchable = false;
+        //     this.bClickContinue = true;
+        //     let moveY = view.btn_continue.y - this.mistakenMoveY;
+        //     Laya.Tween.to(view.btn_continue, { y: moveY }, 800, null, Laya.Handler.create(this, () => {
+        //         view.btn_continue.touchable = true;
+        //     }), Number(delayTime));
+        //     // 展示banner
+        //     if (window.zs["wx"] && window.zs["wx"].banner) {
+        //         var checkInit = !zs.platform.sync.hasBanner();
+        //         var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
+        //         Laya.timer.once(bannerTime, this, function () {
+        //             zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit })
+        //         })
+        //     }
+        //     return;
+        // }
+        // this._clickContinue && this._clickContinue.run();
     }
     apply() {
         let view = this.view as FGUI_full_2;

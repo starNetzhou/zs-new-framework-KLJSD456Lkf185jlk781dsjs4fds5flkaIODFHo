@@ -1657,9 +1657,26 @@ window.zs.exporter = window.zs.exporter || {};
         set text(value) { this.title && (this.title.text = value); }
         get fontcolor() { return this.title ? this.title.color : null; }
         set fontcolor(value) { this.title && (this.title.color = value); }
+        set switch(value) {
+            if (Array.isArray(value)) {
+                for (let i = 0; i < value.length; i++) {
+                    const element = zs.product.get(i);
+                    if (!element) {
+                        this._switch = false;
+                        return;
+                    }
+                }
+                this._switch = true;
+                return;
+            } else {
+                this._switch = zs.product.get(value);
+                return;
+            }
+        }
+        get switch(){ return this._switch }
         onClicked() {
-            this.view.touchable = false;
-            if (this.offsetx || this.offsety) {
+            if (this.switch && (this.offsetx || this.offsety)) {
+                this.view.touchable = false;
                 let targetX = this.view.x + (this.offsetx || 0);
                 let targetY = this.view.y + (this.offsety || 0);
                 Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
@@ -1695,6 +1712,7 @@ window.zs.exporter = window.zs.exporter || {};
                 config.clickignore && (this.clickignore = config.clickignore);
                 config.clickalways && (this.clickalways = config.clickalways);
                 config.event && (this.event = config.event);
+                config.switch && (this.switch = config.switch);
             }
             return this;
         }
