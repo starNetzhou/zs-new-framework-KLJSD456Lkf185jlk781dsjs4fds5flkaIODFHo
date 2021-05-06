@@ -46,6 +46,7 @@ export default class workflow extends zs.workflow {
     static readonly event_common_egg = "event_common_egg";
     static readonly event_fake_exit = "event_fake_exit";
     static readonly event_fake_msg = "event_fake_msg";
+    static readonly event_hide_full = "event_hide_full";
     static readonly event_full_continue = "event_full_continue";
 
     static readonly check_egg = "check_egg";
@@ -54,8 +55,6 @@ export default class workflow extends zs.workflow {
 
     exporterPack = "export/export";
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
-
-    bClickContinue: boolean;
 
     windowFull: zs.fgui.window;
 
@@ -96,8 +95,9 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
-        zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue, true);
-
+        zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, true);
+        zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
+        // 注册检查事件
         zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return value; }, true);
 
         //
@@ -153,21 +153,10 @@ export default class workflow extends zs.workflow {
         // }
     }
 
-    onFullContinue(auto) {
-        let delayTime = ProductKey.zs_button_delay_time;
-        if (window.zs["wx"] && window.zs["wx"].banner) {
-            var checkInit = !zs.platform.sync.hasBanner();
-            var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
-            Laya.timer.once(bannerTime, this, function () {
-                zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
-                this.bClickContinue = true;
-            })
-        } else {
-            this.bClickContinue = true;
-        }
-        if (this.bClickContinue) {
-            this.hideWindowFull(auto);
-        }
+    onFullContinue() {
+        console.log("on Full continue");
+        let checkInit = !zs.platform.sync.hasBanner();
+        zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
     }
 
 
@@ -184,7 +173,6 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
-        this.bClickContinue = false;
         this.windowFull = zs.fgui.window.create()
             .attach(exporter_full_1)
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
@@ -208,7 +196,6 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
-        this.bClickContinue = false;
         this.windowFull = zs.fgui.window.create()
             .attach(exporter_full_2)
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)

@@ -1,7 +1,6 @@
 {
     "PRODUCT_START": {
         "states": [
-            "READY",
             "FULL_1",
             "FULL_2"
         ]
@@ -19,7 +18,7 @@
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_next",
+                    "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -43,11 +42,12 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch":"zs_full_screen_button_switch",
+                    "switch": "zs_full_screen_button_switch",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_full_continue",
+                    "fakeevent": "event_full_continue",
+                    "event": "event_hide_full",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -71,11 +71,12 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch":"zs_full_screen_button_switch",
+                    "switch": "zs_full_screen_button_switch",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_full_continue",
+                    "fakeevent": "event_full_continue",
+                    "event": "event_hide_full",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -217,11 +218,12 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch":"zs_full_screen_button_switch",
+                    "switch": "zs_full_screen_button_switch",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_full_continue",
+                    "fakeevent": "event_full_continue",
+                    "event": "event_hide_full",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -244,11 +246,12 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch":"zs_full_screen_button_switch",
+                    "switch": "zs_full_screen_button_switch",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_full_continue",
+                    "fakeevent": "event_full_continue",
+                    "event": "event_hide_full",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -293,7 +296,7 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch":"zs_button_delay_time",
+                    "switch": "zs_button_delay_time",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,

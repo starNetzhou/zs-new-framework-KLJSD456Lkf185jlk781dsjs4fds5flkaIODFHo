@@ -1673,7 +1673,7 @@ window.zs.exporter = window.zs.exporter || {};
                 return;
             }
         }
-        get switch(){ return this._switch }
+        get switch() { return this._switch }
         onClicked() {
             if (this.switch && (this.offsetx || this.offsety)) {
                 this.view.touchable = false;
@@ -1684,11 +1684,15 @@ window.zs.exporter = window.zs.exporter || {};
                 }), Number(zs.product.get("zs_button_delay_time")));
                 this.offsetx = null;
                 this.offsety = null;
+                this.fakeevent && zs.core.workflow && zs.core.workflow.runEventConfig(this.fakeevent);
+                this.fakeevent = null;
             } else if (this.clickignore) {
                 setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
                 this.clickignore = null;
+                this.fakeevent && zs.core.workflow && zs.core.workflow.runEventConfig(this.fakeevent);
+                this.fakeevent = null;
             } else {
                 if (this.clickalways) {
                     this.view.touchable = true;
@@ -1711,6 +1715,7 @@ window.zs.exporter = window.zs.exporter || {};
                 config.offsettime && (this.offsettime = config.offsettime);
                 config.clickignore && (this.clickignore = config.clickignore);
                 config.clickalways && (this.clickalways = config.clickalways);
+                config.fakeevent && (this.fakeevent = config.fakeevent);
                 config.event && (this.event = config.event);
                 config.switch && (this.switch = config.switch);
             }
