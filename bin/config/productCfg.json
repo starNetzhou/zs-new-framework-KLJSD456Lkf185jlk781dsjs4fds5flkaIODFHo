@@ -187,7 +187,8 @@
             {
                 "type": "export_background",
                 "window": {
-                    "align": "topleft"
+                    "align": "topleft",
+                    "fit": true
                 }
             },
             {

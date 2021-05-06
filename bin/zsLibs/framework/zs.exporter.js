@@ -1434,6 +1434,8 @@ window.zs.exporter = window.zs.exporter || {};
             loaderInst.y = 0;
             loaderInst.width = component.width;
             loaderInst.height = component.height;
+            loaderInst.addRelation(component, fairygui.RelationType.Width);
+            loaderInst.addRelation(component, fairygui.RelationType.Height);
             loaderInst.autoSize = false;
             loaderInst.fill = fairygui.LoaderFillType.ScaleFree;
             component.addChild(loaderInst);
@@ -1559,8 +1561,11 @@ window.zs.exporter = window.zs.exporter || {};
             graphInst.y = 0;
             graphInst.width = component.width;
             graphInst.height = component.height;
+            graphInst.addRelation(component, fairygui.RelationType.Width);
+            graphInst.addRelation(component, fairygui.RelationType.Height);
             this.graph.drawRect(0, '#000000', '#000000');
             component.addChild(graphInst);
+            console.log(fairygui.GRoot.inst.width + " : " + fairygui.GRoot.inst.height, this.graph);
         }
         get color() {
             return this.graph ? this.graph.color : "";
