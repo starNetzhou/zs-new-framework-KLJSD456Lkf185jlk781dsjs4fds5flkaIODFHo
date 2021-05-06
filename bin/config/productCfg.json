@@ -1,6 +1,7 @@
 {
     "PRODUCT_START": {
         "states": [
+            "READY",
             "FULL_1",
             "FULL_2"
         ]
@@ -18,7 +19,7 @@
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
-                    "event": "event_childnext",
+                    "event": "event_next",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -32,14 +33,56 @@
             "zs_full_screen2_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_2"
+        "event": "event_full_2",
+        "exporter": [
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch":"zs_full_screen_button_switch",
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_full_continue",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
+                }
+            }
+        ]
     },
     "PRODUCT_START.FULL_2": {
         "switch": [
             "zs_full_screen1_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_1"
+        "event": "event_full_1",
+        "exporter": [
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch":"zs_full_screen_button_switch",
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_full_continue",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
+                }
+            }
+        ]
     },
     "PRODUCT_HOME_PLAY": {
         "states": [
@@ -163,13 +206,55 @@
         "switch": [
             "zs_full_screen1_jump"
         ],
-        "event": "event_full_1"
+        "event": "event_full_1",
+        "exporter": [
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch":"zs_full_screen_button_switch",
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_full_continue",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
+                }
+            }
+        ]
     },
     "PRODUCT_PLAY_END.FULL_2": {
         "switch": [
             "zs_full_screen2_jump"
         ],
-        "event": "event_full_2"
+        "event": "event_full_2",
+        "exporter": [
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch":"zs_full_screen_button_switch",
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "event": "event_full_continue",
+                    "url": [
+                        "export/export",
+                        "btn-continue-new"
+                    ]
+                }
+            }
+        ]
     },
     "PRODUCT_PLAY_END.SETTLE": {
         "switch": [
@@ -206,6 +291,7 @@
                     "alignoffsety": -100
                 },
                 "base": {
+                    "switch":"zs_button_delay_time",
                     "width": 349,
                     "height": 160,
                     "offsety": -200,

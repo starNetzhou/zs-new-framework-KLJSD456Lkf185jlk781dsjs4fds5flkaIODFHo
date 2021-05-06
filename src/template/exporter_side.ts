@@ -19,6 +19,8 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
     // 延迟回调句柄
     delayHandler: number;
 
+    hidePos = -600;
+
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_Side) {
@@ -29,6 +31,9 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
             component.content.getChild("btnPop").onClick(this, this.onBtnPopClick);
             this.adList.itemRenderer = Laya.Handler.create(this, this.onAdListRender, null, false);
             this.adList.on(fgui.Events.CLICK_ITEM, this, this.onAdListItemClick);
+
+            //默认是先在里面的
+            this.content.x = this.hidePos;
         }
     }
     dispose() {
@@ -97,7 +102,7 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
             this.delayHandler = setTimeout(() => {
                 this.bHide = false;
                 this.updatePos();
-            }, 500)
+            }, 800)
         }
         return this;
     }

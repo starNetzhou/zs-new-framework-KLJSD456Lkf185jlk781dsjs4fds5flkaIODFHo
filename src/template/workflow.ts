@@ -47,7 +47,9 @@ export default class workflow extends zs.workflow {
     static readonly event_common_egg = "event_common_egg";
     static readonly event_fake_exit = "event_fake_exit";
     static readonly event_fake_msg = "event_fake_msg";
+    // static readonly event_hide_full = "event_hide_full";
 
+    static readonly event_full_continue = "event_full_continue";
     static readonly special = "special";
 
     exporterPack = "export/export";
@@ -94,9 +96,8 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.onCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue, true);
 
-        //
-        zs.fgui.configs.registeBase(workflow.special, exporter_Special);
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
@@ -190,9 +191,10 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    hideWindowFull() {
+    hideWindowFull(autoNext) {
         this.windowFull && this.windowFull.dispose();
         this.windowFull = null;
+        autoNext && zs.core.workflow.childNext();
     }
 
     showFull1(auto: boolean) {
@@ -202,6 +204,7 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
+        this.bClickContinue = false;
         if (this.windowFull) {
             this.windowFull
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
@@ -218,8 +221,7 @@ export default class workflow extends zs.workflow {
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
                     unit.setClickContinue(
                         Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { zs.core.workflow.childNext(); }
+                            this.hideWindowFull(auto);
                         }, null, false))
                         .apply();
                 })
@@ -235,6 +237,7 @@ export default class workflow extends zs.workflow {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
         }
+        this.bClickContinue = false;
         if (this.windowFull) {
             this.windowFull
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
@@ -251,14 +254,31 @@ export default class workflow extends zs.workflow {
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
                     unit.setClickContinue(
                         Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { zs.core.workflow.childNext(); }
+                            this.hideWindowFull(auto);
                         }, null, false))
                         .apply();
                 })
                 .show();
         }
         return this.windowFull;
+    }
+    //全屏按钮点击事件
+    bClickContinue = false;
+    onFullContinue(auto) {
+        let delayTime = ProductKey.zs_button_delay_time;
+        if (window.zs["wx"] && window.zs["wx"].banner) {
+            var checkInit = !zs.platform.sync.hasBanner();
+            var bannerTime = checkInit ? 0 : Number(delayTime) / 2;
+            Laya.timer.once(bannerTime, this, function () {
+                zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
+                this.bClickContinue = true;
+            })
+        } else {
+            this.bClickContinue = true;
+        }
+        if (this.bClickContinue) {
+            this.hideWindowFull(auto);
+        }
     }
 
     commonEgg() {
