@@ -9,7 +9,6 @@ window.zs = window.zs || {};
             this.markAwardNum();
             this.markReadyNum();
         }
-
         static markGameNum(autoPlus) {
             let timestamp = zs.utils.getItem(EggKnock.key_game_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
@@ -24,7 +23,6 @@ window.zs = window.zs || {};
             }
             zs.utils.setItem(EggKnock.key_game_num, EggKnock.day_game_num.toString());
         }
-
         static markAwardNum(autoPlus) {
             let timestamp = zs.utils.getItem(EggKnock.key_award_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
@@ -39,7 +37,6 @@ window.zs = window.zs || {};
             }
             zs.utils.setItem(EggKnock.key_award_num, EggKnock.open_award_num.toString());
         }
-
         static markReadyNum(autoPlus) {
             let timestamp = zs.utils.getItem(EggKnock.key_ready_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
@@ -54,7 +51,6 @@ window.zs = window.zs || {};
             }
             zs.utils.setItem(EggKnock.key_ready_num, EggKnock.open_ready_num.toString());
         }
-
         static checkEggOpen(isCommon) {
             if (!EggKnock.switch) { return false; }
             let zs_click_award_since = zs.product.get("zs_click_award_since");

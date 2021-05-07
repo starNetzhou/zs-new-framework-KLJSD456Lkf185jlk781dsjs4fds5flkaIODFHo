@@ -1614,7 +1614,6 @@ window.zs.exporter = window.zs.exporter || {};
             component.addChild(icon);
             this.icon = icon;
             this.url = [zs.fgui.configs.pack_basic, "msg_background"];
-
             let title = new fairygui.GBasicTextField();
             title.autoSize = fairygui.AutoSizeType.None;
             title.x = 0;
