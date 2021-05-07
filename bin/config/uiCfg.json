@@ -1,0 +1,48 @@
+{
+    "base": {
+        "btn_full": {
+            "type": "export_button",
+            "window": {
+                "align": "bottom",
+                "alignoffsety": -100
+            },
+            "base": {
+                "width": 349,
+                "height": 160,
+                "offsety": -200,
+                "autofade": 1000,
+                "autooffset": 2000,
+                "fakeevent": "event_full_continue",
+                "event": "event_childnext",
+                "url": [
+                    "export/export",
+                    "btn-continue-new"
+                ]
+            }
+        },
+        "btn_full_close": {
+            "type": "export_button",
+            "window": {
+                "align": "bottom",
+                "alignoffsety": -100
+            },
+            "base": {
+                "width": 349,
+                "height": 160,
+                "offsety": -200,
+                "autofade": 1000,
+                "autooffset": 2000,
+                "fakeevent": "event_full_continue",
+                "event": "event_hide_full",
+                "url": [
+                    "export/export",
+                    "btn-continue-new"
+                ]
+            }
+        }
+    },
+    "binder": {
+        "full": "btn_full",
+        "full_popup":"btn_full_close"
+    }
+}

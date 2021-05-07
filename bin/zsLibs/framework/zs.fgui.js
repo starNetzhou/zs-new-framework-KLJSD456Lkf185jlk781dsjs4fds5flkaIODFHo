@@ -189,9 +189,34 @@ window.zs.fgui = window.zs.fgui || {};
             } else {
                 view.opaque = false;
             }
-            this.lastBase = new ctr(view);
-            key && (this.listByKeys[key] = this.lastBase);
-            this.list[key] = this.lastBase;
+            let newBase = new ctr(view);
+            this.lastBase = newBase;
+            key && (this.listByKeys[key] = newBase);
+            this.list[key] = newBase;
+
+            if (zs.configs.uiCfg && zs.configs.uiCfg.base && zs.configs.uiCfg.binder && zs.configs.uiCfg.binder[key]) {
+                let binder = zs.configs.uiCfg.binder[key];
+                if (Array.isArray(binder)) {
+                    for (let i = 0, n = binder.length; i < n; i++) {
+                        let base = zs.configs.uiCfg.base[binder];
+                        if (!base) { continue; }
+                        if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
+                            continue;
+                        }
+                        this.applyConfig(base);
+                    }
+                } else {
+                    let base = zs.configs.uiCfg.base[binder];
+                    if (base) {
+                        if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
+                            this.applyConfig(base);
+                        }
+                    }
+                }
+            }
+
+            this.setBase(newBase);
+
             return this;
         }
         detach(ctr) {

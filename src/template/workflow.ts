@@ -95,8 +95,8 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
         zs.fgui.configs.registeItem(workflow.exportItem8, FGUI_item_8);
         // 注册事件
-        zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1, true);
-        zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2, true);
+        zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1);
+        zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2);
         zs.core.workflow.registeEvent(workflow.event_start_video, this, this.onGameVideo);
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
@@ -157,16 +157,12 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_1)
+            .attach(exporter_full_1, null, auto ? "full" : "full_popup")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
             .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                unit.setClickContinue(
-                    Laya.Handler.create(this, () => {
-                        this.hideWindowFull(auto);
-                    }, null, false))
-                    .apply();
+                unit.apply();
             })
             .show();
         return this.windowFull;
@@ -178,16 +174,12 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_2)
+            .attach(exporter_full_2, null, auto ? "full" : "full_popup")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
             .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                unit.setClickContinue(
-                    Laya.Handler.create(this, () => {
-                        this.hideWindowFull(auto);
-                    }, null, false))
-                    .apply();
+                unit.apply();
             })
             .show();
         return this.windowFull;
@@ -273,6 +265,7 @@ export default class workflow extends zs.workflow {
     }
 
     fakeExit(event: string | string[]) {
+        console.error("event", event)
         if (!ProductKey.zs_history_list_jump) { return; }
         if (this._fakeExit) {
             this._fakeExit.view.visible = true;

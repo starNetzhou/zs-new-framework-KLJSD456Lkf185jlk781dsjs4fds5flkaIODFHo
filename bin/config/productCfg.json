@@ -1,8 +1,6 @@
 {
     "PRODUCT_START": {
-        "states": [
-            "READY"
-        ]
+        "switch": "!"
     },
     "PRODUCT_START.READY": {
         "exporter": [
@@ -31,64 +29,28 @@
             "zs_full_screen2_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_2",
+        "event": [
+            [
+                "event_full_2",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
-        "exporter": [
-            {
-                "type": "export_button",
-                "key": "test",
-                "window": {
-                    "align": "bottom",
-                    "alignoffsety": -100
-                },
-                "base": {
-                    "switch": "zs_full_screen_button_switch",
-                    "width": 349,
-                    "fill": "width",
-                    "offsety": -200,
-                    "fakedelay": [
-                        "event_fake_delay",
-                        1500
-                    ],
-                    "fakeevent": "event_full_continue",
-                    "event": "event_childnext",
-                    "url": [
-                        "export/export",
-                        "btn-continue-new"
-                    ]
-                }
-            }
-        ]
+        "exporter": []
     },
     "PRODUCT_START.FULL_2": {
         "switch": [
             "zs_full_screen1_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_1",
+        "event": [
+            [
+                "event_full_1",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
-        "exporter": [
-            {
-                "type": "export_button",
-                "key": "test",
-                "window": {
-                    "align": "bottom",
-                    "alignoffsety": -100
-                },
-                "base": {
-                    "switch": "zs_full_screen_button_switch",
-                    "width": 349,
-                    "height": 160,
-                    "offsety": -200,
-                    "fakeevent": "event_full_continue",
-                    "event": "event_childnext",
-                    "url": [
-                        "export/export",
-                        "btn-continue-new"
-                    ]
-                }
-            }
-        ]
+        "exporter": []
     },
     "PRODUCT_HOME_PLAY": {
         "states": [
@@ -116,12 +78,22 @@
             "SETTLE",
             "END"
         ],
-        "event": "event_fake_exit",
+        "laterevent": [
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ]
+        ],
         "exitevent": "event_hide_fake_exit"
     },
     "GAME_HOME": {
         "base": [],
-        "laterevent": "event_fake_exit",
+        "laterevent": [
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ]
+        ],
         "exporter": [
             {
                 "type": "export_list",
@@ -222,59 +194,27 @@
         "switch": [
             "zs_full_screen1_jump"
         ],
-        "event": "event_full_1",
+        "event": [
+            [
+                "event_full_1",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
-        "exporter": [
-            {
-                "type": "export_button",
-                "key": "test",
-                "window": {
-                    "align": "bottom",
-                    "alignoffsety": -100
-                },
-                "base": {
-                    "switch": "zs_full_screen_button_switch",
-                    "width": 349,
-                    "height": 160,
-                    "offsety": -200,
-                    "fakeevent": "event_full_continue",
-                    "event": "event_childnext",
-                    "url": [
-                        "export/export",
-                        "btn-continue-new"
-                    ]
-                }
-            }
-        ]
+        "exporter": []
     },
     "PRODUCT_PLAY_END.FULL_2": {
         "switch": [
             "zs_full_screen2_jump"
         ],
-        "event": "event_full_2",
+        "event": [
+            [
+                "event_full_2",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
-        "exporter": [
-            {
-                "type": "export_button",
-                "key": "test",
-                "window": {
-                    "align": "bottom",
-                    "alignoffsety": -100
-                },
-                "base": {
-                    "switch": "zs_full_screen_button_switch",
-                    "width": 349,
-                    "height": 160,
-                    "offsety": -200,
-                    "fakeevent": "event_full_continue",
-                    "event": "event_childnext",
-                    "url": [
-                        "export/export",
-                        "btn-continue-new"
-                    ]
-                }
-            }
-        ]
+        "exporter": []
     },
     "PRODUCT_PLAY_END.SETTLE": {
         "switch": [
@@ -285,14 +225,17 @@
             "delay": true
         },
         "laterevent": [
-            "event_fake_exit",
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ],
             "event_fake_msg"
         ],
         "exitevent": [
             "event_hide_fake_exit",
             "event_hide_fake_msg"
         ],
-        "exporter": [
+        "base": [
             {
                 "type": "export_loader",
                 "window": {
@@ -309,7 +252,7 @@
             {
                 "type": "export_loader",
                 "window": {
-                    "align": "center"
+                    "align": "top"
                 },
                 "base": {
                     "fill": "none",
@@ -317,14 +260,6 @@
                         "export/export",
                         "over"
                     ]
-                }
-            },
-            {
-                "type": "export_knock_1",
-                "switch": "zs_finish_jump",
-                "window": {
-                    "align": "center",
-                    "alignoffsety": 100
                 }
             },
             {
@@ -336,14 +271,25 @@
                 },
                 "base": {
                     "switch": "zs_button_delay_time",
-                    "width": 175,
-                    "height": 50,
+                    "width": 200,
+                    "fill": "width",
                     "offsety": -200,
+                    "autooffset": true,
                     "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn_GoOn"
                     ]
+                }
+            }
+        ],
+        "exporter": [
+            {
+                "type": "export_knock_1",
+                "switch": "zs_finish_jump",
+                "window": {
+                    "align": "center",
+                    "alignoffsety": 100
                 }
             }
         ]

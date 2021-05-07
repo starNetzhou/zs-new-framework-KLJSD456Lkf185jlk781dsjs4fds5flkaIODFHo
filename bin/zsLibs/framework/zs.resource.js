@@ -164,6 +164,7 @@ window.zs = window.zs || {};
         static async init() {
             configs.gameCfg = await zs.resource.load(configs.gameCfgPath);
             configs.productCfg = await zs.resource.load(configs.porductCfgPath);
+            configs.uiCfg = await zs.resource.load(configs.uiCfgPath);
             if (!configs.gameCfg.secret) {
                 configs.gameCfg.secret = "7CaD3L23LlGnENd1";
             }
@@ -220,10 +221,9 @@ window.zs = window.zs || {};
             return configs.list[key];
         }
     }
-
     configs.gameCfgPath = 'config/gameCfg.json';
     configs.porductCfgPath = 'config/productCfg.json';
-
+    configs.uiCfgPath = "config/uiCfg.json";
     class prefabs {
         static async load(key, path, url, isAsync) {
             if (configs.list == null) {
