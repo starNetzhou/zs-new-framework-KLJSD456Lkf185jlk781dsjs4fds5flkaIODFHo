@@ -104,6 +104,21 @@ window.zs = window.zs || {};
         callEventReturn(key, ...args) {
             return this.applyEventReturn(key, args);
         }
+        readConfigNumber(config) {
+            let result = null;
+            if (config) {
+                if (typeof config === 'number') {
+                    result = config;
+                } else if (Array.isArray(config) && config.length > 0) {
+                    let evt = config[0];
+                    let args = config.length > 1 ? config.slice(1, config.length) : null;
+                    result = this.applyEventReturn(evt, args);
+                } else if (typeof config === 'string' && config.trim().length > 0) {
+                    result = this.applyEventReturn(config);
+                }
+            }
+            return result;
+        }
         runEventConfig(event) {
             if (Array.isArray(event)) {
                 for (let i = 0, n = event.length; i < n; i++) {
@@ -771,8 +786,9 @@ window.zs = window.zs || {};
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
-                    if (config.switch) {
-                        if (!this.checkSwitch(config.switch)) { continue; }
+                    if (!config) { continue; }
+                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
+                        continue;
                     }
                     this.exportWindow
                         .applyConfig(config)
@@ -785,8 +801,9 @@ window.zs = window.zs || {};
             if (data && data.base && data.base.length > 0) {
                 for (let i = 0, n = data.base.length; i < n; i++) {
                     let config = data.base[i];
-                    if (config.switch) {
-                        if (!this.checkSwitch(config.switch)) { continue; }
+                    if (!config) { continue; }
+                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
+                        continue;
                     }
                     this.exportWindow
                         .applyConfig(config)

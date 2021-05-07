@@ -1739,8 +1739,11 @@ window.zs.exporter = window.zs.exporter || {};
             this.icon.fill = type;
         }
         onClicked() {
+            if (this.autooffset != null || this.autofade != null) { return; }
             this.view.touchable = false;
-            if (this.switch && (this.offsetx || this.offsety)) {
+            let fakeSwitch = true;
+            this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
+            if (fakeSwitch && (this.offsetx || this.offsety)) {
                 let targetX = this.view.x + (this.offsetx || 0);
                 let targetY = this.view.y + (this.offsety || 0);
                 Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
@@ -1749,7 +1752,7 @@ window.zs.exporter = window.zs.exporter || {};
                 this.offsetx = null;
                 this.offsety = null;
                 this.onFakeClicked();
-            } else if (this.switch && this.clickignore) {
+            } else if (fakeSwitch && this.clickignore) {
                 setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
@@ -1763,30 +1766,43 @@ window.zs.exporter = window.zs.exporter || {};
             }
         }
         onFakeClicked() {
-            if (this.fakeevent && zs.core.workflow) {
-                let delay = null;
-                if (this.fakedelay) {
-                    if (typeof this.fakedelay === 'number') {
-                        delay = this.fakedelay;
-                    } else if (Array.isArray(this.fakedelay) && this.fakedelay.length > 0) {
-                        let evt = this.fakedelay[0];
-                        let args = this.fakedelay.length > 1 ? this.fakedelay.slice(1, this.fakedelay.length) : null;
-                        delay = zs.core.workflow.applyEventReturn(evt, args);
-                    } else if (typeof this.fakedelay === 'string' && this.fakedelay.trim().length > 0) {
-                        delay = zs.core.workflow.applyEventReturn(this.fakedelay);
-                    }
-                }
+            if (this.fakeevent) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.fakedelay) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) {
                     zs.core.workflow.runEventConfig(this.fakeevent);
                 } else {
                     this.readyEvent = this.fakeevent;
                     this.fakeDelayHandler = setTimeout(() => {
-                        console.log("fake delay handled");
                         zs.core.workflow.runEventConfig(this.readyEvent);
                         this.readyEvent = null;
                     }, delay);
                 }
                 this.fakeevent = null;
+            }
+        }
+        autoOffset() {
+            let fakeSwitch = true;
+            this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
+            if (fakeSwitch && this.autooffset != null && (this.offsetx != null || this.offsety != null)) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.autooffset) : null;
+                if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
+                let targetX = this.view.x + (this.offsetx || 0);
+                let targetY = this.view.y + (this.offsety || 0);
+                Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
+                    this.autooffset = null;
+                }), delay);
+                this.clickignore = null;
+                this.offsetx = null;
+                this.offsety = null;
+            }
+        }
+        autoFade() {
+            if (this.autofade != null) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.autofade) : null;
+                if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
+                Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 500, null, Laya.Handler.create(this, () => {
+                    this.view.touchable = true;
+                }), delay);
             }
         }
         applyConfig(config) {
@@ -1800,6 +1816,9 @@ window.zs.exporter = window.zs.exporter || {};
                 config.fontsize != null && (this.fontsize = config.fontsize);
                 config.fontcolor && (this.fontcolor = config.fontcolor);
                 config.text && (this.text = config.text);
+                config.autofade != null && (this.autofade = config.autofade);
+                config.autofadetime != null && (this.autofadetime = config.autofadetime);
+                config.autooffset != null && (this.autooffset = config.autooffset);
                 config.offsetx != null && (this.offsetx = config.offsetx);
                 config.offsety != null && (this.offsety = config.offsety);
                 config.offsettime != null && (this.offsettime = config.offsettime);
@@ -1809,11 +1828,17 @@ window.zs.exporter = window.zs.exporter || {};
                 config.fakeevent && (this.fakeevent = config.fakeevent);
                 config.event && (this.event = config.event);
                 config.switch && (this.switch = config.switch);
+
+                if (this.autooffset != null) { setTimeout(() => { this.autoOffset(); }, 1); }
+                if (this.autofade != null) {
+                    this.view.alpha = 0;
+                    this.view.touchable = false;
+                    this.autoFade();
+                }
             }
             return this;
         }
     }
-
     class full extends zs.fgui.base {
         setMistaken() { return this; }
         setClickContinue(handler) {

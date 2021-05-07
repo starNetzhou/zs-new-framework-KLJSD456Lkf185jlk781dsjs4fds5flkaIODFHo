@@ -123,12 +123,24 @@ declare module zs {
 
     interface exporterCfg {
         type: string,
-        config: any
+        window?: any,
+        base?: any
     }
 
     interface productCfg {
+        switch?: string | string[],
+        check?: string | any[],
+        event?: string | any[],
+        laterevent?: string | any[],
+        exitevent?: string | any[],
         banner?: bannerCfg,
-        exporter?: exporterCfg[]
+        exporter?: exporterCfg[],
+        base?: exporterCfg[]
+    }
+
+    interface uiCfg {
+        base?: { [key: string]: any },
+        binder?: { [key: string]: string | string[] }
     }
 
     /**
@@ -779,6 +791,10 @@ declare module zs {
          *  基础产品配置
          */
         static readonly productCfg: { [key: string]: productCfg };
+        /**
+         * 基础UI配置
+         */
+        static readonly uiCfg: uiCfg;
         /**
          * 加载配置表
          * @param key 表名 
@@ -1591,9 +1607,10 @@ declare module zs.fgui {
         /**
          * 附加部件
          * @param ctr 部件类型
-         * @param index (可选) 索引号
+         * @param index （可选） 索引号
+         * @param key （可选）绑定关键词
          */
-        attach(ctr: typeof base, index?: number): window;
+        attach(ctr: typeof base, index?: number, key?: string): window;
         /**
          * 释放部件
          * @param ctr 部件类型或索引号

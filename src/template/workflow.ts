@@ -150,7 +150,7 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_1)
+            .attach(exporter_full_1, null, "full")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
@@ -171,7 +171,7 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_2)
+            .attach(exporter_full_2, null, "full")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
