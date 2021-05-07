@@ -1642,7 +1642,10 @@ window.zs.exporter = window.zs.exporter || {};
             this.title = title;
         }
         dispose() {
+            Laya.Tween.clearAll(this.view);
             this.fakeDelayHandler && clearTimeout(this.fakeDelayHandler);
+            this.clickDelayHandler && clearTimeout(this.clickDelayHandler);
+            this.offsetDelayHandler && clearTimeout(this.offsetDelayHandler);
             super.dispose();
         }
         get url() { return this.icon ? this.icon.url : null; }
@@ -1753,7 +1756,7 @@ window.zs.exporter = window.zs.exporter || {};
                 this.offsety = null;
                 this.onFakeClicked();
             } else if (fakeSwitch && this.clickignore) {
-                setTimeout(() => {
+                this.clickDelayHandler = setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
                 this.clickignore = null;
@@ -1802,6 +1805,7 @@ window.zs.exporter = window.zs.exporter || {};
                 if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
                 Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 500, null, Laya.Handler.create(this, () => {
                     this.view.touchable = true;
+                    this.autofade = null;
                 }), delay);
             }
         }
@@ -1829,7 +1833,9 @@ window.zs.exporter = window.zs.exporter || {};
                 config.event && (this.event = config.event);
                 config.switch && (this.switch = config.switch);
 
-                if (this.autooffset != null) { setTimeout(() => { this.autoOffset(); }, 1); }
+                if (this.autooffset != null) {
+                    this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
+                }
                 if (this.autofade != null) {
                     this.view.alpha = 0;
                     this.view.touchable = false;
