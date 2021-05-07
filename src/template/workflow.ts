@@ -98,7 +98,7 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, true);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
         // 注册检查事件
-        zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return value; }, true);
+        zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
 
         //
         zs.fgui.configs.registeBase(workflow.special, exporter_Special);
@@ -154,7 +154,6 @@ export default class workflow extends zs.workflow {
     }
 
     onFullContinue() {
-        console.log("on Full continue");
         let checkInit = !zs.platform.sync.hasBanner();
         zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
     }

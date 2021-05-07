@@ -1,6 +1,7 @@
 {
     "PRODUCT_START": {
         "states": [
+            "READY",
             "FULL_1",
             "FULL_2"
         ]
@@ -297,13 +298,13 @@
                 },
                 "base": {
                     "switch": "zs_button_delay_time",
-                    "width": 349,
-                    "height": 160,
+                    "width": 175,
+                    "height": 50,
                     "offsety": -200,
                     "event": "event_childnext",
                     "url": [
                         "export/export",
-                        "btn-continue-new"
+                        "btn_GoOn"
                     ]
                 }
             }
