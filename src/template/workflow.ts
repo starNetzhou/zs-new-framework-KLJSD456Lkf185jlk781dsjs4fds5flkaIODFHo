@@ -17,6 +17,7 @@ import exporter_friend_challenge from "./exporter_friend_challenge";
 import knock_egg from "./knock_egg";
 import FGUI_item_8 from "./export/FGUI_item_8";
 import exporter_knock_1 from "./exporter_knock_1";
+import KnockEggBinder from "./KnockEgg/KnockEggBinder";
 
 export default class workflow extends zs.workflow {
 
@@ -57,7 +58,7 @@ export default class workflow extends zs.workflow {
     static readonly event_hide_fake_msg = "event_hide_fake_msg";
     static readonly event_hide_fake_exit = "event_hide_fake_exit";
 
-    exporterPack = "export/export";
+    exporterPack = ["export/export","knock_fgui/KnockEgg"];
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
 
     windowFull: zs.fgui.window;
@@ -80,7 +81,7 @@ export default class workflow extends zs.workflow {
 
         // 绑定工作流FGUI组件
         exportBinder.bindAll();
-
+        KnockEggBinder.bindAll();
         // 注册模块
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
@@ -105,7 +106,7 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, false);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
         // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
-        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return value; }, false);
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return true; }, false);
         zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);
@@ -265,7 +266,6 @@ export default class workflow extends zs.workflow {
     }
 
     fakeExit(event: string | string[]) {
-        console.error("event", event)
         if (!ProductKey.zs_history_list_jump) { return; }
         if (this._fakeExit) {
             this._fakeExit.view.visible = true;
