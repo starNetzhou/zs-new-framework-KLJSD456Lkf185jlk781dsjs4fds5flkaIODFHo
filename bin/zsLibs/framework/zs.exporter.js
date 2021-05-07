@@ -1630,6 +1630,10 @@ window.zs.exporter = window.zs.exporter || {};
             component.addChild(title);
             this.title = title;
         }
+        dispose() {
+            this.fakeDelayHandler && clearTimeout(this.fakeDelayHandler);
+            super.dispose();
+        }
         get url() { return this.icon ? this.icon.url : null; }
         set url(value) {
             if (this.icon) {
@@ -1683,20 +1687,45 @@ window.zs.exporter = window.zs.exporter || {};
                 }), Number(zs.product.get("zs_button_delay_time")));
                 this.offsetx = null;
                 this.offsety = null;
-                this.fakeevent && zs.core.workflow && zs.core.workflow.runEventConfig(this.fakeevent);
-                this.fakeevent = null;
+                this.onFakeClicked();
             } else if (this.clickignore) {
                 setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
                 this.clickignore = null;
-                this.fakeevent && zs.core.workflow && zs.core.workflow.runEventConfig(this.fakeevent);
-                this.fakeevent = null;
+                this.onFakeClicked();
             } else {
                 if (this.clickalways) {
                     this.view.touchable = true;
                 }
                 this.event && zs.core.workflow && zs.core.workflow.runEventConfig(this.event);
+            }
+        }
+        onFakeClicked() {
+            if (this.fakeevent && zs.core.workflow) {
+                let delay = null;
+                if (this.fakedelay) {
+                    if (typeof this.fakedelay === 'number') {
+                        delay = this.fakedelay;
+                    } else if (Array.isArray(this.fakedelay) && this.fakedelay.length > 0) {
+                        let evt = this.fakedelay[0];
+                        let args = this.fakedelay.length > 1 ? this.fakedelay.slice(1, this.fakedelay.length) : null;
+                        delay = zs.core.workflow.applyEventReturn(evt, args);
+                    } else if (typeof this.fakedelay === 'string' && this.fakedelay.trim().length > 0) {
+                        delay = zs.core.workflow.applyEventReturn(this.fakedelay);
+                    }
+                }
+                if (!delay || typeof delay !== 'number' || delay <= 0) {
+                    zs.core.workflow.runEventConfig(this.fakeevent);
+                } else {
+                    this.readyEvent = this.fakeevent;
+                    this.fakeDelayHandler = setTimeout(() => {
+                        console.log("fake delay handled");
+                        zs.core.workflow.runEventConfig(this.readyEvent);
+                        this.readyEvent = null;
+                    }, delay);
+                }
+                this.fakeevent = null;
             }
         }
         applyConfig(config) {
@@ -1714,6 +1743,7 @@ window.zs.exporter = window.zs.exporter || {};
                 config.offsettime && (this.offsettime = config.offsettime);
                 config.clickignore && (this.clickignore = config.clickignore);
                 config.clickalways && (this.clickalways = config.clickalways);
+                config.fakedelay && (this.fakedelay = config.fakedelay);
                 config.fakeevent && (this.fakeevent = config.fakeevent);
                 config.event && (this.event = config.event);
                 config.switch && (this.switch = config.switch);

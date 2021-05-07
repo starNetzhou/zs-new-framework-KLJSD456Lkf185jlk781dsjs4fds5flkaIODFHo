@@ -46,12 +46,6 @@ window.zs = window.zs || {};
             }
             return this._eventList;
         }
-        get checkEventList() {
-            if (this._checkEventList == null) {
-                this._checkEventList = {};
-            }
-            return this._checkEventList;
-        }
         constructor() {
             this.switchExporter = "zs_jump_switch";
             this.exporterPack = null;
@@ -84,37 +78,31 @@ window.zs = window.zs || {};
             this.fsm.init();
         }
         setFSM(key, fsm) {
-            this.fsmList[key] = fsm;
+            this.fsmList[key.trim()] = fsm;
         }
         registeEvent(key, caller, func, ...args) {
-            this.eventList[key] = {
+            this.eventList[key.trim()] = {
                 caller: caller,
                 func: func,
                 args: args
-            }
-        }
-        registeCheckEvent(key, caller, func, ...args) {
-            this.checkEventList[key] = {
-                caller: caller,
-                func: func,
-                args: args
-            }
-        }
-        callEvent(key, ...args) {
-            let event = this.eventList[key];
-            if (args && args.length > 0) {
-                event && (event.func.apply(event.caller, args));
-            } else {
-                event && (event.func.apply(event.caller, event.args));
             }
         }
         applyEvent(key, args) {
-            let event = this.eventList[key];
-            if (args && args.length > 0) {
-                event && (event.func.apply(event.caller, args));
-            } else {
-                event && (event.func.apply(event.caller, event.args));
+            let event = this.eventList[key.trim()];
+            event && event.func && event.func.apply(event.caller, (args && args.length > 0) ? args : event.args);
+        }
+        applyEventReturn(key, args) {
+            let event = this.eventList[key.trim()];
+            if (event && event.func) {
+                return event.func.apply(event.caller, (args && args.length > 0) ? args : event.args);
             }
+            return null;
+        }
+        callEvent(key, ...args) {
+            this.applyEvent(key, args);
+        }
+        callEventReturn(key, ...args) {
+            return this.applyEventReturn(key, args);
         }
         runEventConfig(event) {
             if (Array.isArray(event)) {
@@ -138,6 +126,7 @@ window.zs = window.zs || {};
         registeChildFSM() {
             let config = zs.configs.productCfg;
             for (let key in config) {
+                key = key.trim();
                 if (this.fsmList[key]) { continue; }
                 let info = config[key].states;
                 if (!info || info.length <= 0) { continue; }
@@ -178,7 +167,8 @@ window.zs = window.zs || {};
             }
         }
         on(key, handler, isBefore, priority) {
-            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (key == null || key.trim().length <= 0 || handler == null) { return; }
+            key = key.trim();
             handler.once = false;
             priority = priority || 0;
             handler.priority = priority;
@@ -218,7 +208,8 @@ window.zs = window.zs || {};
             }
         }
         onLater(key, handler, isBefore, priority) {
-            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (key == null || key.trim().length <= 0 || handler == null) { return; }
+            key = key.trim();
             handler.once = false;
             priority = priority || 0;
             handler.priority = priority;
@@ -266,7 +257,8 @@ window.zs = window.zs || {};
             if (handler) { handler.once = true; }
         }
         off(key, handler, isBefore) {
-            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (key == null || key.trim().length <= 0 || handler == null) { return; }
+            key = key.trim();
             if (isBefore) {
                 if (this.preListeners == null) { return; }
                 if (this.preListeners[key] == null) { return; }
@@ -290,7 +282,8 @@ window.zs = window.zs || {};
             }
         }
         offLater(key, handler, isBefore) {
-            if (key == null || key.length <= 0 || handler == null) { return; }
+            if (key == null || key.trim().length <= 0 || handler == null) { return; }
+            key = key.trim();
             if (isBefore) {
                 if (this.laterPreListeners == null) { return; }
                 if (this.laterPreListeners[key] == null) { return; }
@@ -314,7 +307,8 @@ window.zs = window.zs || {};
             }
         }
         offAll(key, isBefore) {
-            if (key == null || key.length <= 0) { return; }
+            if (key == null || key.trim().length <= 0) { return; }
+            key = key.trim();
             if (isBefore) {
                 if (this.preListeners == null) { return; }
                 if (this.preListeners[key] == null) { return; }
@@ -326,7 +320,8 @@ window.zs = window.zs || {};
             }
         }
         offAllLater(key, isBefore) {
-            if (key == null || key.length <= 0) { return; }
+            if (key == null || key.trim().length <= 0) { return; }
+            key = key.trim();
             if (isBefore) {
                 if (this.laterPreListeners == null) { return; }
                 if (this.laterPreListeners[key] == null) { return; }
@@ -339,7 +334,7 @@ window.zs = window.zs || {};
         }
         offAllCaller(caller, key, isBefore) {
             if (caller == null) { return; }
-            if (key == null || key.length <= 0) {
+            if (key == null || key.trim().length <= 0) {
                 if (isBefore) {
                     for (let k in this.preListeners) {
                         let listener = this.preListeners[k];
@@ -364,6 +359,7 @@ window.zs = window.zs || {};
                     }
                 }
             } else {
+                key = key.trim();
                 if (isBefore) {
                     let listener = this.preListeners[key];
                     if (listener) {
@@ -391,7 +387,7 @@ window.zs = window.zs || {};
         }
         offAllCallerLater(caller, key, isBefore) {
             if (caller == null) { return; }
-            if (key == null || key.length <= 0) {
+            if (key == null || key.trim().length <= 0) {
                 if (isBefore) {
                     for (let k in this.laterPreListeners) {
                         let listener = this.laterPreListeners[k];
@@ -416,6 +412,7 @@ window.zs = window.zs || {};
                     }
                 }
             } else {
+                key = key.trim();
                 if (isBefore) {
                     let listener = this.laterPreListeners[key];
                     if (listener) {
@@ -533,7 +530,7 @@ window.zs = window.zs || {};
             this.lockStep = false;
             this.step();
         }
-        checkSwitch(config, checks) {
+        checkSwitch(config, check) {
             let isPassed = true;
             if (config) {
                 if (Array.isArray(config)) {
@@ -573,40 +570,25 @@ window.zs = window.zs || {};
                 }
             }
             if (!isPassed) { return false; }
-            if (checks) {
-                if (Array.isArray(checks)) {
-                    for (let i = 0, n = checks.length; i < n; i++) {
-                        let check = checks[i];
+            if (check) {
+                if (Array.isArray(check)) {
+                    for (let i = 0, n = check.length; i < n; i++) {
+                        let c = check[i];
                         let evt = null;
                         let args = null;
-                        if (Array.isArray(check)) {
-                            let lenCheck = check.length;
-                            if (lenCheck <= 0) { continue; }
-                            evt = this.checkEventList[check[0]];
-                            if (lenCheck > 1) {
-                                args = check.slice(1, lenCheck);
-                            }
+                        if (Array.isArray(c)) {
+                            let lenC = c.length;
+                            if (lenC <= 0) { continue; }
+                            evt = c[0];
+                            lenC > 1 && (args = c.slice(1, lenC));
                         } else {
-                            evt = this.checkEventList[check];
+                            evt = c;
                         }
-                        if (evt && evt.func) {
-                            let result = true;
-                            if (args && args.length > 0) {
-                                result = evt.func.apply(evt.caller, args);
-                            } else {
-                                result = evt.func.apply(evt.caller.evt.args);
-                            }
-                            if (!result) {
-                                isPassed = false;
-                                break;
-                            }
-                        }
+                        isPassed = this.applyEventReturn(evt, args);
+                        if (!isPassed) { break; }
                     }
                 } else {
-                    let evt = this.checkEventList[checks];
-                    if (evt && !evt.func.apply(evt.caller, evt.args)) {
-                        isPassed = false;
-                    }
+                    isPassed = this.applyEventReturn(check);
                 }
             }
             return isPassed;
@@ -944,7 +926,11 @@ window.zs = window.zs || {};
                 this.workflow = new zs.workflow();
             }
             if (this.workflow.exporterPack) {
-                await zs.fgui.loadPack(this.workflow.exporterPack);
+                if (Array.isArray(this.workflow.exporterPack)) {
+                    await zs.fgui.loadPacks(this.workflow.exporterPack);
+                } else {
+                    await zs.fgui.loadPack(this.workflow.exporterPack);
+                }
             }
             this.workflow.registe();
             this.workflow.registeChildFSM();

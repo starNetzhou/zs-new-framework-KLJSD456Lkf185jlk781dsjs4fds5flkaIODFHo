@@ -46,6 +46,7 @@
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
+                    "fakedelay": ["event_fake_delay", 1500],
                     "fakeevent": "event_full_continue",
                     "event": "event_hide_full",
                     "url": [
@@ -99,7 +100,7 @@
         "event": "event_start_video"
     },
     "PRODUCT_HOME_PLAY.EGG": {
-        "check": "check_egg",
+        "check": "event_check_egg",
         "event": "event_common_egg"
     },
     "GAME_PLAY": {

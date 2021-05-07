@@ -14,7 +14,6 @@ import exporter_fake_msg from "./exporter_fake_msg";
 import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
-import exporter_Special from "./exporter_Special";
 import knock_egg from "./knock_egg";
 
 export default class workflow extends zs.workflow {
@@ -46,10 +45,10 @@ export default class workflow extends zs.workflow {
     static readonly event_common_egg = "event_common_egg";
     static readonly event_fake_exit = "event_fake_exit";
     static readonly event_fake_msg = "event_fake_msg";
+    static readonly event_fake_delay = "event_fake_delay";
     static readonly event_hide_full = "event_hide_full";
     static readonly event_full_continue = "event_full_continue";
-
-    static readonly check_egg = "check_egg";
+    static readonly event_check_egg = "event_check_egg";
 
     static readonly special = "special";
 
@@ -95,13 +94,12 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_fake_delay, this, this.fakeContinueDelay, 1000);
         zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, true);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
-        // 注册检查事件
-        zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return value; }, true);
+        // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return true; }, false);
 
-        //
-        zs.fgui.configs.registeBase(workflow.special, exporter_Special);
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
@@ -127,34 +125,11 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    isNumber(val) {
-        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-        if (regPos.test(val) || regNeg.test(val)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    onCommonEgg() {
-        this.commonEgg();
-        // var bEgg;
-        // await this.checkEgg(true).then(() => {
-        //     bEgg = true;
-        // }).catch(() => {
-        //     bEgg = false;
-        // })
-        // console.log("通用砸金蛋", bEgg)
-        // if (bEgg) {
-        //     this.commonEgg();
-        // } else {
-        //     zs.core.workflow.childNext();
-        // }
+    fakeContinueDelay(value) {
+        return value;
     }
 
     onFullContinue() {
-        console.log("on Full continue");
         let checkInit = !zs.platform.sync.hasBanner();
         zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
     }

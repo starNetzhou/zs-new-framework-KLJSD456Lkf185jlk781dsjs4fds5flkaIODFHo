@@ -301,13 +301,17 @@ declare module zs {
          */
         registeEvent(key: string, caller: any, func: Function, ...args: any[]);
         /**
-         * 注册检查事件
+         * 调用注册事件
          * @param key 关键词
-         * @param caller 调用者
-         * @param func 调用函数
-         * @param args 调用参数列表
+         * @param args 调用参数列表（将覆盖默认参数）
          */
-        registeCheckEvent(key: string, caller: any, func: Function, ...args: any[]);
+        applyEvent(key: string, args?: any[]);
+        /**
+         * 带返回调用注册事件
+         * @param key 关键词
+         * @param args 调用参数列表（将覆盖默认参数）
+         */
+        applyEventReturn(key: string, args?: any[]): any;
         /**
          * 调用注册事件
          * @param key 关键词
@@ -315,11 +319,11 @@ declare module zs {
          */
         callEvent(key: string, ...args: any[]);
         /**
-         * 调用注册事件
+         * 带返回调用注册事件
          * @param key 关键词
          * @param args 调用参数列表（将覆盖默认参数）
          */
-        applyEvent(key: string, args?: any[]);
+        callEventReturn(key: string, args?: any[]): any;
         /**
          * 按配置执行事件
          * @param config 配置
@@ -1211,6 +1215,14 @@ declare module zs.ui {
          * 获取点击按钮
          */
         get btnKnock(): fairygui.GButton;
+        /**
+         * 点击事件处理
+         */
+         handleClick();
+        /**
+         * 开始按钮偏移
+         */
+        startButtonOffset();
         /**
          * 更新进度方法
          */
