@@ -1,9 +1,9 @@
 import FGUI_donhua from "./export/FGUI_donhua";
-import FGUI_knock_export from "./export/FGUI_knock_export";
+import FGUI_knock_export_1 from "./export/FGUI_knock_export_1";
 
-export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_export> {
+export default class exporter_knock_1 extends zs.fgui.baseGeneric<FGUI_knock_export_1> {
 
-    static typeDefine = FGUI_knock_export;
+    static typeDefine = FGUI_knock_export_1;
 
     // 导出列表
     listAd: fairygui.GList;
@@ -20,7 +20,7 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
 
     constructor(component) {
         super(component);
-        if (component && component instanceof FGUI_knock_export) {
+        if (component && component instanceof FGUI_knock_export_1) {
             this.listAd = component.adList;
             this.nodeHammer = component.knock;
             this.aniHammer = this.nodeHammer.aniKnock;

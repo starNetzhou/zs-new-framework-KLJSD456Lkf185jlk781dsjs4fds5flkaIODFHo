@@ -1217,8 +1217,9 @@ declare module zs.ui {
         get btnKnock(): fairygui.GButton;
         /**
          * 点击事件处理
+         * @param progress 进度值
          */
-         handleClick();
+        handleClick(progress: number);
         /**
          * 开始按钮偏移
          */
@@ -2709,6 +2710,10 @@ declare module zs.exporter {
          */
         get background(): string;
         /**
+         * 背景透明度
+         */
+        get backgroundAlpha(): string;
+        /**
          * 部件URL
          */
         get itemURL(): string;
@@ -2886,6 +2891,11 @@ declare module zs.exporter {
          * @param url 图片URL
          */
         setBackground(url: string | string[]): list;
+        /**
+         * 背景透明度
+         * @param value 透明度
+         */
+        setBackgroundAlpha(value: number): list;
         /**
          * 部件URL
          * @param type 部件类型
@@ -3182,6 +3192,34 @@ declare module zs.exporter {
          * 设置字体颜色（16进制，如 #000000）
          */
         set fontcolor(value: string);
+        /**
+         * 获取误触开关
+         */
+        get switch(): string | string[];
+        /**
+         * 设置误触开关（开关字段）
+         */
+        set switch(value: string | string[]);
+        /**
+         * 获取适配模式
+         * scale 整体适配
+         * height 适配高度
+         * width 适配宽度
+         * free 自由缩放
+         * noborder 无边框
+         * none 无缩放
+         */
+        get fill(): string;
+        /**
+         * 设置适配模式
+         * scale 整体适配
+         * height 适配高度
+         * width 适配宽度
+         * free 自由缩放
+         * noborder 无边框
+         * none 无缩放
+         */
+        set fill(value: string);
     }
     /**
      * 全屏导出基类

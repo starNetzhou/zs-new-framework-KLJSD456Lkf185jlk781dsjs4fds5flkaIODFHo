@@ -32,6 +32,7 @@
             "zs_auto_full_screen_jump_switch"
         ],
         "event": "event_full_2",
+        "exitevent": "event_hide_full",
         "exporter": [
             {
                 "type": "export_button",
@@ -43,14 +44,14 @@
                 "base": {
                     "switch": "zs_full_screen_button_switch",
                     "width": 349,
-                    "height": 160,
+                    "fill": "width",
                     "offsety": -200,
                     "fakedelay": [
                         "event_fake_delay",
                         1500
                     ],
                     "fakeevent": "event_full_continue",
-                    "event": "event_hide_full",
+                    "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -65,6 +66,7 @@
             "zs_auto_full_screen_jump_switch"
         ],
         "event": "event_full_1",
+        "exitevent": "event_hide_full",
         "exporter": [
             {
                 "type": "export_button",
@@ -79,7 +81,7 @@
                     "height": 160,
                     "offsety": -200,
                     "fakeevent": "event_full_continue",
-                    "event": "event_hide_full",
+                    "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -103,7 +105,8 @@
     },
     "PRODUCT_HOME_PLAY.EGG": {
         "check": "event_check_egg",
-        "event": "event_common_egg"
+        "event": "event_common_egg",
+        "exitevent": "event_hide_egg"
     },
     "GAME_PLAY": {
         "states": [
@@ -113,7 +116,8 @@
             "SETTLE",
             "END"
         ],
-        "event": "event_fake_exit"
+        "event": "event_fake_exit",
+        "exitevent": "event_hide_fake_exit"
     },
     "GAME_HOME": {
         "base": [],
@@ -163,7 +167,8 @@
                     "background": [
                         "export/export",
                         "bg_bg"
-                    ]
+                    ],
+                    "backgroundalpha": 0.7
                 }
             },
             {
@@ -200,7 +205,8 @@
                     "background": [
                         "export/export",
                         "bg_bg"
-                    ]
+                    ],
+                    "backgroundalpha": 0.7
                 }
             }
         ]
@@ -217,6 +223,7 @@
             "zs_full_screen1_jump"
         ],
         "event": "event_full_1",
+        "exitevent": "event_hide_full",
         "exporter": [
             {
                 "type": "export_button",
@@ -231,7 +238,7 @@
                     "height": 160,
                     "offsety": -200,
                     "fakeevent": "event_full_continue",
-                    "event": "event_hide_full",
+                    "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -245,6 +252,7 @@
             "zs_full_screen2_jump"
         ],
         "event": "event_full_2",
+        "exitevent": "event_hide_full",
         "exporter": [
             {
                 "type": "export_button",
@@ -259,7 +267,7 @@
                     "height": 160,
                     "offsety": -200,
                     "fakeevent": "event_full_continue",
-                    "event": "event_hide_full",
+                    "event": "event_childnext",
                     "url": [
                         "export/export",
                         "btn-continue-new"
@@ -280,13 +288,18 @@
             "event_fake_exit",
             "event_fake_msg"
         ],
+        "exitevent": [
+            "event_hide_fake_exit",
+            "event_hide_fake_msg"
+        ],
         "exporter": [
             {
                 "type": "export_loader",
                 "window": {
                     "align": "topleft",
                     "fit": true
-                },"base":{
+                },
+                "base": {
                     "url": [
                         "export/export",
                         "background_1"
@@ -294,11 +307,24 @@
                 }
             },
             {
-                "type": "export_knock",
+                "type": "export_loader",
+                "window": {
+                    "align": "center"
+                },
+                "base": {
+                    "fill": "none",
+                    "url": [
+                        "export/export",
+                        "over"
+                    ]
+                }
+            },
+            {
+                "type": "export_knock_1",
                 "switch": "zs_finish_jump",
                 "window": {
                     "align": "center",
-                    "alignoffsety": -30
+                    "alignoffsety": 100
                 }
             },
             {

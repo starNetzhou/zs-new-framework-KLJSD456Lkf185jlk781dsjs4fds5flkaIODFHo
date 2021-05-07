@@ -21,12 +21,12 @@ import FGUI_btnConfirm from "./FGUI_btnConfirm";
 import FGUI_btnCancel from "./FGUI_btnCancel";
 import FGUI_full_1 from "./FGUI_full_1";
 import FGUI_item_7 from "./FGUI_item_7";
-import FGUI_btn_Special from "./FGUI_btn_Special";
 import FGUI_Side from "./FGUI_Side";
 import FGUI_btn_left_pop from "./FGUI_btn_left_pop";
 import FGUI_hot_game from "./FGUI_hot_game";
 import FGUI_item_6 from "./FGUI_item_6";
 import FGUI_item_8 from "./FGUI_item_8";
+import FGUI_knock_export_1 from "./FGUI_knock_export_1";
 
 export default class exportBinder {
 	public static bindAll():void {
@@ -51,11 +51,11 @@ export default class exportBinder {
 		fgui.UIObjectFactory.setExtension(FGUI_btnCancel.URL, FGUI_btnCancel);
 		fgui.UIObjectFactory.setExtension(FGUI_full_1.URL, FGUI_full_1);
 		fgui.UIObjectFactory.setExtension(FGUI_item_7.URL, FGUI_item_7);
-		fgui.UIObjectFactory.setExtension(FGUI_btn_Special.URL, FGUI_btn_Special);
 		fgui.UIObjectFactory.setExtension(FGUI_Side.URL, FGUI_Side);
 		fgui.UIObjectFactory.setExtension(FGUI_btn_left_pop.URL, FGUI_btn_left_pop);
 		fgui.UIObjectFactory.setExtension(FGUI_hot_game.URL, FGUI_hot_game);
 		fgui.UIObjectFactory.setExtension(FGUI_item_6.URL, FGUI_item_6);
 		fgui.UIObjectFactory.setExtension(FGUI_item_8.URL, FGUI_item_8);
+		fgui.UIObjectFactory.setExtension(FGUI_knock_export_1.URL, FGUI_knock_export_1);
 	}
 }

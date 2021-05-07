@@ -16,6 +16,7 @@ import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import knock_egg from "./knock_egg";
 import FGUI_item_8 from "./export/FGUI_item_8";
+import exporter_knock_1 from "./exporter_knock_1";
 
 export default class workflow extends zs.workflow {
 
@@ -31,6 +32,7 @@ export default class workflow extends zs.workflow {
 
     static readonly exporterSide = "export_side";
     static readonly exporterKnock = "export_knock";
+    static readonly exporterKnock_1 = "export_knock_1";
 
     static readonly exportItem1 = "export_item_1";
     static readonly exportItem2 = "export_item_2";
@@ -51,6 +53,9 @@ export default class workflow extends zs.workflow {
     static readonly event_hide_full = "event_hide_full";
     static readonly event_full_continue = "event_full_continue";
     static readonly event_check_egg = "event_check_egg";
+    static readonly event_hide_egg = "event_hide_egg";
+    static readonly event_hide_fake_msg = "event_hide_fake_msg";
+    static readonly event_hide_fake_exit = "event_hide_fake_exit";
 
     exporterPack = "export/export";
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
@@ -79,6 +84,7 @@ export default class workflow extends zs.workflow {
         // 注册模块
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
+        zs.fgui.configs.registeBase(workflow.exporterKnock_1, exporter_knock_1);
         // 注册控件
         zs.fgui.configs.registeItem(workflow.exportItem1, FGUI_item_1);
         zs.fgui.configs.registeItem(workflow.exportItem2, FGUI_item_2);
@@ -96,10 +102,14 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
         zs.core.workflow.registeEvent(workflow.event_fake_delay, this, this.fakeContinueDelay, 1000);
-        zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, true);
+        zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, false);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
         // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
         zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return value; }, false);
+        zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
+        zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);
+
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
@@ -135,7 +145,6 @@ export default class workflow extends zs.workflow {
         zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
     }
 
-
     hideWindowFull(autoNext) {
         this.windowFull && this.windowFull.dispose();
         this.windowFull = null;
@@ -143,8 +152,6 @@ export default class workflow extends zs.workflow {
     }
 
     showFull1(auto: boolean) {
-        this.hideFakeExit();
-        this.hideFakeMsg();
         if (this.windowFull) {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
@@ -166,8 +173,6 @@ export default class workflow extends zs.workflow {
     }
 
     showFull2(auto: boolean) {
-        this.hideFakeExit();
-        this.hideFakeMsg();
         if (this.windowFull) {
             zs.log.debug("全屏已经打开了，不能再开了");
             return;
@@ -190,19 +195,6 @@ export default class workflow extends zs.workflow {
 
     commonEgg() {
         if (this._commonEgg) { return; }
-        // return workflow.showPanel(ad_egg)
-        //     .block(true)
-        //     .update<ad_egg>(ad_egg, (unit) => {
-        //         this._commonEgg = unit;
-        //         unit
-        //             .setCloseCallback(Laya.Handler.create(this, () => {
-        //                 console.log("关闭砸金蛋")
-        //                 this.hideCommonEgg();
-        //                 zs.core.workflow.childNext();
-        //             }))
-        //             .apply()
-        //     })
-        //     .front();
         return workflow.showPanel(knock_egg)
             .block(true)
             .update<knock_egg>(knock_egg, (unit) => {
@@ -245,7 +237,7 @@ export default class workflow extends zs.workflow {
                         }))
                         .apply();
                 })
-                .align(zs.fgui.AlignType.Top)
+                .align(zs.fgui.AlignType.Top);
         }
         return workflow.getPanel().front();
     }
@@ -291,8 +283,8 @@ export default class workflow extends zs.workflow {
                     this._fakeExit = unit;
                     unit.event = event;
                 })
-                .align(zs.fgui.AlignType.TopLeft, 10, 50)
-                .scale(1.5, 1.5);
+                .scale(1.5, 1.5)
+                .align(zs.fgui.AlignType.TopLeft, 10, 50);
         }
 
         return workflow.getPanel().front();

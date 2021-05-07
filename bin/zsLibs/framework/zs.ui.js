@@ -205,7 +205,7 @@ window.zs.ui = window.zs.ui || {};
                 if (this.clicked) {
                     this.onBannerCheck();
                     this.progress += this.clickPercent;
-                    this.handleClick();
+                    this.handleClick(this.progress);
                 }
                 this.clicked = false;
                 this.progress = Math.min(1, Math.max(0, this.progress));
@@ -231,8 +231,8 @@ window.zs.ui = window.zs.ui || {};
             }
         }
         onClick() { this.clicked = true; }
-        handleClick() {
-            if (this.progress >= this.bannerPoint && !this.isOpenAd) {
+        handleClick(progress) {
+            if (progress >= this.bannerPoint && !this.isOpenAd) {
                 this.isOpenAd = true;
                 zs.platform.sync.showBanner();
                 this.startButtonOffset();

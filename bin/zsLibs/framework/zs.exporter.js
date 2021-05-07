@@ -763,6 +763,16 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return this;
         }
+        get backgroundAlpha() {
+            if (this.view && this.view instanceof zs.ui.FGUI_list) {
+                return this.view.background.alpha;
+            }
+            return 0;
+        }
+        setBackgroundAlpha(value) {
+            this.view && this.view.background && (this.view.background.alpha = value);
+            return this;
+        }
         get item() {
             return this._itemType;
         }
@@ -1045,6 +1055,7 @@ window.zs.exporter = window.zs.exporter || {};
                 config.margintop != null && config.margintop != undefined && (this.setMarginTop(config.margintop));
                 config.marginbottom != null && config.marginbottom != undefined && (this.setMarginBottom(config.marginbottom));
                 config.background && (this.setBackground(config.background));
+                config.backgroundalpha != null && (this.setBackgroundAlpha(config.backgroundalpha));
                 item && (this.setItem(item));
                 config.max && (this.setMaxItems(config.max));
                 if (config.scrolltype) {
@@ -1398,8 +1409,8 @@ window.zs.exporter = window.zs.exporter || {};
                 if (config.autosize != null && config.autosize != undefined) {
                     this.setAutoSize(config.autosize);
                 } else {
-                    config.width && this.setWidth(config.width, config.keepratio);
-                    config.height && this.setHeight(config.height, config.keepratio);
+                    config.width != null && this.setWidth(config.width, config.keepratio);
+                    config.height != null && this.setHeight(config.height, config.keepratio);
                 }
             }
         }
@@ -1537,12 +1548,12 @@ window.zs.exporter = window.zs.exporter || {};
         }
         applyConfig(config) {
             if (config) {
-                config.alpha && (this.alpha = config.alpha);
+                config.alpha != null && (this.alpha = config.alpha);
                 config.url && (this.url = config.url);
-                config.width && (this.width = config.width);
-                config.height && (this.height = config.height);
-                config.x && (this.x = config.x);
-                config.y && (this.y = config.y);
+                config.width != null && (this.width = config.width);
+                config.height != null && (this.height = config.height);
+                config.x != null && (this.x = config.x);
+                config.y != null && (this.y = config.y);
                 config.fill && (this.fill = config.fill);
             }
             return this;
@@ -1582,7 +1593,7 @@ window.zs.exporter = window.zs.exporter || {};
         applyConfig(config) {
             if (config) {
                 config.color && (this.color = config.color);
-                config.alpha && (this.alpha = config.alpha);
+                config.alpha != null && (this.alpha = config.alpha);
             }
             return this;
         }
@@ -1677,9 +1688,59 @@ window.zs.exporter = window.zs.exporter || {};
             }
         }
         get switch() { return this._switch }
+        get fill() {
+            if (!this.icon) { return null; }
+            let type = "free";
+            switch (this.icon.fill) {
+                case fairygui.LoaderFillType.None:
+                    type = "none";
+                    break;
+                case fairygui.LoaderFillType.Scale:
+                    type = "scale";
+                    break;
+                case fairygui.LoaderFillType.ScaleMatchHeight:
+                    type = "height";
+                    break;
+                case fairygui.LoaderFillType.ScaleMatchWidth:
+                    type = "width";
+                    break;
+                case fairygui.LoaderFillType.ScaleFree:
+                    type = "free";
+                    break;
+                case fairygui.LoaderFillType.ScaleNoBorder:
+                    type = "noborder";
+                    break;
+            }
+            return type;
+        }
+        set fill(value) {
+            if (!this.icon) { return; }
+            let type = fairygui.LoaderFillType.ScaleFree;
+            switch (value) {
+                case "scale":
+                    type = fairygui.LoaderFillType.Scale;
+                    break;
+                case "height":
+                    type = fairygui.LoaderFillType.ScaleMatchHeight;
+                    break;
+                case "width":
+                    type = fairygui.LoaderFillType.ScaleMatchWidth;
+                    break;
+                case "free":
+                    type = fairygui.LoaderFillType.ScaleFree;
+                    break;
+                case "noborder":
+                    type = fairygui.LoaderFillType.ScaleNoBorder;
+                    break;
+                case "none":
+                    type = fairygui.LoaderFillType.None;
+                    break;
+            }
+            this.icon.fill = type;
+        }
         onClicked() {
+            this.view.touchable = false;
             if (this.switch && (this.offsetx || this.offsety)) {
-                this.view.touchable = false;
                 let targetX = this.view.x + (this.offsetx || 0);
                 let targetY = this.view.y + (this.offsety || 0);
                 Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
@@ -1688,7 +1749,7 @@ window.zs.exporter = window.zs.exporter || {};
                 this.offsetx = null;
                 this.offsety = null;
                 this.onFakeClicked();
-            } else if (this.clickignore) {
+            } else if (this.switch && this.clickignore) {
                 setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
@@ -1731,19 +1792,20 @@ window.zs.exporter = window.zs.exporter || {};
         applyConfig(config) {
             if (config) {
                 config.url && (this.url = config.url);
-                config.alpha && (this.alpha = config.alpha);
-                config.width && (this.width = config.width);
-                config.height && (this.height = config.height);
+                config.fill && (this.fill = config.fill);
+                config.alpha != null && (this.alpha = config.alpha);
+                config.width != null && (this.width = config.width);
+                config.height != null && (this.height = config.height);
                 config.font && (this.font = config.font);
-                config.fontsize && (this.fontsize = config.fontsize);
+                config.fontsize != null && (this.fontsize = config.fontsize);
                 config.fontcolor && (this.fontcolor = config.fontcolor);
                 config.text && (this.text = config.text);
-                config.offsetx && (this.offsetx = config.offsetx);
-                config.offsety && (this.offsety = config.offsety);
-                config.offsettime && (this.offsettime = config.offsettime);
+                config.offsetx != null && (this.offsetx = config.offsetx);
+                config.offsety != null && (this.offsety = config.offsety);
+                config.offsettime != null && (this.offsettime = config.offsettime);
                 config.clickignore && (this.clickignore = config.clickignore);
                 config.clickalways && (this.clickalways = config.clickalways);
-                config.fakedelay && (this.fakedelay = config.fakedelay);
+                config.fakedelay != null && (this.fakedelay = config.fakedelay);
                 config.fakeevent && (this.fakeevent = config.fakeevent);
                 config.event && (this.event = config.event);
                 config.switch && (this.switch = config.switch);
