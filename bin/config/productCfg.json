@@ -106,7 +106,8 @@
                     "mode": "side",
                     "width": 300,
                     "max": 2,
-                    "shaketime": 3000
+                    "shaketime": 3000,
+                    "startfadedelay": 1000
                 }
             },
             {
@@ -120,7 +121,8 @@
                     "mode": "side",
                     "width": 300,
                     "max": 2,
-                    "shaketime": 3000
+                    "shaketime": 3000,
+                    "startfadedelay": 1000
                 }
             },
             {

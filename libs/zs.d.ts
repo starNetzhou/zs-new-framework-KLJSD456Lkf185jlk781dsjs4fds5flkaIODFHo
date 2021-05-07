@@ -2763,6 +2763,30 @@ declare module zs.exporter {
          */
         get transition(): string;
         /**
+         * 开始X偏移
+         */
+        get startOffsetX(): number;
+        /**
+         * 开始Y偏移
+         */
+        get startOffsetY(): number;
+        /**
+         * 开始偏移时间
+         */
+        get startOffsetTime(): number;
+        /**
+         * 开始偏移延迟
+         */
+        get startOffsetDelay(): number;
+        /**
+         * 开始隐现延迟
+         */
+        get startFadeDelay(): number;
+        /**
+         * 开始隐现时间
+         */
+        get startFadeTime(): number;
+        /**
          * 适配缩放
          * @param value 是否开启
          */
@@ -2948,6 +2972,36 @@ declare module zs.exporter {
          */
         setDragRecoverTime(value: number): list;
         /**
+         * 开始X偏移
+         * @param value 偏移值
+         */
+        setStartOffsetX(value): list;
+        /**
+         * 开始Y偏移
+         * @param value 偏移值
+         */
+        setStartOffsetY(value): list;
+        /**
+         * 开始偏移时间
+         * @param value 时间值 
+         */
+        setStartOffsetTime(value): list;
+        /**
+         * 开始偏移延迟
+         * @param value 时间值 
+         */
+        setStartOffsetDelay(value): list;
+        /**
+         * 开始隐现延迟
+         * @param value 时间值
+         */
+        setStartFadeDelay(value): list;
+        /**
+         * 开始隐现时间
+         * @param value 时间值 
+         */
+        setStartFadeTime(value): list;
+        /**
          * 动效
          * @param transition 动效名称
          */
@@ -2991,7 +3045,7 @@ declare module zs.exporter {
     }
 
     /**
-     * 导出卡片
+     * 导出卡片(暂时不可用，可能产生问题)
      */
     class card extends zs.fgui.base {
         /**

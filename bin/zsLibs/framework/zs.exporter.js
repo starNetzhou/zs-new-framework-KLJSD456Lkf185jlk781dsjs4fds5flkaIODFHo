@@ -287,6 +287,8 @@ window.zs.exporter = window.zs.exporter || {};
         }
         dispose() {
             super.dispose();
+            this.startOffsetDelayHandler && clearTimeout(this.startOffsetDelayHandler);
+            Laya.Tween.clear(this.view);
             if (this.shakeTime > 0) {
                 this.stopShake();
             }
@@ -834,6 +836,44 @@ window.zs.exporter = window.zs.exporter || {};
             this._transition = transition;
             return this;
         }
+        get startOffsetX() {
+            return this._startoffsetx;
+        }
+        setStartOffsetX(value) {
+            this._startoffsetx = value;
+            return this;
+        }
+        get startOffsetY() {
+            return this._startoffsety;
+        }
+        setStartOffsetY(value) {
+            this._startoffsety = value;
+            return this;
+        }
+        get startOffsetTime() {
+            return this._startoffsettime;
+        }
+        setStartOffsetTime(value) {
+            this._startoffsettime = value;
+        }
+        get startOffsetDelay() {
+            return this._startoffsetdelay;
+        }
+        setStartOffsetDelay(value) {
+            this._startoffsetdelay = value;
+        }
+        get startFadeDelay() {
+            return this._startfadedelay;
+        }
+        setStartFadeDelay(value) {
+            this._startfadedelay = value;
+        }
+        get startFadeTime() {
+            return this._startfadetime;
+        }
+        setStartFadeTime(value) {
+            this._startfadetime = value;
+        }
         setDataHandler(handler) {
             if (handler) {
                 handler.once = false;
@@ -931,6 +971,21 @@ window.zs.exporter = window.zs.exporter || {};
                 if (this.shakeTime && this.shakeTime > 0) {
                     Laya.timer.once(this.shakeTime, this, this.refreshItem)
                 }
+            }
+
+            if ((this._startoffsetx != null || this._startoffsety != null) && this.startOffsetDelayHandler == null) {
+                this.startOffsetDelayHandler = setTimeout(() => {
+                    let targetX = this.view.x + (this._startoffsetx || 0);
+                    let targetY = this.view.y + (this._startoffsety || 0);
+                    console.log(this.view.x + " : " + this._startoffsetx, this.view.y + " : " + this._startoffsety);
+                    Laya.Tween.to(this.view, { x: targetX, y: targetY }, this._startoffsettime || 500, null, null, this._startoffsetdelay || 0);
+                }, 1);
+            }
+            if (this._startfadedelay != null || this._startfadetime != null) {
+                this.view.alpha = 0;
+                Laya.Tween.to(this.view, { alpha: 1 }, this._startfadetime || 500, null, null, this._startfadedelay || 0);
+                this._startfadedelay = null;
+                this._startfadetime = null;
             }
             return this;
         }
@@ -1080,6 +1135,12 @@ window.zs.exporter = window.zs.exporter || {};
                 config.virtual && (this.virtual());
                 config.bounce != null && config.bounce != undefined && (this.bounce(config.bounce));
                 config.shaketime != null && config.shaketime != undefined && (this.setShakeTime(config.shaketime));
+                config.startoffsetx != null && config.startoffsetx != undefined && (this.setStartOffsetX(config.startoffsetx));
+                config.startoffsety != null && config.startoffsety != undefined && (this.setStartOffsetY(config.startoffsety));
+                config.startoffsettime != null && config.startoffsettime != undefined && (this.setStartOffsetTime(config.startoffsettime));
+                config.startoffsetdelay != null && config.startoffsetdelay != undefined && (this.setStartOffsetDelay(config.startoffsetdelay));
+                config.startfadedelay != null && config.startfadedelay != undefined && (this.setStartFadeDelay(config.startfadedelay));
+                config.startfadetime != null && config.startfadetime != undefined && (this.setStartFadeTime(config.startfadetime));
             }
             return this.apply();
         }
@@ -1181,7 +1242,7 @@ window.zs.exporter = window.zs.exporter || {};
             if (this._itemRendererHandler) {
                 this._itemRendererHandler.runWith([item, data]);
             } else {
-                item.picture.icon = data.app_icon;
+                item.picture && item.picture.icon && (item.picture.icon = data.app_icon);
                 if (data.app_title && item.title) {
                     item.title.text = data.app_title;
                 } else if (item.title) {
@@ -1301,6 +1362,11 @@ window.zs.exporter = window.zs.exporter || {};
         static type() {
             return zs.ui.FGUI_card;
         }
+        dispose() {
+            super.dispose();
+            this.startOffsetDelayHandler && clearTimeout(this.startOffsetDelayHandler);
+            Laya.Tween.clear(this.view);
+        }
         check(component) {
             if (component instanceof zs.ui.FGUI_card) {
                 return true;
@@ -1345,6 +1411,7 @@ window.zs.exporter = window.zs.exporter || {};
                     cardView.loader.height = scale * cardView.loader.sourceHeight;
                 }
             }
+            console.log(cardView);
             return this;
         }
         get height() {
@@ -1380,6 +1447,44 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return this;
         }
+        get startOffsetX() {
+            return this._startoffsetx;
+        }
+        setStartOffsetX(value) {
+            this._startoffsetx = value;
+            return this;
+        }
+        get startOffsetY() {
+            return this._startoffsety;
+        }
+        setStartOffsetY(value) {
+            this._startoffsety = value;
+            return this;
+        }
+        get startOffsetTime() {
+            return this._startoffsettime;
+        }
+        setStartOffsetTime(value) {
+            this._startoffsettime = value;
+        }
+        get startOffsetDelay() {
+            return this._startoffsetdelay;
+        }
+        setStartOffsetDelay(value) {
+            this._startoffsetdelay = value;
+        }
+        get startFadeDelay() {
+            return this._startfadedelay;
+        }
+        setStartFadeDelay(value) {
+            this._startfadedelay = value;
+        }
+        get startFadeTime() {
+            return this._startfadetime;
+        }
+        setStartFadeTime(value) {
+            this._startfadetime = value;
+        }
         setData(data) {
             let cardView = this.view;
             if (cardView && cardView.loader) {
@@ -1388,17 +1493,42 @@ window.zs.exporter = window.zs.exporter || {};
                 if (this._cardRendererHandler) {
                     this._cardRendererHandler.runWith([item, data]);
                 } else {
-                    if (item instanceof zs.ui.FGUI_item) {
-                        item.picture.icon = data.url;
-                        item.title.text = data.title;
-                        if (item.desc && data.desc) {
-                            item.desc.text = data.desc;
-                        } else if (item.desc) {
-                            item.desc.text = "";
-                        }
+                    item.picture && item.picture.icon && (item.picture.icon = data.app_icon);
+                    if (data.app_title && item.title) {
+                        item.title.text = data.app_title;
+                    } else if (item.title) {
+                        item.title.text = "";
+                    }
+                    if (data.app_desc && item.desc) {
+                        item.desc.text = data.app_desc;
+                    } else if (item.desc) {
+                        item.desc.text = "";
                     }
                 }
             }
+            return this;
+        }
+        apply() {
+            if ((this._startoffsetx != null || this._startoffsety != null) && this.startOffsetDelayHandler == null) {
+                this.startOffsetDelayHandler = setTimeout(() => {
+                    let targetX = this.view.x + (this._startoffsetx || 0);
+                    let targetY = this.view.y + (this._startoffsety || 0);
+                    console.log(this.view.x + " : " + this._startoffsetx, this.view.y + " : " + this._startoffsety);
+                    Laya.Tween.to(this.view, { x: targetX, y: targetY }, this._startoffsettime || 500, null, null, this._startoffsetdelay || 0);
+                }, 1);
+            }
+            if (this._startfadedelay != null || this._startfadetime != null) {
+                this.view.alpha = 0;
+                Laya.Tween.to(this.view, { alpha: 1 }, this._startfadetime || 500, null, null, this._startfadedelay || 0);
+                this._startfadedelay = null;
+                this._startfadetime = null;
+            }
+
+            dataMgr.load().then((result) => {
+                if (this.disposed) return;
+                this.setData(result.promotion[zs.utils.randInt(0, result.promotion.length)]);
+            });
+
             return this;
         }
         applyConfig(config) {
@@ -1412,7 +1542,15 @@ window.zs.exporter = window.zs.exporter || {};
                     config.width != null && this.setWidth(config.width, config.keepratio);
                     config.height != null && this.setHeight(config.height, config.keepratio);
                 }
+                config.startoffsetx != null && config.startoffsetx != undefined && (this.setStartOffsetX(config.startoffsetx));
+                config.startoffsety != null && config.startoffsety != undefined && (this.setStartOffsetY(config.startoffsety));
+                config.startoffsettime != null && config.startoffsettime != undefined && (this.setStartOffsetTime(config.startoffsettime));
+                config.startoffsetdelay != null && config.startoffsetdelay != undefined && (this.setStartOffsetDelay(config.startoffsetdelay));
+                config.startfadedelay != null && config.startfadedelay != undefined && (this.setStartFadeDelay(config.startfadedelay));
+                config.startfadetime != null && config.startfadetime != undefined && (this.setStartFadeTime(config.startfadetime));
             }
+
+            return this.apply();
         }
         setDataHandler(handler) {
             if (handler) {
@@ -1429,7 +1567,7 @@ window.zs.exporter = window.zs.exporter || {};
             if (this._clickHandler) {
                 this._clickHandler.runWith(item);
             } else {
-                utils.navigateToMiniProgram(item.info);
+                utils.navigateToMiniProgram(item.data);
             }
         }
     }
@@ -1764,6 +1902,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
         setAutoFade(value) {
             this.autofade = value;
+            this.isFading = false;
             return this;
         }
         setAutoFadeTime(value) {
@@ -1874,6 +2013,18 @@ window.zs.exporter = window.zs.exporter || {};
                 }), delay);
             }
         }
+        apply() {
+            if (this.autooffset != null && this.offsetDelayHandler == null) {
+                this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
+            }
+            if (this.autofade != null || !this.isFading) {
+                this.view.alpha = 0;
+                this.view.touchable = false;
+                this.autoFade();
+                this.isFading = true;
+            }
+            return this;
+        }
         applyConfig(config) {
             if (config) {
                 config.url && (this.setURL(config.url));
@@ -1897,17 +2048,8 @@ window.zs.exporter = window.zs.exporter || {};
                 config.fakeevent && (this.setFakeEvent(config.fakeevent));
                 config.event && (this.setEvent(config.event));
                 config.switch && (this.setSwitch(config.switch));
-
-                if (this.autooffset != null) {
-                    this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
-                }
-                if (this.autofade != null) {
-                    this.view.alpha = 0;
-                    this.view.touchable = false;
-                    this.autoFade();
-                }
             }
-            return this;
+            return this.apply();
         }
     }
     class full extends zs.fgui.base {
