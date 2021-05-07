@@ -205,11 +205,7 @@ window.zs.ui = window.zs.ui || {};
                 if (this.clicked) {
                     this.onBannerCheck();
                     this.progress += this.clickPercent;
-                    if (this.progress >= this.bannerPoint && !this.isOpenAd) {
-                        this.isOpenAd = true;
-                        zs.platform.sync.showBanner();
-                        this.btnOffsetCount = this.btnOffsetDelay;
-                    }
+                    this.handleClick();
                 }
                 this.clicked = false;
                 this.progress = Math.min(1, Math.max(0, this.progress));
@@ -235,6 +231,16 @@ window.zs.ui = window.zs.ui || {};
             }
         }
         onClick() { this.clicked = true; }
+        handleClick() {
+            if (this.progress >= this.bannerPoint && !this.isOpenAd) {
+                this.isOpenAd = true;
+                zs.platform.sync.showBanner();
+                this.startButtonOffset();
+            }
+        }
+        startButtonOffset() {
+            this.btnOffsetCount = this.btnOffsetDelay;
+        }
         updateProgress(value) { }
         setEventHandler(evtAward, evtClose) {
             this.awardHandler = evtAward;

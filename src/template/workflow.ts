@@ -14,8 +14,8 @@ import exporter_fake_msg from "./exporter_fake_msg";
 import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
-import exporter_Special from "./exporter_Special";
 import knock_egg from "./knock_egg";
+import FGUI_item_8 from "./export/FGUI_item_8";
 
 export default class workflow extends zs.workflow {
 
@@ -39,6 +39,7 @@ export default class workflow extends zs.workflow {
     static readonly exportItem5 = "export_item_5";
     static readonly exportItem6 = "export_item_6";
     static readonly exportItem7 = "export_item_7";
+    static readonly exportItem8 = "export_item_8";
 
     static readonly event_full_1 = "event_full_1";
     static readonly event_full_2 = "event_full_2";
@@ -46,12 +47,10 @@ export default class workflow extends zs.workflow {
     static readonly event_common_egg = "event_common_egg";
     static readonly event_fake_exit = "event_fake_exit";
     static readonly event_fake_msg = "event_fake_msg";
+    static readonly event_fake_delay = "event_fake_delay";
     static readonly event_hide_full = "event_hide_full";
     static readonly event_full_continue = "event_full_continue";
-
-    static readonly check_egg = "check_egg";
-
-    static readonly special = "special";
+    static readonly event_check_egg = "event_check_egg";
 
     exporterPack = "export/export";
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
@@ -88,6 +87,7 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem5, FGUI_item_5);
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
+        zs.fgui.configs.registeItem(workflow.exportItem8, FGUI_item_8);
         // 注册事件
         zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1, true);
         zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2, true);
@@ -95,18 +95,17 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
         zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_fake_delay, this, this.fakeContinueDelay, 1000);
         zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, true);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
-        // 注册检查事件
-        zs.core.workflow.registeCheckEvent(workflow.check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
-
-        //
-        zs.fgui.configs.registeBase(workflow.special, exporter_Special);
+        // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return value; }, false);
         // 假消息音效，指定路径没有资源会报错
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
         zs.exporter.utils.navigateErrorHandler = Laya.Handler.create(this, () => {
-            this.showFull1(false);
+            // this.showFull1(false);
+            zs.core.workflow.callEvent(workflow.event_full_1);
         }, null, false);
         // 读取假消息昵称列表
         zs.configs.load("fake_msg_nick", "fgui/export/nickname.json").then((res) => {
@@ -127,30 +126,8 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    isNumber(val) {
-        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-        if (regPos.test(val) || regNeg.test(val)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    onCommonEgg() {
-        this.commonEgg();
-        // var bEgg;
-        // await this.checkEgg(true).then(() => {
-        //     bEgg = true;
-        // }).catch(() => {
-        //     bEgg = false;
-        // })
-        // console.log("通用砸金蛋", bEgg)
-        // if (bEgg) {
-        //     this.commonEgg();
-        // } else {
-        //     zs.core.workflow.childNext();
-        // }
+    fakeContinueDelay(value) {
+        return value;
     }
 
     onFullContinue() {

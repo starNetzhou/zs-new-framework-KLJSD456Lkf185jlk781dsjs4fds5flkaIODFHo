@@ -1,9 +1,7 @@
 {
     "PRODUCT_START": {
         "states": [
-            "READY",
-            "FULL_1",
-            "FULL_2"
+            "READY"
         ]
     },
     "PRODUCT_START.READY": {
@@ -47,6 +45,10 @@
                     "width": 349,
                     "height": 160,
                     "offsety": -200,
+                    "fakedelay": [
+                        "event_fake_delay",
+                        1500
+                    ],
                     "fakeevent": "event_full_continue",
                     "event": "event_hide_full",
                     "url": [
@@ -100,7 +102,7 @@
         "event": "event_start_video"
     },
     "PRODUCT_HOME_PLAY.EGG": {
-        "check": "check_egg",
+        "check": "event_check_egg",
         "event": "event_common_egg"
     },
     "GAME_PLAY": {
@@ -115,6 +117,7 @@
     },
     "GAME_HOME": {
         "base": [],
+        "laterevent": "event_fake_exit",
         "exporter": [
             {
                 "type": "export_list",
@@ -148,10 +151,10 @@
                 "type": "export_list",
                 "window": {
                     "align": "top",
-                    "alignoffsety": 95
+                    "alignoffsety": 140
                 },
                 "base": {
-                    "item": "export_item_7",
+                    "item": "export_item_8",
                     "mode": "hlist",
                     "height": 270,
                     "max": 10,
@@ -159,7 +162,7 @@
                     "marginright": 10,
                     "background": [
                         "export/export",
-                        "icon_background"
+                        "bg_bg"
                     ]
                 }
             },
@@ -188,12 +191,16 @@
                     "alignoffsety": 140
                 },
                 "base": {
-                    "item": "export_item_7",
+                    "item": "export_item_8",
                     "mode": "hlist",
                     "height": 270,
                     "max": 10,
                     "marginleft": 10,
-                    "marginright": 10
+                    "marginright": 10,
+                    "background": [
+                        "export/export",
+                        "bg_bg"
+                    ]
                 }
             }
         ]
@@ -275,10 +282,15 @@
         ],
         "exporter": [
             {
-                "type": "export_background",
+                "type": "export_loader",
                 "window": {
                     "align": "topleft",
                     "fit": true
+                },"base":{
+                    "url": [
+                        "export/export",
+                        "background_1"
+                    ]
                 }
             },
             {
