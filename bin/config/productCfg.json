@@ -252,10 +252,12 @@
             {
                 "type": "export_loader",
                 "window": {
-                    "align": "top"
+                    "align": "top",
+                    "alignoffsety": 200
                 },
                 "base": {
-                    "fill": "none",
+                    "width": 800,
+                    "fill": "width",
                     "url": [
                         "export/export",
                         "over"

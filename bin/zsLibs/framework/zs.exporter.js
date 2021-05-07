@@ -1437,69 +1437,69 @@ window.zs.exporter = window.zs.exporter || {};
     class loader extends zs.fgui.base {
         constructor(component) {
             super(component);
+            console.log("loader", component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
-            let loaderInst = new fairygui.GLoader();
-            loaderInst.alpha = 1;
-            loaderInst.x = 0;
-            loaderInst.y = 0;
-            loaderInst.width = component.width;
-            loaderInst.height = component.height;
-            loaderInst.addRelation(component, fairygui.RelationType.Width);
-            loaderInst.addRelation(component, fairygui.RelationType.Height);
-            loaderInst.autoSize = false;
-            loaderInst.fill = fairygui.LoaderFillType.ScaleFree;
-            component.addChild(loaderInst);
-            this.loader = loaderInst;
+            component.alpha = 1;
+            component.x = 0;
+            component.y = 0;
+            component.autoSize = false;
+            component.fill = fairygui.LoaderFillType.ScaleFree;
+        }
+        static make() {
+            return new fairygui.GLoader();
         }
         get url() {
-            return this.loader ? this.loader.url : null;
+            return this.view.url;
         }
-        set url(value) {
-            if (this.loader) {
-                if (Array.isArray(value) && value.length > 1) {
-                    zs.fgui.loadPack(value[0]).then((res) => {
-                        this.loader.url = zs.ui.readURL(res, value[1]);
-                    });
-                } else {
-                    this.loader.url = value;
-                }
+        setURL(value) {
+            if (Array.isArray(value) && value.length > 1) {
+                zs.fgui.loadPack(value[0]).then((res) => {
+                    this.view.url = zs.ui.readURL(res, value[1]);
+                });
+            } else {
+                this.view.url = value;
             }
+            return this;
         }
         get alpha() {
-            return this.loader ? this.loader.alpha : 0;
+            return this.view.alpha;
         }
-        set alpha(value) {
-            this.loader && (this.loader.alpha = value);
+        setAlpha(value) {
+            this.view.alpha = value;
+            return this;
         }
         get width() {
-            return this.loader ? this.loader.width : 0;
+            return this.view.width;
         }
-        set width(value) {
-            this.loader && (this.loader.width = value);
+        setWidth(value) {
+            this.view.width = value;
+            return this;
         }
         get height() {
-            return this.loader ? this.loader.height : 0;
+            return this.view.height;
         }
-        set height(value) {
-            this.loader && (this.loader.height = value);
+        setHeight(value) {
+            this.view.height = value;
+            return this;
         }
         get x() {
-            return this.loader ? this.loader.x : 0;
+            return this.view.x;
         }
-        set x(value) {
-            this.loader && (this.loader.x = value);
+        setX(value) {
+            this.view.x = value;
+            return this;
         }
         get y() {
-            return this.loader ? this.loader.y : 0;
+            return this.view.y;
         }
-        set y(value) {
-            this.loader && (this.loader.y = value);
+        setY(value) {
+            this.view.y = value;
+            return this;
         }
         get fill() {
-            if (!this.loader) { return null; }
             let type = "free";
-            switch (this.loader.fill) {
+            switch (this.view.fill) {
                 case fairygui.LoaderFillType.None:
                     type = "none";
                     break;
@@ -1521,8 +1521,7 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return type;
         }
-        set fill(value) {
-            if (!this.loader) { return; }
+        setFill(value) {
             let type = fairygui.LoaderFillType.ScaleFree;
             switch (value) {
                 case "scale":
@@ -1544,17 +1543,18 @@ window.zs.exporter = window.zs.exporter || {};
                     type = fairygui.LoaderFillType.None;
                     break;
             }
-            this.loader.fill = type;
+            this.view.fill = type;
+            return this;
         }
         applyConfig(config) {
             if (config) {
-                config.alpha != null && (this.alpha = config.alpha);
-                config.url && (this.url = config.url);
-                config.width != null && (this.width = config.width);
-                config.height != null && (this.height = config.height);
-                config.x != null && (this.x = config.x);
-                config.y != null && (this.y = config.y);
-                config.fill && (this.fill = config.fill);
+                config.alpha != null && (this.setAlpha(config.alpha));
+                config.url && (this.setURL(config.url));
+                config.width != null && (this.setWidth(config.width));
+                config.height != null && (this.setHeight(config.height));
+                config.x != null && (this.setX(config.x));
+                config.y != null && (this.setY(config.y));
+                config.fill && (this.setFill(config.fill));
             }
             return this;
         }
@@ -1565,35 +1565,32 @@ window.zs.exporter = window.zs.exporter || {};
             super(component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
-            let graphInst = new fairygui.GGraph();
-            this.graph = graphInst;
-            graphInst.alpha = 0.5;
-            graphInst.x = 0;
-            graphInst.y = 0;
-            graphInst.width = component.width;
-            graphInst.height = component.height;
-            graphInst.addRelation(component, fairygui.RelationType.Width);
-            graphInst.addRelation(component, fairygui.RelationType.Height);
-            this.graph.drawRect(0, '#000000', '#000000');
-            component.addChild(graphInst);
-            console.log(fairygui.GRoot.inst.width + " : " + fairygui.GRoot.inst.height, this.graph);
+            component.alpha = 0.5;
+            component.x = 0;
+            component.y = 0;
+            component.drawRect(0, '#000000', '#000000');
+        }
+        static make() {
+            return new fairygui.GGraph();
         }
         get color() {
-            return this.graph ? this.graph.color : "";
+            return this.view.color;
         }
-        set color(value) {
-            this.graph && (this.graph.color = value);
+        setColor(value) {
+            this.view.color = value;
+            return this;
         }
         get alpha() {
-            return this.graph ? this.graph.alpha : 0;
+            return this.view.alpha;
         }
-        set alpha(value) {
-            this.graph && (this.graph.alpha = value);
+        setAlpha(value) {
+            this.view.alpha = value;
+            return this;
         }
         applyConfig(config) {
             if (config) {
-                config.color && (this.color = config.color);
-                config.alpha != null && (this.alpha = config.alpha);
+                config.color && (this.setColor(config.color));
+                config.alpha != null && (this.setAlpha(config.alpha));
             }
             return this;
         }
@@ -1807,10 +1804,6 @@ window.zs.exporter = window.zs.exporter || {};
         }
         setEvent(value) {
             this.event = value;
-            return this;
-        }
-        setSwitch(value) {
-            this.switch = value;
             return this;
         }
         onClicked() {

@@ -1253,6 +1253,10 @@ declare module zs.ui {
          */
         onBannerCheck();
         /**
+         * 获取奖励监听
+         */
+        onGetAward();
+        /**
          * 销毁检查监听
          */
         onDispose();
@@ -3061,7 +3065,7 @@ declare module zs.exporter {
         /**
          * 设置图片URL
          */
-        set url(value: string | string[]);
+        setURL(value: string | string[]): loader;
         /**
          * 获取透明度
          */
@@ -3069,7 +3073,7 @@ declare module zs.exporter {
         /**
          * 设置透明度
          */
-        set alpha(value: number);
+        setAlpha(value: number): loader;
         /**
          * 获取宽度
          */
@@ -3077,7 +3081,7 @@ declare module zs.exporter {
         /**
          * 设置宽度
          */
-        set width(value: number);
+        setWidth(value: number): loader;
         /**
          * 获取高度
          */
@@ -3085,7 +3089,7 @@ declare module zs.exporter {
         /**
          * 设置高度 
          */
-        set height(value: number);
+        setHeight(value: number): loader;
         /**
          * 获取X位置
          */
@@ -3093,7 +3097,7 @@ declare module zs.exporter {
         /**
          * 设置X位置
          */
-        set x(value: number);
+        setX(value: number): loader;
         /**
          * 获取Y位置
          */
@@ -3101,7 +3105,7 @@ declare module zs.exporter {
         /**
          * 设置Y位置
          */
-        set y(value: number);
+        setY(value: number): loader;
         /**
          * 获取适配模式
          * scale 整体适配
@@ -3121,7 +3125,7 @@ declare module zs.exporter {
          * noborder 无边框
          * none 无缩放
          */
-        set fill(value: string);
+        setFill(value: string): loader;
     }
     /**
      * 导出背景
@@ -3134,7 +3138,7 @@ declare module zs.exporter {
         /**
          * 设置背景颜色（16进制，如 #000000）
          */
-        set color(value: string);
+        setColor(value: string): background;
         /**
          * 设置透明度
          */
@@ -3142,7 +3146,7 @@ declare module zs.exporter {
         /**
          * 获取透明度
          */
-        set alpha(value: number);
+        setAlpha(value: number): background;
     }
     class button extends zs.fgui.base {
         /**
@@ -3292,11 +3296,6 @@ declare module zs.exporter {
          * @param value 事件名
          */
         setEvent(value: string | string[]): button;
-        /**
-         * 设置假事件按钮开关
-         * @param value 开关列表
-         */
-        setSwitch(value: string | string[]): button;
     }
     /**
      * 全屏导出基类

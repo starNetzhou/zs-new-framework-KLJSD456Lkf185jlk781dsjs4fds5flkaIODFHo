@@ -49,13 +49,11 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
         var data = this.adShowArr[index]
         item.icon = data.app_icon;
     }
-
     onClickItem(item) {
         var index = this.listAd.getChildIndex(item);
         // console.log("点击了", this.adShowArr[index])
         zs.exporter.utils.navigateToMiniProgram(this.adShowArr[index]);
     }
-
     updateUI() {
         this.adData.sort((a, b) => {
             return Math.random() > 0.5 ? -1 : 1;
@@ -73,7 +71,6 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
         var enterDelay = 1000; //进界面后多久开始砸导出
         Laya.timer.once(enterDelay, this, this.knockExportIcon, null, false);
     }
-
     stopKnock() {
         Laya.timer.clearAll(this);
         for (let index = 0; index < this.listAd.numItems; index++) {
@@ -81,7 +78,6 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
             Laya.Tween.clearAll(element)
         }
     }
-
     knockExportIcon() {
         if (this.listAd.numItems <= 0) { return; }
         var hammerTime = 5000;
@@ -100,13 +96,11 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
         this.aniHammer.play(Laya.Handler.create(this, this.onBrokenComplete), 1);
         Laya.timer.once(hammerTime, this, this.knockExportIcon, null, true);
     }
-
     onBrokenComplete() {
         this.nodeHammer.visible = false;
         var cell = this.listAd.getChildAt(this.knockIndex);
         this.playScaleEff(cell);
     }
-
     playScaleEff(cell) {
         var scaleTime = 500;
         //缩小
@@ -119,7 +113,6 @@ export default class exporter_knock extends zs.fgui.baseGeneric<FGUI_knock_expor
             }));
         }))
     }
-
     refreshSingleItem(index) {
         // 筛选当前没有的
         var filterArr = this.adData.filter((x) => !this.adShowArr.some((datas) => x.app_icon === datas.app_icon));
