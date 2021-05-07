@@ -3,10 +3,10 @@
 export default class FGUI_btn_egg extends fgui.GButton {
 
 	public btnExit:fgui.GImage;
-	public static URL:string = "ui://pt2mjy81i71b8b";
+	public static URL:string = "ui://xvfmpbdecqs58";
 
 	public static createInstance():FGUI_btn_egg {
-		return <FGUI_btn_egg>(fgui.UIPackage.createObject("export", "btn_egg"));
+		return <FGUI_btn_egg>(fgui.UIPackage.createObject("KnockEgg", "btn_egg"));
 	}
 
 	protected onConstruct():void {

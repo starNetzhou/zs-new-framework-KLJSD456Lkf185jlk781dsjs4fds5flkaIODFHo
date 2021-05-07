@@ -15,6 +15,9 @@ import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
 import knock_egg from "./knock_egg";
+import FGUI_item_8 from "./export/FGUI_item_8";
+import exporter_knock_1 from "./exporter_knock_1";
+import KnockEggBinder from "./KnockEgg/KnockEggBinder";
 
 export default class workflow extends zs.workflow {
 
@@ -30,6 +33,7 @@ export default class workflow extends zs.workflow {
 
     static readonly exporterSide = "export_side";
     static readonly exporterKnock = "export_knock";
+    static readonly exporterKnock_1 = "export_knock_1";
 
     static readonly exportItem1 = "export_item_1";
     static readonly exportItem2 = "export_item_2";
@@ -38,6 +42,7 @@ export default class workflow extends zs.workflow {
     static readonly exportItem5 = "export_item_5";
     static readonly exportItem6 = "export_item_6";
     static readonly exportItem7 = "export_item_7";
+    static readonly exportItem8 = "export_item_8";
 
     static readonly event_full_1 = "event_full_1";
     static readonly event_full_2 = "event_full_2";
@@ -53,7 +58,7 @@ export default class workflow extends zs.workflow {
     static readonly event_hide_fake_msg = "event_hide_fake_msg";
     static readonly event_hide_fake_exit = "event_hide_fake_exit";
 
-    exporterPack = "export/export";
+    exporterPack = ["export/export","knock_fgui/KnockEgg"];
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
 
     windowFull: zs.fgui.window;
@@ -76,10 +81,11 @@ export default class workflow extends zs.workflow {
 
         // 绑定工作流FGUI组件
         exportBinder.bindAll();
-
+        KnockEggBinder.bindAll();
         // 注册模块
         zs.fgui.configs.registeBase(workflow.exporterSide, exporter_side);
         zs.fgui.configs.registeBase(workflow.exporterKnock, exporter_knock);
+        zs.fgui.configs.registeBase(workflow.exporterKnock_1, exporter_knock_1);
         // 注册控件
         zs.fgui.configs.registeItem(workflow.exportItem1, FGUI_item_1);
         zs.fgui.configs.registeItem(workflow.exportItem2, FGUI_item_2);
@@ -88,9 +94,10 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeItem(workflow.exportItem5, FGUI_item_5);
         zs.fgui.configs.registeItem(workflow.exportItem6, FGUI_item_6);
         zs.fgui.configs.registeItem(workflow.exportItem7, FGUI_item_7);
+        zs.fgui.configs.registeItem(workflow.exportItem8, FGUI_item_8);
         // 注册事件
-        zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1, true);
-        zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2, true);
+        zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1);
+        zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2);
         zs.core.workflow.registeEvent(workflow.event_start_video, this, this.onGameVideo);
         zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
@@ -108,7 +115,8 @@ export default class workflow extends zs.workflow {
         exporter_fake_msg.soundShow = "fgui/export/wechat.mp3";
         // 导出错误事件回调
         zs.exporter.utils.navigateErrorHandler = Laya.Handler.create(this, () => {
-            this.showFull1(false);
+            // this.showFull1(false);
+            zs.core.workflow.callEvent(workflow.event_full_1);
         }, null, false);
         // 读取假消息昵称列表
         zs.configs.load("fake_msg_nick", "fgui/export/nickname.json").then((res) => {
@@ -150,16 +158,12 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_1, null, "full")
+            .attach(exporter_full_1, null, auto ? "full" : "full_popup")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
             .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                unit.setClickContinue(
-                    Laya.Handler.create(this, () => {
-                        this.hideWindowFull(auto);
-                    }, null, false))
-                    .apply();
+                unit.apply();
             })
             .show();
         return this.windowFull;
@@ -171,16 +175,12 @@ export default class workflow extends zs.workflow {
             return;
         }
         this.windowFull = zs.fgui.window.create()
-            .attach(exporter_full_2, null, "full")
+            .attach(exporter_full_2, null, auto ? "full" : "full_popup")
             .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
             .fit()
             .block(true)
             .update<zs.exporter.full>(zs.exporter.full, (unit) => {
-                unit.setClickContinue(
-                    Laya.Handler.create(this, () => {
-                        this.hideWindowFull(auto);
-                    }, null, false))
-                    .apply();
+                unit.apply();
             })
             .show();
         return this.windowFull;

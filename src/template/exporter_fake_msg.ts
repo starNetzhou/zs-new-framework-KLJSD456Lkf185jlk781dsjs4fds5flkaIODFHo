@@ -71,7 +71,7 @@ export default class exporter_fake_msg extends zs.fgui.baseGeneric<FGUI_fake_msg
         Laya.Tween.clearAll(this.view)
         let y = this.view.height;
         this.view.y = -y;
-        Laya.Tween.to(this.view, { y: 0 }, 200);
+        Laya.Tween.to(this.view, { y: 80 }, 200);
         return this;
     }
 

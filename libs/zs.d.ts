@@ -277,7 +277,7 @@ declare module zs {
         /**
          * 导出包路径
          */
-        exporterPack: string;
+        exporterPack: string | string[];
         /**
          * 工作流主窗口
          */

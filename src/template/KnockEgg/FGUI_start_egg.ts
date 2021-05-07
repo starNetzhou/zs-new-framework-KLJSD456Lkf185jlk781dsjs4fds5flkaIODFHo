@@ -2,14 +2,14 @@
 
 import FGUI_btn_egg from "./FGUI_btn_egg";
 
-export default class FGUI_common_egg extends fgui.GComponent {
+export default class FGUI_start_egg extends fgui.GComponent {
 
 	public bar:fgui.GProgressBar;
 	public btn_click:FGUI_btn_egg;
-	public static URL:string = "ui://pt2mjy81i71b7v";
+	public static URL:string = "ui://xvfmpbdecqs51";
 
-	public static createInstance():FGUI_common_egg {
-		return <FGUI_common_egg>(fgui.UIPackage.createObject("export", "common_egg"));
+	public static createInstance():FGUI_start_egg {
+		return <FGUI_start_egg>(fgui.UIPackage.createObject("KnockEgg", "start_egg"));
 	}
 
 	protected onConstruct():void {

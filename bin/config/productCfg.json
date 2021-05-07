@@ -1,9 +1,6 @@
 {
     "PRODUCT_START": {
-        "states": [
-            "FULL_1",
-            "FULL_2"
-        ]
+        "switch": "!"
     },
     "PRODUCT_START.READY": {
         "exporter": [
@@ -32,7 +29,12 @@
             "zs_full_screen2_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_2",
+        "event": [
+            [
+                "event_full_2",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -41,7 +43,12 @@
             "zs_full_screen1_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": "event_full_1",
+        "event": [
+            [
+                "event_full_1",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -71,11 +78,22 @@
             "SETTLE",
             "END"
         ],
-        "event": "event_fake_exit",
+        "laterevent": [
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ]
+        ],
         "exitevent": "event_hide_fake_exit"
     },
     "GAME_HOME": {
         "base": [],
+        "laterevent": [
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ]
+        ],
         "exporter": [
             {
                 "type": "export_list",
@@ -109,10 +127,10 @@
                 "type": "export_list",
                 "window": {
                     "align": "top",
-                    "alignoffsety": 95
+                    "alignoffsety": 140
                 },
                 "base": {
-                    "item": "export_item_7",
+                    "item": "export_item_8",
                     "mode": "hlist",
                     "height": 270,
                     "max": 10,
@@ -120,9 +138,9 @@
                     "marginright": 10,
                     "background": [
                         "export/export",
-                        "icon_background"
+                        "bg_bg"
                     ],
-                    "backgroundalpha": 0.5
+                    "backgroundalpha": 0.7
                 }
             },
             {
@@ -150,12 +168,17 @@
                     "alignoffsety": 140
                 },
                 "base": {
-                    "item": "export_item_7",
+                    "item": "export_item_8",
                     "mode": "hlist",
                     "height": 270,
                     "max": 10,
                     "marginleft": 10,
-                    "marginright": 10
+                    "marginright": 10,
+                    "background": [
+                        "export/export",
+                        "bg_bg"
+                    ],
+                    "backgroundalpha": 0.7
                 }
             }
         ]
@@ -171,7 +194,12 @@
         "switch": [
             "zs_full_screen1_jump"
         ],
-        "event": "event_full_1",
+        "event": [
+            [
+                "event_full_1",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -179,7 +207,12 @@
         "switch": [
             "zs_full_screen2_jump"
         ],
-        "event": "event_full_2",
+        "event": [
+            [
+                "event_full_2",
+                true
+            ]
+        ],
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -192,28 +225,71 @@
             "delay": true
         },
         "laterevent": [
-            "event_fake_exit",
+            [
+                "event_fake_exit",
+                "event_full_2"
+            ],
             "event_fake_msg"
         ],
         "exitevent": [
             "event_hide_fake_exit",
             "event_hide_fake_msg"
         ],
-        "exporter": [
+        "base": [
             {
-                "type": "export_background",
-                "key": "full",
+                "type": "export_loader",
                 "window": {
                     "align": "topleft",
                     "fit": true
+                },
+                "base": {
+                    "url": [
+                        "export/export",
+                        "background_1"
+                    ]
                 }
             },
             {
-                "type": "export_knock",
+                "type": "export_loader",
+                "window": {
+                    "align": "top"
+                },
+                "base": {
+                    "fill": "none",
+                    "url": [
+                        "export/export",
+                        "over"
+                    ]
+                }
+            },
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch": "zs_button_delay_time",
+                    "width": 200,
+                    "fill": "width",
+                    "offsety": -200,
+                    "autooffset": true,
+                    "event": "event_childnext",
+                    "url": [
+                        "export/export",
+                        "btn_GoOn"
+                    ]
+                }
+            }
+        ],
+        "exporter": [
+            {
+                "type": "export_knock_1",
                 "switch": "zs_finish_jump",
                 "window": {
                     "align": "center",
-                    "alignoffsety": -30
+                    "alignoffsety": 100
                 }
             }
         ]
