@@ -3152,7 +3152,7 @@ declare module zs.exporter {
         /**
          * 设置底图URL
          */
-        set url(value: string | string[]);
+        setURL(value: string | string[]): button;
         /**
          * 获取底图透明度
          */
@@ -3160,7 +3160,7 @@ declare module zs.exporter {
         /**
          * 设置底图透明度
          */
-        set alpha(value: number);
+        setAlpha(value: number): button;
         /**
          * 获取宽度
          */
@@ -3168,7 +3168,7 @@ declare module zs.exporter {
         /**
          * 设置宽度
          */
-        set width(value: number);
+        setWidth(value: number): button;
         /**
          * 获取高度
          */
@@ -3176,7 +3176,7 @@ declare module zs.exporter {
         /**
          * 设置高度
          */
-        set height(value: number);
+        setHeight(value: number): button;
         /**
          * 获取字体
          */
@@ -3184,7 +3184,7 @@ declare module zs.exporter {
         /**
          * 设置字体
          */
-        set font(value: string);
+        setFont(value: string): button;
         /**
          * 获取字体大小
          */
@@ -3192,7 +3192,7 @@ declare module zs.exporter {
         /**
          * 设置字体大小
          */
-        set fontsize(value: number);
+        setFontSize(value: number): button;
         /**
          * 获取按钮文本
          */
@@ -3200,7 +3200,7 @@ declare module zs.exporter {
         /**
          * 设置按钮文本
          */
-        set text(value: string);
+        setText(value: string): button;
         /**
          * 获取字体颜色（16进制，如 #000000）
          */
@@ -3208,7 +3208,7 @@ declare module zs.exporter {
         /**
          * 设置字体颜色（16进制，如 #000000）
          */
-        set fontcolor(value: string);
+        setFontColor(value: string): button;
         /**
          * 获取误触开关
          */
@@ -3216,7 +3216,7 @@ declare module zs.exporter {
         /**
          * 设置误触开关（开关字段）
          */
-        set switch(value: string | string[]);
+        setSwitch(value: string | string[]): button;
         /**
          * 获取适配模式
          * scale 整体适配
@@ -3236,7 +3236,67 @@ declare module zs.exporter {
          * noborder 无边框
          * none 无缩放
          */
-        set fill(value: string);
+        setFill(value: string): button;
+        /**
+         * 设置延迟出现时间
+         * @param value 时间值
+         */
+        setAutoFade(value: number | string | string[]): button;
+        /**
+         * 设置延迟出现过渡事件
+         * @param value 时间值
+         */
+        setAutoFadeTime(value: number): button;
+        /**
+         * 设置自动偏移时间
+         * @param value 时间值
+         */
+        setAutoOffset(value: number | string | string[]): button;
+        /**
+         * 设置按钮X偏移
+         * @param value 偏移值
+         */
+        setOffsetX(value: number): button;
+        /**
+         * 设置按钮Y偏移
+         * @param value 偏移值
+         */
+        setOffsetY(value: number): button;
+        /**
+         * 设置偏移时间
+         * @param value 时间值
+         */
+        setOffsetTime(value: number): button;
+        /**
+         * 设置首次点击忽略
+         * @param value 开关
+         */
+        setClickIgnore(value: boolean): button;
+        /**
+         * 设置连续点击
+         * @param value 开关
+         */
+        setClickAlways(value: boolean): button;
+        /**
+         * 设置假事件延迟
+         * @param value 时间值
+         */
+        setFakeDelay(value: number | string | string[]): button;
+        /**
+         * 设置假事件
+         * @param value 事件名
+         */
+        setFakeEvent(value: string | string[]): button;
+        /**
+         * 设置点击事件
+         * @param value 事件名
+         */
+        setEvent(value: string | string[]): button;
+        /**
+         * 设置假事件按钮开关
+         * @param value 开关列表
+         */
+        setSwitch(value: string | string[]): button;
     }
     /**
      * 全屏导出基类

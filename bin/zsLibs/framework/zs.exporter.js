@@ -1624,7 +1624,7 @@ window.zs.exporter = window.zs.exporter || {};
             icon.fill = fairygui.LoaderFillType.ScaleFree;
             component.addChild(icon);
             this.icon = icon;
-            this.url = [zs.fgui.configs.pack_basic, "msg_background"];
+            this.setURL([zs.fgui.configs.pack_basic, "msg_background"]);
             let title = new fairygui.GBasicTextField();
             title.autoSize = fairygui.AutoSizeType.None;
             title.x = 0;
@@ -1649,7 +1649,7 @@ window.zs.exporter = window.zs.exporter || {};
             super.dispose();
         }
         get url() { return this.icon ? this.icon.url : null; }
-        set url(value) {
+        setURL(value) {
             if (this.icon) {
                 if (Array.isArray(value) && value.length > 1) {
                     zs.fgui.loadPack(value[0]).then((res) => {
@@ -1659,22 +1659,45 @@ window.zs.exporter = window.zs.exporter || {};
                     this.icon.url = value;
                 }
             }
+            return this;
         }
         get alpha() { return this.icon ? this.icon.alpha : null; }
-        set alpha(value) { this.icon && (this.icon.alpha = value); }
+        setAlpha(value) {
+            this.icon && (this.icon.alpha = value);
+            return this;
+        }
         get width() { return this.view.width; }
-        set width(value) { this.view.width = value; }
+        setWidth(value) {
+            this.view.width = value;
+            return this;
+        }
         get height() { return this.view.height; }
-        set height(value) { this.view.height = value; }
+        setHeight(value) {
+            this.view.height = value;
+            return this;
+        }
         get font() { return this.title ? this.title.font : null; }
-        set font(value) { this.title && (this.title.font = value); }
+        setFont(value) {
+            this.title && (this.title.font = value);
+            return this;
+        }
         get fontsize() { return this.title ? this.title.fontSize : 0; }
-        set fontsize(value) { this.title && (this.title.fontSize = value); }
+        setFontSize(value) {
+            this.title && (this.title.fontSize = value);
+            return this;
+        }
         get text() { return this.title ? this.title.text : null; }
-        set text(value) { this.title && (this.title.text = value); }
+        setText(value) {
+            this.title && (this.title.text = value);
+            return this;
+        }
         get fontcolor() { return this.title ? this.title.color : null; }
-        set fontcolor(value) { this.title && (this.title.color = value); }
-        set switch(value) {
+        setFontColor(value) {
+            this.title && (this.title.color = value);
+            return this;
+        }
+        get switch() { return this._switch }
+        setSwitch(value) {
             if (Array.isArray(value)) {
                 for (let i = 0; i < value.length; i++) {
                     const element = zs.product.get(i);
@@ -1689,8 +1712,8 @@ window.zs.exporter = window.zs.exporter || {};
                 this._switch = zs.product.get(value);
                 return;
             }
+            return this;
         }
-        get switch() { return this._switch }
         get fill() {
             if (!this.icon) { return null; }
             let type = "free";
@@ -1716,7 +1739,7 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return type;
         }
-        set fill(value) {
+        setFill(value) {
             if (!this.icon) { return; }
             let type = fairygui.LoaderFillType.ScaleFree;
             switch (value) {
@@ -1740,6 +1763,55 @@ window.zs.exporter = window.zs.exporter || {};
                     break;
             }
             this.icon.fill = type;
+            return this;
+        }
+        setAutoFade(value) {
+            this.autofade = value;
+            return this;
+        }
+        setAutoFadeTime(value) {
+            this.autofadetime = value;
+            return this;
+        }
+        setAutoOffset(value) {
+            this.autooffset = value;
+            return this;
+        }
+        setOffsetX(value) {
+            this.offsetx = value;
+            return this;
+        }
+        setOffsetY(value) {
+            this.offsety = value;
+            return this;
+        }
+        setOffsetTime(value) {
+            this.offsettime = value;
+            return this;
+        }
+        setClickIgnore(value) {
+            this.clickignore = value;
+            return this;
+        }
+        setClickAlways(value) {
+            this.clickalways = value;
+            return this;
+        }
+        setFakeDelay(value) {
+            this.fakedelay = value;
+            return this;
+        }
+        setFakeEvent(value) {
+            this.fakeevent = value;
+            return this;
+        }
+        setEvent(value) {
+            this.event = value;
+            return this;
+        }
+        setSwitch(value) {
+            this.switch = value;
+            return this;
         }
         onClicked() {
             if (this.autooffset != null || this.autofade != null) { return; }
@@ -1803,7 +1875,7 @@ window.zs.exporter = window.zs.exporter || {};
             if (this.autofade != null) {
                 let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.autofade) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
-                Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 500, null, Laya.Handler.create(this, () => {
+                Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 0, null, Laya.Handler.create(this, () => {
                     this.view.touchable = true;
                     this.autofade = null;
                 }), delay);
@@ -1811,27 +1883,27 @@ window.zs.exporter = window.zs.exporter || {};
         }
         applyConfig(config) {
             if (config) {
-                config.url && (this.url = config.url);
-                config.fill && (this.fill = config.fill);
-                config.alpha != null && (this.alpha = config.alpha);
-                config.width != null && (this.width = config.width);
-                config.height != null && (this.height = config.height);
-                config.font && (this.font = config.font);
-                config.fontsize != null && (this.fontsize = config.fontsize);
-                config.fontcolor && (this.fontcolor = config.fontcolor);
-                config.text && (this.text = config.text);
-                config.autofade != null && (this.autofade = config.autofade);
-                config.autofadetime != null && (this.autofadetime = config.autofadetime);
-                config.autooffset != null && (this.autooffset = config.autooffset);
-                config.offsetx != null && (this.offsetx = config.offsetx);
-                config.offsety != null && (this.offsety = config.offsety);
-                config.offsettime != null && (this.offsettime = config.offsettime);
-                config.clickignore && (this.clickignore = config.clickignore);
-                config.clickalways && (this.clickalways = config.clickalways);
-                config.fakedelay != null && (this.fakedelay = config.fakedelay);
-                config.fakeevent && (this.fakeevent = config.fakeevent);
-                config.event && (this.event = config.event);
-                config.switch && (this.switch = config.switch);
+                config.url && (this.setURL(config.url));
+                config.fill && (this.setFill(config.fill));
+                config.alpha != null && (this.setAlpha(config.alpha));
+                config.width != null && (this.setWidth(config.width));
+                config.height != null && (this.setHeight(config.height));
+                config.font && (this.setFont(config.font));
+                config.fontsize != null && (this.setFontSize(config.fontsize));
+                config.fontcolor && (this.setFontColor(config.fontcolor));
+                config.text && (this.setText(config.text));
+                config.autofade != null && (this.setAutoFade(config.autofade));
+                config.autofadetime != null && (this.setAutoFadeTime(config.autofadetime));
+                config.autooffset != null && (this.setAutoOffset(config.autooffset));
+                config.offsetx != null && (this.setOffsetX(config.offsetx));
+                config.offsety != null && (this.setOffsetY(config.offsety));
+                config.offsettime != null && (this.setOffsetTime(config.offsettime));
+                config.clickignore && (this.setClickIgnore(config.clickignore));
+                config.clickalways && (this.setClickAlways(config.clickalways));
+                config.fakedelay != null && (this.setFakeDelay(config.fakedelay));
+                config.fakeevent && (this.setFakeEvent(config.fakeevent));
+                config.event && (this.setEvent(config.event));
+                config.switch && (this.setSwitch(config.switch));
 
                 if (this.autooffset != null) {
                     this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
