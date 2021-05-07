@@ -488,6 +488,7 @@ window.zs = window.zs || {};
                     if (this.fsm != null) {
                         let childFSM = this.fsmList[this.fsm.current];
                         if (childFSM && ((target && !childFSM.runTransition(target)) || !childFSM.runNext())) {
+                            this.onChildFSMBeforeChanged(null, childFSM.current);
                             let lastState = this.fsm.current;
                             if (!this.fsm.runNext()) {
                                 zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
@@ -511,6 +512,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
+            this.checkExitEvent(current);
             this.exportWindow.clear();
             // banner销毁
             zs.platform.sync.hideBanner();
@@ -631,7 +633,7 @@ window.zs = window.zs || {};
                     zs.product.get(this.switchExporter) && this.checkExporter(current);
                     this.checkBanner(current);
                 }
-                this.checkEvent(current, true);
+                this.checkLaterEvent(current);
                 if (this.laterListeners != null && this.laterListeners[current] != null) {
                     let list = this.laterListeners[current];
                     for (let i = 0, n = list.length; i < n; i++) {
@@ -664,6 +666,7 @@ window.zs = window.zs || {};
                     }
                 }
             }
+            this.checkExitEvent(this.fsm.current + '.' + current);
             this.exportWindow.clear();
             // banner销毁
             zs.platform.sync.hideBanner();
@@ -712,7 +715,7 @@ window.zs = window.zs || {};
                 this.checkBase(childKey);
                 zs.product.get(this.switchExporter) && this.checkExporter(childKey);
                 this.checkBanner(childKey);
-                this.checkEvent(childKey, true);
+                this.checkLaterEvent(childKey);
                 if (this.laterListeners != null && this.laterListeners[childKey] != null) {
                     let list = this.laterListeners[childKey];
                     for (let i = 0, n = list.length; i < n; i++) {
@@ -729,16 +732,22 @@ window.zs = window.zs || {};
             this.lockStep = false;
             this.step();
         }
-        checkEvent(current, isLater) {
+        checkEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (isLater) {
-                if (data && data.laterevent && data.laterevent.length > 0) {
-                    this.runEventConfig(data.laterevent);
-                }
-            } else {
-                if (data && data.event && data.event.length > 0) {
-                    this.runEventConfig(data.event);
-                }
+            if (data && data.event && data.event.length > 0) {
+                this.runEventConfig(data.event);
+            }
+        }
+        checkLaterEvent(current) {
+            let data = zs.configs.productCfg[current];
+            if (data && data.laterevent && data.laterevent.length > 0) {
+                this.runEventConfig(data.laterevent);
+            }
+        }
+        checkExitEvent(current) {
+            let data = zs.configs.productCfg[current];
+            if (data && data.exitevent && data.exitevent.length > 0) {
+                this.runEventConfig(data.exitevent);
             }
         }
         checkBanner(current) {

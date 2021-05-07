@@ -86,7 +86,7 @@ window.zs = window.zs || {};
             }
             this.target = target;
             zs.log.debug('runTransition: ' + this.current + ' - ' + this.target);
-            this.onBeforeChange && this.onBeforeChange.runWith(this.target);
+            this.onBeforeChange && this.onBeforeChange.runWith([this.target, this.current]);
             transition.transition.call(transition.thisObj, Laya.Handler.create(this, this.onTransitionComplete));
             return true;
         }
