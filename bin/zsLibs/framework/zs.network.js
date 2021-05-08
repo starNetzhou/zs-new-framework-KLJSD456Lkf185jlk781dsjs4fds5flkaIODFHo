@@ -348,6 +348,9 @@ window.zs = window.zs || {};
                 let sign = MD5.buildSign(data, !ignoreSecret);
                 data = Object.assign(data, { sign: sign });
             }
+            let currentTime = Math.round(new Date().getTime() / 1000).toString();
+            data = Object.assign(data, { timestamp: currentTime });
+            console.log(url, data);
             return new Promise((resolve, reject) => {
                 zs.platform.async.request(
                     {

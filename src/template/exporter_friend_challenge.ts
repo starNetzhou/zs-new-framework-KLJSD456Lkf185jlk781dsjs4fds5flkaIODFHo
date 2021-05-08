@@ -56,18 +56,16 @@ export default class exporter_friend_challenge extends zs.fgui.baseGeneric<FGUI_
     }
     apply() {
         zs.exporter.dataMgr.load().then((result) => {
-            var adDatas = result.promotion;
+            let adDatas = result;
             this.adData = adDatas[Math.floor(Math.random() * adDatas.length)];
-            var gameName = this.adData && this.adData.app_title || "游戏";
-            var gameIcon = this.adData && this.adData.app_icon;
+            let gameName = this.adData && this.adData.app_title || "游戏";
+            let gameIcon = this.adData && this.adData.app_icon;
             let nameList = exporter_friend_challenge.nickList || [];
-            var showName;
+            let showName = "神秘人";
             if (nameList.length > 0) {
                 showName = nameList[Math.floor(Math.random() * nameList.length)];
-            } else {
-                showName = "神秘人"
             }
-            var desc = `好友“${showName}”向您发起挑战：`
+            let desc = `好友“${showName}”向您发起挑战：`
             this.setPlayerName(showName)
                 .setGameName(gameName)
                 .setGameIcon(gameIcon)
@@ -84,7 +82,7 @@ export default class exporter_friend_challenge extends zs.fgui.baseGeneric<FGUI_
     }
     onBtnYesClick() {
         zs.platform.async.navigateToOther({ appInfo: this.adData }).then(() => {
-            zs.exporter.dataMgr.collectExport(this.adData.app_id);
+            zs.exporter.dataMgr.collectExport(this.adData);
         });
         this.callback && this.callback.run();
     }

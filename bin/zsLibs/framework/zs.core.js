@@ -895,34 +895,35 @@ window.zs = window.zs || {};
             return this.entryInst && this.entryInst.progress >= 100 && this._readyStart;
         }
         static async ready() {
+            zs.log.debug("web 设置", 'Core');
+            core.userInfo = await zs.network.init();
+            core.userId = core.userInfo.user_id;
+            zs.exporter.dataMgr.collectSource();
+            this.progress = 10;
             zs.log.debug("初始化数据统计", 'Core');
             await zs.td.registeConfig(zs.configs.gameCfg.tdConfig);
-            this.progress = 15;
+            this.progress = 20;
             zs.log.debug("初始化广告与导出组件", 'Core');
             let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic);
             zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
-            this.progress = 20;
+            this.progress = 30;
             zs.log.debug("加载必要分包", 'Core');
             await zs.resource.preload();
-            this.progress = 30;
+            this.progress = 40;
             zs.log.debug("加载 main", 'Core');
             await zs.fgui.loadPacks(zs.configs.gameCfg.fguiPacks, true);
             this.onFGUIBind && this.onFGUIBind.run();
-            this.progress = 40;
-            zs.log.debug("web 设置", 'Core');
-            core.userInfo = await zs.network.init();
-            core.userId = core.userInfo.user_id;
+            this.progress = 50;
+            zs.log.debug("运营设置", 'Core');
+            let switchs = await zs.network.config(true);
+            zs.product.sync(switchs);
             if (zs.EggKnock) {
                 zs.EggKnock.init();
                 zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
                     zs.EggKnock.markGameNum(true);
                 }), true);
             }
-            this.progress = 50;
-            zs.log.debug("运营设置", 'Core');
-            let switchs = await zs.network.config(true);
-            zs.product.sync(switchs);
             this.progress = 60;
             zs.log.debug("加载基础配置", 'Core');
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.configs) {

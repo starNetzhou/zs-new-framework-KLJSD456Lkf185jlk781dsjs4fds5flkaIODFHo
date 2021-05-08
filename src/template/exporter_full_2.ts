@@ -160,10 +160,10 @@ export default class exporter_full_2 extends zs.exporter.full {
         if (view) {
             view.rankList.numItems = 0;
             zs.exporter.dataMgr.load().then((result) => {
-                let data = result.promotion || [];
-                this.rankIndies = zs.utils.pickNumbers(0, result.promotion.length - 1, result.promotion.length);
+                let data = result || [];
+                this.rankIndies = zs.utils.pickNumbers(0, result.length - 1, result.length);
                 this.rankPlayNums = [];
-                for (let i = 0; i < result.promotion.length; i++) {
+                for (let i = 0; i < result.length; i++) {
                     this.rankPlayNums.push((Math.floor(Math.random() * exporter_full_2.fakePlayerMax) + exporter_full_2.fakePlayerMin) / 10);
                 }
                 this.rankPlayNums.sort((a, b) => b - a);

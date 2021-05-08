@@ -20,9 +20,9 @@ window.zs = window.zs || {};
                 }, timeout);
             });
         }
-        static isToday(timestamp) {
+        static isToday(timestamp, isSecond) {
             let tsNow = Date.now();
-            if (tsNow - timestamp > 86400000) { return false; }
+            if (tsNow - timestamp > isSecond ? 86400 : 86400000) { return false; }
             let now = new Date(tsNow);
             let target = new Date(timestamp);
             if (now.getDate() != target.getDate()) {
