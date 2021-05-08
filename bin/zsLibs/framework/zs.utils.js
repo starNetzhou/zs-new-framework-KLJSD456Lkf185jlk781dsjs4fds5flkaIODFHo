@@ -147,6 +147,12 @@ window.zs = window.zs || {};
             }
             return result;
         }
+        static getItem(key) {
+            return Laya.LocalStorage.getItem(zs.core.appId + '.' + key);
+        }
+        static setItem(key, value) {
+            Laya.LocalStorage.setItem(zs.core.appId + '.' + key, value);
+        }
 
     }
     utils.randSeed = 5;

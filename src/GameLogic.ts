@@ -53,7 +53,7 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_HOME");
             // 展示FGUI界面
-            this.examplePage = zs.fgui.manager.show(true, zs_example)
+            this.examplePage = zs.fgui.manager.open(zs_example)
                 .update<zs_example>(zs_example, (unit) => {
                     // 设置FGUI界面状态
                     unit.setWorkflowState(workflow.GAME_HOME)
@@ -65,13 +65,6 @@ export default class GameLogic extends Laya.Script {
             this.examplePage.show();
         }));
 
-        zs.core.onWorkflow(workflow.GAME_START, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_START");
-        }));
-        zs.core.onWorkflow(workflow.GAME_PREPARE, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_PREPARE");
-            this.examplePage.setWorkflowState(workflow.GAME_PREPARE).show();
-        }));
         zs.core.onWorkflow(workflow.GAME_PLAY, Laya.Handler.create(this, () => {
             console.log("Workflow ===== GAME_PLAY");
             this.examplePage.setWorkflowState(workflow.GAME_PLAY).show();
@@ -102,14 +95,13 @@ export default class GameLogic extends Laya.Script {
                 .setBtnClickEvent(this, this.workflowNext)
                 .show();
         }));
-        zs.core.onWorkflow(workflow.GAME_SETTLE, Laya.Handler.create(this, () => {
-            console.log("Workflow ====== GAME_SETTLE");
-            this.examplePage.setWorkflowState(workflow.GAME_SETTLE, true).show();
-        }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_END");
             this.examplePage.setWorkflowState(workflow.GAME_END).show();
-            zs.core.workflow.next();
+        }));
+        zs.core.onWorkflow(workflow.PRODUCT_FINISH, Laya.Handler.create(this, () => {
+            console.log("Workflow ====== PRODUCT_FINISH");
+            this.examplePage.setWorkflowState(workflow.PRODUCT_FINISH).show();
         }));
 
         // 启动SDK，开始执行游戏进程

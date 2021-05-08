@@ -1,5 +1,39 @@
 {
-    "GAME_PLAY.PLAY": {
-        "banner": {}
+    "PRODUCT_START": {
+        "switch": "!"
+    },
+    "PRODUCT_BEGIN": {
+        "switch": "!"
+    },
+    "GAME_HOME": {
+        "banner": {
+            "auto": true,
+            "isDelay": true
+        },
+        "event": "event_home_banner",
+        "exitevent": "event_hide_screen_native",
+        "base": [
+            {
+                "type": "add_btn_deskTopIcon",
+                "window": {
+                    "align": "right",
+                    "scale": [
+                        1.5,
+                        1.5
+                    ]
+                }
+            }
+        ]
+    },
+    "PRODUCT_HOME_PLAY": {
+        "switch": "!"
+    },
+    "GAME_PLAY": {},
+    "PRODUCT_PLAY_END": {
+        "switch": "!"
+    },
+    "GAME_END": {},
+    "PRODUCT_FINISH": {
+        "switch": "!"
     }
 }
