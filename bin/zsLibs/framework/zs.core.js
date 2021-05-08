@@ -918,6 +918,12 @@ window.zs = window.zs || {};
             zs.log.debug("运营设置", 'Core');
             let switchs = await zs.network.config(true);
             zs.product.sync(switchs);
+            if (zs.EggKnock) {
+                zs.EggKnock.init();
+                zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
+                    zs.EggKnock.markGameNum(true);
+                }), true);
+            }
             this.progress = 60;
             zs.log.debug("加载基础配置", 'Core');
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.configs) {
