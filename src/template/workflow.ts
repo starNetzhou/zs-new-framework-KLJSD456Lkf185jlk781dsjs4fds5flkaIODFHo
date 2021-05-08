@@ -5,13 +5,20 @@ import ProductKey from "./ProductKey";
 import exporter_btn_confirm from "./exporter_btn_confirm";
 
 export default class workflow extends zs.workflow {
-    static readonly GAME_HOME = 'GAME_HOME';
-    static readonly GAME_PLAY = 'GAME_PLAY';
-    static readonly OPEN_SHARE_RECORD = 'OPEN_SHARE_RECORD';
-    static readonly GAME_SETTLE = 'GAME_SETTLE';
-    static readonly GAME_END = 'GAME_END';
+    static readonly PRODUCT_START = "PRODUCT_START";
+    static readonly PRODUCT_BEGIN = "PRODUCT_BEGIN";
+    static readonly GAME_HOME = "GAME_HOME";
+    static readonly PRODUCT_HOME_PLAY = "PRODUCT_HOME_PLAY";
+    static readonly GAME_PLAY = "GAME_PLAY";
+    static readonly PRODUCT_PLAY_END = "PRODUCT_PLAY_END";
+    static readonly GAME_END = "GAME_END";
+    static readonly PRODUCT_FINISH = "PRODUCT_FINISH";;
 
-    static readonly EXPORT_MORE_GAME = "EXPORT_MORE_GAME";
+    static readonly add_more_game = "add_more_game";
+
+    static readonly event_game_play = "event_game_play";
+    static readonly event_share_record = "event_share_record";
+    static readonly event_init_insert = "event_init_insert";
 
     exporterPack = "export/export";
 
@@ -33,19 +40,24 @@ export default class workflow extends zs.workflow {
     public onShareHandler: Laya.Handler;
 
     registe() {
+        super.registe();
+
         exportBinder.bindAll();
-        zs.fgui.configs.registeBase(workflow.EXPORT_MORE_GAME, BtnMoreGame);
-        this.fsm = new zs.fsm()
-            .registe(workflow.GAME_HOME, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-            .registe(workflow.GAME_PLAY, workflow.OPEN_SHARE_RECORD, 0, false, this, this.onShareRecordPage)
-            .registe(workflow.OPEN_SHARE_RECORD, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-            .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
-            .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this)
-            .setDefault(workflow.GAME_HOME);
+        zs.fgui.configs.registeBase(workflow.add_more_game, BtnMoreGame);
+
+        zs.core.workflow.registeEvent(workflow.event_game_play, this, this.onGamePlay);
+        zs.core.workflow.registeEvent(workflow.event_share_record, this, this.showShareRecordPage);
+        zs.core.workflow.registeEvent(workflow.event_init_insert, this, this.initInsert);
+        // this.fsm = new zs.fsm()
+        //     .registe(workflow.GAME_HOME, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
+        //     .registe(workflow.GAME_PLAY, workflow.OPEN_SHARE_RECORD, 0, false, this, this.onShareRecordPage)
+        //     .registe(workflow.OPEN_SHARE_RECORD, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
+        //     .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
+        //     .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this)
+        //     .setDefault(workflow.GAME_HOME);
     }
 
-    onGamePlay(complete) {
-        complete.run();
+    onGamePlay() {
         let zs_best_videotape_time = ProductKey.zs_best_videotape_time / 1000;
         let zs_hide_banner_switch = ProductKey.zs_hide_banner_switch;
         //开始录屏
@@ -74,6 +86,10 @@ export default class workflow extends zs.workflow {
         }
     }
 
+    initInsert() {
+        zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
+    }
+
     onGameEnd(complete) {
         complete.run();
         this._settleBtn && (this._settleBtn.view.visible = false);
@@ -82,12 +98,12 @@ export default class workflow extends zs.workflow {
         }
     }
 
-
     /**
      * 显示分享录屏
      * @returns 
      */
     showShareRecordPage() {
+        console.log("show Share Record");
         if (this._shareRecordPage) {
             this._shareRecordPage.view.visible = true;
             this.windowExport.setBase(this._shareRecordPage).front();
@@ -104,14 +120,5 @@ export default class workflow extends zs.workflow {
                 .setBase(this._shareRecordPage).align(zs.fgui.AlignType.Center).front();
         }
         return this._shareRecordPage;
-    }
-
-    /**
-     * 分享录屏工作流程
-     * @param complete 
-     */
-    onShareRecordPage(complete) {
-        complete.run();
-        this.showShareRecordPage();
     }
 }

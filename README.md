@@ -498,7 +498,7 @@ zs.platform.**.js 适配器核心模块，不同平台需要配套使用不同�
         "banner": {},
         "exporter": [
             {
-                "type": "export_list", // 默认有 export_list 和 export_card 两种类型，其他类型可在模版模块注册使用
+                "type": "export_list", // 默认有 export_list 一种类型，其他类型可在模版模块注册使用
                 "window": { // 窗口设置
                     "align": "topleft", // 对齐设置，可设置屏幕对齐
                     // align可用类型有 center（中心） top（顶部） bottom（底部） 

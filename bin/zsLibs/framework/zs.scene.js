@@ -160,7 +160,11 @@ window.zs = window.zs || {};
                 }
             }
             scene.onBuildWorld && scene.onBuildWorld.run();
-            Laya.StaticBatchManager.combine(this._staticNode);
+            if (Laya.ILaya.Browser.onIOS && zs.platform.config.platformMark == 'qq_') {
+                zs.log.warn("手Q平台IOS系统使用静态合批将引发崩溃，自动跳过场景静态合批", "Scene");
+            } else {
+                Laya.StaticBatchManager.combine(this._staticNode);
+            }
             this._preloadNode.destroy(true);
             for (let i = 0; i < listDestroy.length; i++) {
                 if (listDestroy[i] != null) {

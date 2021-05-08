@@ -41,21 +41,6 @@ window.zs.ui = window.zs.ui || {};
     }
     FGUI_item.URL = null;
 
-
-    class FGUI_card extends fairygui.GComponent {
-        static bind(pack) {
-            zs.ui.bind(pack, this.itemName, FGUI_card);
-            this.pack = pack;
-        }
-        static createInstance() {
-            return (fairygui.UIPackage.createObject(this.pack.name, this.itemName));
-        }
-        onConstruct() {
-            this.loader = (this.getChild("loader"));
-        }
-    }
-    FGUI_card.itemName = "card";
-
     class FGUI_list extends fairygui.GComponent {
         static bind(pack) {
             zs.ui.bind(pack, this.itemName, FGUI_list);
@@ -89,7 +74,6 @@ window.zs.ui = window.zs.ui || {};
     }
     FGUI_msgbox.itemName = "msgbox";
 
-
     class FGUI_Loading extends fairygui.GComponent {
         static createInstance() {
             let panel = new fairygui.GComponent();
@@ -120,6 +104,149 @@ window.zs.ui = window.zs.ui || {};
         }
     }
     FGUI_Loading.itemName = "loading";
+
+    class EggKnock extends zs.fgui.base {
+        static checkEggOpen(isCommon) {
+            if (zs.EggKnock) {
+                return zs.EggKnock.checkEggOpen(isCommon);
+            }
+            return false;
+        }
+        get btnKnock() {
+            return null;
+        }
+        constructor(component) {
+            super(component);
+            this.clickPercent = 0.14;
+            this.rollbackPercent = 0.01;
+            this.rollbackInterval = 20;
+            this.bannerRange = [0.3, 0.7];
+            this.awardDelay = [1000, 1000];
+            this.closeDelay = [1000, 1040];
+            this.btnSrcOffset = 240;
+            this.btnDstOffset = 370;
+            this.btnOffsetDelay = 800;
+            this.btnOffsetTime = 500;
+            this.btnIgnoreOffset = false;
+            if (!EggKnock.inited) {
+                EggKnock.inited = true;
+                if (zs.EggKnock) {
+                    zs.EggKnock.init();
+                    zs.core.onWorkflow(zs.workflow.PRODUCT_FINISH, Laya.Handler.create(this, () => {
+                        zs.EggKnock.markGameNum(true);
+                    }));
+                }
+            }
+        }
+        dispose() {
+            Laya.timer.clear(this, this.tick);
+            Laya.Tween.clearAll(this.btnKnock);
+            zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
+            zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
+            this.btnKnock && this.btnKnock.offClick && this.btnKnock.offClick(this, this.onClick);
+            this.onDispose();
+            super.dispose();
+        }
+        onAppShow() {
+            if (!this.isOpenAd) { return; }
+            this.onFinish();
+        }
+        onAppHide() {
+            if (!this.isOpenAd) { return; }
+            this.isOpenAd = true;
+        }
+        apply() {
+            this.progress = 0;
+            this.rollbackNext = 0;
+            this.isOpenAd = false;
+            this.isGetAward = false;
+            this.bannerPoint = zs.utils.randInt(this.bannerRange[0], this.bannerRange[1]);
+            zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
+            zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
+            this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
+            this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
+            Laya.timer.loop(1, this, this.tick);
+            this.updateProgress(this.progress);
+            zs.EggKnock && zs.EggKnock.markReadyNum(true);
+            return this;
+        }
+        tick() {
+            let delta = Laya.timer.delta;
+            if (this.btnOffsetCount && this.btnOffsetCount > 0) {
+                this.btnOffsetCount -= delta;
+                if (this.btnOffsetCount <= 0) {
+                    if (this.btnKnock && this.btnKnock.y && !this.btnIgnoreOffset) {
+                        Laya.Tween.to(this.btnKnock, { y: this.btnKnock.y - this.btnDstOffset }, this.btnOffsetTime);
+                    }
+                    this.btnOffsetCount = null;
+                }
+            }
+            if (!this.isGetAward) {
+                if (this.rollbackNext <= 0) {
+                    this.progress -= this.rollbackPercent;
+                    this.rollbackNext = this.rollbackInterval;
+                } else {
+                    this.rollbackNext -= delta;
+                }
+                if (this.clicked) {
+                    this.onBannerCheck();
+                    this.progress += this.clickPercent;
+                    this.handleClick(this.progress);
+                }
+                this.clicked = false;
+                this.progress = Math.min(1, Math.max(0, this.progress));
+                this.updateProgress(this.progress);
+                this.progress >= 1 && this.onFinish();
+            } else {
+                if (this.awardCount != null && this.awardCount > 0) {
+                    this.awardCount -= delta;
+                    if (this.awardCount <= 0) {
+                        this.awardHandler && this.awardHandler.run();
+                        this.awardCount = null;
+                    }
+                }
+                if (this.closeCount != null && this.closeCount > 0) {
+                    this.closeCount -= delta;
+                    if (this.closeCount <= 0) {
+                        this.awardCount && this.awardHandler && this.awardHandler.run();
+                        this.awardCount = null;
+                        this.closeHandler && this.closeHandler.run();
+                        this.closeCount = null;
+                    }
+                }
+            }
+        }
+        onClick() { this.clicked = true; }
+        handleClick(progress) {
+            if (progress >= this.bannerPoint && !this.isOpenAd) {
+                this.isOpenAd = true;
+                zs.platform.sync.showBanner();
+                this.startButtonOffset();
+            }
+        }
+        startButtonOffset() {
+            this.btnOffsetCount = this.btnOffsetDelay;
+        }
+        updateProgress(value) { }
+        setEventHandler(evtAward, evtClose) {
+            this.awardHandler = evtAward;
+            this.closeHandler = evtClose;
+            return this;
+        }
+        onFinish() {
+            if (this.isGetAward) { return; }
+            this.onGetAward();
+            this.isGetAward = true;
+            this.awardCount = zs.utils.randInt(this.awardDelay[0], this.awardDelay[1]);
+            this.closeCount = zs.utils.randInt(this.closeDelay[0], this.closeDelay[1]);
+        }
+        onBannerCheck() { }
+        onGetAward() {
+            zs.EggKnock && zs.EggKnock.markAwardNum(true);
+        }
+        onDispose() { }
+    }
+    EggKnock.inited = false;
 
     class Loading extends zs.fgui.base {
         constructor() {
@@ -193,7 +320,7 @@ window.zs.ui = window.zs.ui || {};
         }
     }
 
-    class uiScene {
+    class UIScene {
         static get list() {
             if (this._list == null) {
                 this._list = [];
@@ -308,10 +435,10 @@ window.zs.ui = window.zs.ui || {};
     exports.readURL = readURL;
     exports.FGUI_item = FGUI_item;
     exports.FGUI_list = FGUI_list;
-    exports.FGUI_card = FGUI_card;
     exports.FGUI_msgbox = FGUI_msgbox;
     exports.FGUI_Loading = FGUI_Loading;
+    exports.EggKnock = EggKnock;
     exports.Loading = Loading;
     exports.LayaLoading = LayaLoading;
-    exports.uiScene = uiScene;
+    exports.UIScene = UIScene;
 }(window.zs.ui = window.zs.ui || {}));

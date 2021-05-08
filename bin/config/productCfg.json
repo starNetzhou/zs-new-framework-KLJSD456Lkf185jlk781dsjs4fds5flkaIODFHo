@@ -1,15 +1,14 @@
 {
-    "GAME_START": {},
-    "START_FULL_1": {
-        "banner": {}
+    "PRODUCT_START": {
+        "switch": "!"
     },
-    "START_FULL_2": {
-        "banner": {}
+    "PRODUCT_BEGIN": {
+        "switch": "!"
     },
     "GAME_HOME": {
         "base": [
             {
-                "type": "EXPORT_MORE_GAME",
+                "type": "add_more_game",
                 "switch": "zs_jump_switch",
                 "window": {
                     "align": "left",
@@ -18,34 +17,27 @@
             }
         ]
     },
-    "GAME_PREPARE": {},
-    "EXPORT_COMMON_EGG": {
-        "banner": {}
+    "PRODUCT_HOME_PLAY": {
+        "switch": "!"
     },
-    "GAME_PLAY": {},
-    "EXPORT_GAME_EGG": {
-        "banner": {}
+    "GAME_PLAY": {
+        "event": "event_game_play"
     },
-    "OVER_FULL_1": {
-        "banner": {}
-    },
-    "GAME_SETTLE": {
-        "banner": {
-            "delay": true
-        },
-        "exporter": [
-            {
-                "type": "export_knock",
-                "switch": "zs_finish_jump",
-                "window": {
-                    "align": "center",
-                    "alignoffsety": -30
-                }
-            }
+    "PRODUCT_PLAY_END": {
+        "states": [
+            "SHARE",
+            "SETTLE"
         ]
     },
-    "OVER_FULL_2": {
-        "banner": {}
+    "PRODUCT_PLAY_END.SHARE": {
+        "event": "event_share_record"
     },
-    "GAME_END": {}
+    "PRODUCT_PLAY_END.SETTLE": {
+        "switch": "!"
+    },
+    "GAME_END": {
+    },
+    "PRODUCT_FINISH": {
+        "switch": "!"
+    }
 }

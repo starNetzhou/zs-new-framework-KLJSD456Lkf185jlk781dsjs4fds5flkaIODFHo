@@ -348,6 +348,8 @@ window.zs = window.zs || {};
                 let sign = MD5.buildSign(data, !ignoreSecret);
                 data = Object.assign(data, { sign: sign });
             }
+            let currentTime = Math.round(new Date().getTime() / 1000).toString();
+            data = Object.assign(data, { timestamp: currentTime });
             return new Promise((resolve, reject) => {
                 zs.platform.async.request(
                     {
@@ -486,7 +488,7 @@ window.zs = window.zs || {};
             if (key) {
                 storageKey += '>>' + key;
             }
-            let localData = Laya.LocalStorage.getItem('network_' + storageKey);
+            let localData = zs.utils.getItem('network_' + storageKey);
             if (localData) {
                 return JSON.parse(localData);
             }
