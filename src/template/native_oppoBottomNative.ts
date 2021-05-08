@@ -143,8 +143,4 @@ export default class native_oppoBottomNative extends zs.fgui.base {
         zs.core.removeAppHide(Laya.Handler.create(this, this.closeView));
         this.dispose();
     }
-
-    dispose() {
-        super.dispose();
-    }
 }

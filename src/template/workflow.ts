@@ -7,12 +7,18 @@ import exporter_btn_confirm from "./exporter_btn_confirm";
 import ProductKey from "./ProductKey";
 
 export default class workflow extends zs.workflow {
-    static readonly GAME_HOME = 'GAME_HOME';
     static readonly GAME_START_NATIVE = 'GAME_START_NATIVE'
-    static readonly GAME_PLAY = 'GAME_PLAY';
     static readonly GAME_SETTLE = 'GAME_SETTLE';
-    static readonly GAME_END = 'GAME_END';
     static readonly OPEN_SCREE_NATIVE = 'OPEN_SCREE_NATIVE';
+
+    static readonly PRODUCT_START = "PRODUCT_START";
+    static readonly PRODUCT_BEGIN = "PRODUCT_BEGIN";
+    static readonly GAME_HOME = "GAME_HOME";
+    static readonly PRODUCT_HOME_PLAY = "PRODUCT_HOME_PLAY";
+    static readonly GAME_PLAY = "GAME_PLAY";
+    static readonly PRODUCT_PLAY_END = "PRODUCT_PLAY_END";
+    static readonly GAME_END = "GAME_END";
+    static readonly PRODUCT_FINISH = "PRODUCT_FINISH";
 
     exporterPack = "export/export";
 
@@ -34,26 +40,30 @@ export default class workflow extends zs.workflow {
     static readonly add_btn_moreGame = "add_btn_moreGame";
     /**添加底部原生 */
     static readonly add_bottom_native = "add_bottom_native";
+    static readonly add_screen_native = "add_screen_native";
 
     _settleBtn: exporter_btn_confirm;
 
     registe() {
+        super.registe();
+
         // 绑定导出UI
         exportBinder.bindAll();
 
         zs.fgui.configs.registeBase(workflow.add_btn_deskTopIcon, native_BtnAddDesk);
         zs.fgui.configs.registeBase(workflow.add_bottom_native, native_oppoBottomNative);
+        zs.fgui.configs.registeBase(workflow.add_screen_native, native_oppoScreeNative);
         zs.fgui.configs.registeBase(workflow.add_btn_moreGame, native_BtnMoreGame);
 
         // 工作流注册
-        this.fsm = new zs.fsm()
-            .registe(workflow.GAME_HOME, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
-            .registe(workflow.GAME_START_NATIVE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-            .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-            .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
-            .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
-            .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
-            .setDefault(workflow.GAME_HOME);
+        // this.fsm = new zs.fsm()
+        //     // .registe(workflow.GAME_HOME, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
+        //     .registe(workflow.GAME_START_NATIVE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
+        //     .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
+        //     .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
+        //     .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
+        //     .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
+        //     .setDefault(workflow.GAME_HOME);
     }
 
     onGameHome(complete) {
@@ -137,17 +147,14 @@ export default class workflow extends zs.workflow {
                     this._screeNative = unit;
                     unit.apply();
                 })
-                .setBase(this._screeNative)
                 .align(zs.fgui.AlignType.Center)
                 .front();
         }
         return this.windowExport;
     }
     hideScreeNative() {
-        if (this._screeNative) {
-            this.windowExport.detach(this._screeNative);
-            this._screeNative = null;
-        }
+        this._screeNative && this.windowExport.detach(this._screeNative);
+        this._screeNative = null;
     }
     //#endregion
 }

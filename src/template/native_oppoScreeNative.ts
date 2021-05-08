@@ -22,7 +22,6 @@ export default class native_oppoScreeNative extends native_oppoBottomNative {
     }
     apply() {
         let zs_native_limit = ProductKey.zs_native_limit;
-        console.log("🐑 下一关开始/重新开始原生广告开关 : --- >>> ", zs_native_limit);
         if (!zs_native_limit) {
             this.closeView();
             return;
@@ -33,7 +32,6 @@ export default class native_oppoScreeNative extends native_oppoBottomNative {
     /**关闭界面 */
     closeView() {
         super.closeView();
-        console.log("🐑 : --- >>> ", "workflow");
         zs.core.workflow.next();
     }
 }

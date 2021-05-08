@@ -1,21 +1,14 @@
 {
-    "GAME_START": {
-        
+    "PRODUCT_START": {
+        "switch": "!"
     },
-    "START_FULL_1": {
-        "banner": {
-
-        }
-    },
-    "START_FULL_2": {
-        "banner": {
-
-        }
+    "PRODUCT_BEGIN": {
+        "switch": "!"
     },
     "GAME_HOME": {
         "banner": {
             "auto": true,
-            "isDelay":true
+            "isDelay": true
         },
         "base": [
             {
@@ -40,34 +33,26 @@
             }
         ]
     },
-    "GAME_PREPARE": {
-
-    },
-    "GAME_START_NATIVE":{
-
-    },
-    "OPEN_SCREE_NATIVE":{
-
-    },
-    "EXPORT_COMMON_EGG": {
-        "banner": {
-
-        }
+    "PRODUCT_HOME_PLAY": {
+        "switch": "zs_native_limit",
+        "base": [
+            {
+                "type": "add_screen_native",
+                "window": {
+                    "align": "center",
+                    "fit": true,
+                    "block": true
+                }
+            }
+        ]
     },
     "GAME_PLAY": {
         "banner": {
             "switch": "zs_game_banner_show_switch"
         }
     },
-    "EXPORT_GAME_EGG": {
-        "banner": {
-
-        }
-    },
-    "OVER_FULL_1": {
-        "banner": {
-
-        }
+    "PRODUCT_PLAY_END": {
+        "base": {}
     },
     "GAME_SETTLE": {
         "exporter": [
@@ -80,7 +65,7 @@
                 }
             }
         ],
-        "base":[
+        "base": [
             {
                 "type": "add_bottom_native",
                 "window": {
@@ -92,7 +77,5 @@
     "OVER_FULL_2": {
         "banner": {}
     },
-    "GAME_END": {
-
-    }
+    "GAME_END": {}
 }
