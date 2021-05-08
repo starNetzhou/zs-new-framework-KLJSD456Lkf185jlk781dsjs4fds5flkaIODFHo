@@ -1348,234 +1348,9 @@ window.zs.exporter = window.zs.exporter || {};
     list.transitionShakeLeft = 'shakeLeft';
     list.transitionShakeRight = 'shakeRight';
 
-    class card extends zs.fgui.base {
-        constructor(component) {
-            super(component);
-            if (component && component instanceof zs.ui.FGUI_card) {
-                component.on(Laya.Event.CLICK, this, this.onClickItem);
-            }
-        }
-        static make() {
-            let view = zs.ui.FGUI_card.createInstance();
-            return view;
-        }
-        static type() {
-            return zs.ui.FGUI_card;
-        }
-        dispose() {
-            super.dispose();
-            this.startOffsetDelayHandler && clearTimeout(this.startOffsetDelayHandler);
-            Laya.Tween.clear(this.view);
-        }
-        check(component) {
-            if (component instanceof zs.ui.FGUI_card) {
-                return true;
-            }
-            return false;
-        }
-        get itemURL() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.url;
-            }
-            return null;
-        }
-        setItem(type) {
-            let cardView = this.view;
-            cardView && cardView.loader && (cardView.loader.url = type.URL);
-            return this;
-        }
-        get autoSize() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.autoSize;
-            }
-            return null;
-        }
-        setAutoSize(value) {
-            let cardView = this.view;
-            cardView && cardView.loader && (cardView.loader.autoSize = value);
-            return this;
-        }
-        get width() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.width;
-            }
-            return null;
-        }
-        setWidth(width, keepRatio) {
-            this.setAutoSize(false);
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let scale = width / cardView.loader.sourceWidth;
-                cardView.loader.width = width;
-                if (keepRatio) {
-                    cardView.loader.height = scale * cardView.loader.sourceHeight;
-                }
-            }
-            console.log(cardView);
-            return this;
-        }
-        get height() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.height;
-            }
-            return null;
-        }
-        setHeight(height, keepRatio) {
-            this.setAutoSize(false);
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let scale = height / cardView.loader.sourceHeight;
-                cardView.loader.height = height;
-                if (keepRatio) {
-                    cardView.loader.width = scale * cardView.loader.sourceWidth;
-                }
-            }
-            return this;
-        }
-        setTransition(transition, stop) {
-            let cardView = this.view;
-            if (cardView) {
-                let t = cardView.getTransition(transition);
-                if (t) {
-                    if (stop) {
-                        t.stop();
-                    }
-                    else {
-                        t.play();
-                    }
-                }
-            }
-            return this;
-        }
-        get startOffsetX() {
-            return this._startoffsetx;
-        }
-        setStartOffsetX(value) {
-            this._startoffsetx = value;
-            return this;
-        }
-        get startOffsetY() {
-            return this._startoffsety;
-        }
-        setStartOffsetY(value) {
-            this._startoffsety = value;
-            return this;
-        }
-        get startOffsetTime() {
-            return this._startoffsettime;
-        }
-        setStartOffsetTime(value) {
-            this._startoffsettime = value;
-        }
-        get startOffsetDelay() {
-            return this._startoffsetdelay;
-        }
-        setStartOffsetDelay(value) {
-            this._startoffsetdelay = value;
-        }
-        get startFadeDelay() {
-            return this._startfadedelay;
-        }
-        setStartFadeDelay(value) {
-            this._startfadedelay = value;
-        }
-        get startFadeTime() {
-            return this._startfadetime;
-        }
-        setStartFadeTime(value) {
-            this._startfadetime = value;
-        }
-        setData(data) {
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let item = cardView.loader.component;
-                item.data = data;
-                if (this._cardRendererHandler) {
-                    this._cardRendererHandler.runWith([item, data]);
-                } else {
-                    item.picture && item.picture.icon && (item.picture.icon = data.app_icon);
-                    if (data.app_title && item.title) {
-                        item.title.text = data.app_title;
-                    } else if (item.title) {
-                        item.title.text = "";
-                    }
-                    if (data.app_desc && item.desc) {
-                        item.desc.text = data.app_desc;
-                    } else if (item.desc) {
-                        item.desc.text = "";
-                    }
-                }
-            }
-            return this;
-        }
-        apply() {
-            if ((this._startoffsetx != null || this._startoffsety != null) && this.startOffsetDelayHandler == null) {
-                this.startOffsetDelayHandler = setTimeout(() => {
-                    let targetX = this.view.x + (this._startoffsetx || 0);
-                    let targetY = this.view.y + (this._startoffsety || 0);
-                    console.log(this.view.x + " : " + this._startoffsetx, this.view.y + " : " + this._startoffsety);
-                    Laya.Tween.to(this.view, { x: targetX, y: targetY }, this._startoffsettime || 500, null, null, this._startoffsetdelay || 0);
-                }, 1);
-            }
-            if (this._startfadedelay != null || this._startfadetime != null) {
-                this.view.alpha = 0;
-                Laya.Tween.to(this.view, { alpha: 1 }, this._startfadetime || 500, null, null, this._startfadedelay || 0);
-                this._startfadedelay = null;
-                this._startfadetime = null;
-            }
-
-            dataMgr.load().then((result) => {
-                if (this.disposed) return;
-                this.setData(result.promotion[zs.utils.randInt(0, result.promotion.length)]);
-            });
-
-            return this;
-        }
-        applyConfig(config) {
-            if (config) {
-                let item = null;
-                config.item && (item = zs.fgui.configs.items[config.item]);
-                item && (this.setItem(item));
-                if (config.autosize != null && config.autosize != undefined) {
-                    this.setAutoSize(config.autosize);
-                } else {
-                    config.width != null && this.setWidth(config.width, config.keepratio);
-                    config.height != null && this.setHeight(config.height, config.keepratio);
-                }
-                config.startoffsetx != null && config.startoffsetx != undefined && (this.setStartOffsetX(config.startoffsetx));
-                config.startoffsety != null && config.startoffsety != undefined && (this.setStartOffsetY(config.startoffsety));
-                config.startoffsettime != null && config.startoffsettime != undefined && (this.setStartOffsetTime(config.startoffsettime));
-                config.startoffsetdelay != null && config.startoffsetdelay != undefined && (this.setStartOffsetDelay(config.startoffsetdelay));
-                config.startfadedelay != null && config.startfadedelay != undefined && (this.setStartFadeDelay(config.startfadedelay));
-                config.startfadetime != null && config.startfadetime != undefined && (this.setStartFadeTime(config.startfadetime));
-            }
-
-            return this.apply();
-        }
-        setDataHandler(handler) {
-            if (handler) {
-                handler.once = false;
-                this._cardRendererHandler = handler;
-            }
-            return this;
-        }
-        setClickHandler(clickHandler) {
-            this._clickHandler = clickHandler;
-            return this;
-        }
-        onClickItem(item, evt) {
-            if (this._clickHandler) {
-                this._clickHandler.runWith(item);
-            } else {
-                utils.navigateToMiniProgram(item.data);
-            }
-        }
-    }
-
     class loader extends zs.fgui.base {
         constructor(component) {
             super(component);
-            console.log("loader", component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
             component.alpha = 1;
@@ -1974,7 +1749,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
         onFakeClicked() {
             if (this.fakeevent) {
-                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.fakedelay) : null;
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.fakedelay) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) {
                     zs.core.workflow.runEventConfig(this.fakeevent);
                 } else {
@@ -1991,7 +1766,7 @@ window.zs.exporter = window.zs.exporter || {};
             let fakeSwitch = true;
             this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
             if (fakeSwitch && this.autooffset != null && (this.offsetx != null || this.offsety != null)) {
-                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.autooffset) : null;
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.autooffset) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
                 let targetX = this.view.x + (this.offsetx || 0);
                 let targetY = this.view.y + (this.offsety || 0);
@@ -2008,7 +1783,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
         autoFade() {
             if (this.autofade != null) {
-                let delay = zs.core.workflow ? zs.core.workflow.readConfigNumber(this.autofade) : null;
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.autofade) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
                 Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 0, null, Laya.Handler.create(this, () => {
                     this.view.touchable = true;
@@ -2091,7 +1866,6 @@ window.zs.exporter = window.zs.exporter || {};
     exports.utils = utils;
     exports.dataMgr = dataMgr;
     exports.list = list;
-    exports.card = card;
     exports.loader = loader;
     exports.background = background;
     exports.button = button;

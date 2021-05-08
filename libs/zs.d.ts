@@ -1106,20 +1106,7 @@ declare module zs.ui {
      * @param itemName 组件名
      */
     function readURL(pack: fairygui.UIPackage, itemName: string);
-
-    /**
-     * 导出卡片
-     */
-    class FGUI_card extends fairygui.GComponent {
-        /**
-         * 卡片加载器
-         */
-        loader: fairygui.GLoader;
-        /**
-         * 创建实例
-         */
-        static createInstance();
-    }
+  
     /**
      * 导出部件
      */
@@ -3044,70 +3031,6 @@ declare module zs.exporter {
         apply(): list;
     }
 
-    /**
-     * 导出卡片(暂时不可用，可能产生问题)
-     */
-    class card extends zs.fgui.base {
-        /**
-         * 部件URL
-         */
-        get itemURL(): string;
-        /**
-         * 自动尺寸
-         */
-        get autoSize(): boolean;
-        /**
-         * 宽度
-         */
-        get width(): number;
-        /**
-         * 高度
-         */
-        get height(): number;
-        /**
-         * 部件类型
-         * @param type 
-         */
-        setItem(type: typeof zs.ui.FGUI_item): card;
-        /**
-         * 自动尺寸
-         * @param value 
-         */
-        setAutoSize(value: boolean): card;
-        /**
-         * 宽度
-         * @param width 宽度
-         * @param keepRatio （可选）保持比例
-         */
-        setWidth(width: number, keepRatio?: boolean): card;
-        /**
-         * 高度
-         * @param height 高度
-         * @param keepRatio （可选）保持比例
-         */
-        setHeight(height: number, keepRatio?: boolean): card;
-        /**
-         * 动效
-         * @param transition 动效
-         * @param stop （可选）自动停止
-         */
-        setTransition(transition: string, stop?: boolean): card;
-        /**
-         * 数据
-         * @param data 数据
-         */
-        setData(data: ExporterData): card;
-        /**
-         * 设置自定义卡片处理
-         * @param handler 处理事件（(item, data) => {...}，data可能为空）
-         */
-        setDataHandler(handler: Laya.Handler): card;
-        /**
-         * 点击事件
-         * @param clickHandler 事件
-         */
-        setClickHandler(clickHandler: Laya.Handler): card;
-    }
     /**
      * 导出加载器
      */

@@ -41,21 +41,6 @@ window.zs.ui = window.zs.ui || {};
     }
     FGUI_item.URL = null;
 
-
-    class FGUI_card extends fairygui.GComponent {
-        static bind(pack) {
-            zs.ui.bind(pack, this.itemName, FGUI_card);
-            this.pack = pack;
-        }
-        static createInstance() {
-            return (fairygui.UIPackage.createObject(this.pack.name, this.itemName));
-        }
-        onConstruct() {
-            this.loader = (this.getChild("loader"));
-        }
-    }
-    FGUI_card.itemName = "card";
-
     class FGUI_list extends fairygui.GComponent {
         static bind(pack) {
             zs.ui.bind(pack, this.itemName, FGUI_list);
@@ -448,7 +433,6 @@ window.zs.ui = window.zs.ui || {};
     exports.readURL = readURL;
     exports.FGUI_item = FGUI_item;
     exports.FGUI_list = FGUI_list;
-    exports.FGUI_card = FGUI_card;
     exports.FGUI_msgbox = FGUI_msgbox;
     exports.FGUI_Loading = FGUI_Loading;
     exports.EggKnock = EggKnock;

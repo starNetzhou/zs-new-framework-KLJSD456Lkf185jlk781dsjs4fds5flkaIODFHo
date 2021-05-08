@@ -104,38 +104,44 @@ window.zs = window.zs || {};
         callEventReturn(key, ...args) {
             return this.applyEventReturn(key, args);
         }
-        readConfigNumber(config) {
+        readConfigReturn(config) {
+            if (config == null || config == undefined) { return null; }
             let result = null;
-            if (config) {
-                if (typeof config === 'number') {
-                    result = config;
-                } else if (Array.isArray(config) && config.length > 0) {
-                    let evt = config[0];
-                    let args = config.length > 1 ? config.slice(1, config.length) : null;
+            let configType = typeof config;
+            if (configType === 'number' || configType === 'boolean' || Array.isArray(config)) {
+                result = config;
+            } else if (configType === 'objects') {
+                for (let evt in config) {
+                    let args = config[evt];
+                    if (!Array.isArray(args) && args != null && args != undefined) {
+                        args = [args];
+                    }
                     result = this.applyEventReturn(evt, args);
-                } else if (typeof config === 'string' && config.trim().length > 0) {
-                    result = this.applyEventReturn(config);
+                    break;
                 }
+            } else if (configType === 'string') {
+                result = this.applyEventReturn(config);
             }
             return result;
         }
         runEventConfig(event) {
-            if (Array.isArray(event)) {
-                for (let i = 0, n = event.length; i < n; i++) {
-                    let evt = event[i];
-                    if (Array.isArray(evt)) {
-                        let lenEvt = evt.length;
-                        if (lenEvt > 1) {
-                            this.applyEvent(evt[0], evt.slice(1, lenEvt));
-                        } else if (lenEvt > 0) {
-                            this.callEvent(evt[0]);
-                        }
-                    } else {
-                        this.callEvent(evt);
-                    }
-                }
-            } else {
+            if (event == null || event == undefined) { return; }
+            let eventType = typeof event;
+            console.log(eventType);
+            if (eventType === 'string') {
                 this.callEvent(event);
+            } else if (Array.isArray(event)) {
+                for (let i = 0, n = event.length; i < n; i++) {
+                    this.runEventConfig(event[i]);
+                }
+            } else if (eventType == 'object') {
+                for (let evt in event) {
+                    let args = event[evt];
+                    if (!Array.isArray(args) && args != null && args != undefined) {
+                        args = [args];
+                    }
+                    this.applyEvent(evt, args);
+                }
             }
         }
         registeChildFSM() {
@@ -619,7 +625,7 @@ window.zs = window.zs || {};
                 isSkip = !this.checkSwitch(productData.switch, productData.check);
             }
             let childFSM = this.fsmList[current];
-            if (isSkip && !childFSM) {
+            if (isSkip) {
                 this.next();
             } else {
                 if (this.listeners != null && this.listeners[current] != null) {
@@ -749,19 +755,19 @@ window.zs = window.zs || {};
         }
         checkEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.event && data.event.length > 0) {
+            if (data && data.event) {
                 this.runEventConfig(data.event);
             }
         }
         checkLaterEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.laterevent && data.laterevent.length > 0) {
+            if (data && data.laterevent) {
                 this.runEventConfig(data.laterevent);
             }
         }
         checkExitEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.exitevent && data.exitevent.length > 0) {
+            if (data && data.exitevent) {
                 this.runEventConfig(data.exitevent);
             }
         }
@@ -896,7 +902,6 @@ window.zs = window.zs || {};
             let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic);
             zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
-            zs.ui.FGUI_card.bind(basicExportPack);
             this.progress = 20;
             zs.log.debug("加载必要分包", 'Core');
             await zs.resource.preload();
