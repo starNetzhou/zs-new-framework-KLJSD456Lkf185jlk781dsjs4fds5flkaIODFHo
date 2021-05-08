@@ -350,7 +350,6 @@ window.zs = window.zs || {};
             }
             let currentTime = Math.round(new Date().getTime() / 1000).toString();
             data = Object.assign(data, { timestamp: currentTime });
-            console.log(url, data);
             return new Promise((resolve, reject) => {
                 zs.platform.async.request(
                     {
