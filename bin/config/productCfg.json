@@ -30,10 +30,30 @@
     },
     "GAME_PLAY": {},
     "PRODUCT_PLAY_END": {
-        "switch": "!"
+        "event": "event_show_screen_native",
+        "exitevent": "event_hide_screen_native",
+        "base": [
+            {
+                "type": "export_button",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "text": "继续游戏",
+                    "event": "event_childnext"
+                }
+            }
+        ]
     },
     "GAME_END": {},
     "PRODUCT_FINISH": {
-        "switch": "!"
+        "event": [
+            "event_finish_screen_native",
+            "event_childnext"
+        ]
     }
 }

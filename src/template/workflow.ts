@@ -41,6 +41,7 @@ export default class workflow extends zs.workflow {
     static readonly event_home_banner = "event_home_banner";
     static readonly event_hide_screen_native = "event_hide_screen_native";
     static readonly event_show_screen_native = "event_show_screen_native";
+    static readonly event_finish_screen_native = "event_finish_screen_native";
 
     _settleBtn: exporter_btn_confirm;
 
@@ -57,14 +58,7 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_home_banner, this, this.homeBanner);
         zs.core.workflow.registeEvent(workflow.event_hide_screen_native, this, this.hideScreeNative);
         zs.core.workflow.registeEvent(workflow.event_show_screen_native, this, this.showScreeNative);
-    }
-
-    onGameHome(complete) {
-        complete.run();
-        if ((!this._screeNative || !this._screeNative.view.visible) && !this.skipHomeBanner) {
-            zs.platform.sync.showBanner();
-        }
-        this.onShowAddDeskTop();
+        zs.core.workflow.registeEvent(workflow.event_finish_screen_native, this, this.finishScreenNative);
     }
 
     homeBanner() {
@@ -73,101 +67,13 @@ export default class workflow extends zs.workflow {
         }
     }
 
-    onGamePrepare(complete) {
-        complete.run();
-        this.hideScreeNative();
-        this.onHideAddDeskTop();
-    }
-
-    onGamePlay(complete) {
-        complete.run();
-    }
-
-    onGameSettle(complete) {
-        complete.run();
-        if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
-            if (this._settleBtn) {
-                this._settleBtn.view.visible = true;
-            } else {
-                this._settleBtn = this.windowExport.attach(exporter_btn_confirm)
-                    .align(zs.fgui.AlignType.Bottom, 0, -150)
-                    .front()
-                    .getBase() as exporter_btn_confirm;
-            }
-            this.showScreeNative();
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-    onGameEnd(complete) {
-        complete.run();
-        this.hideScreeNative();
+    finishScreenNative() {
         if (ProductKey.zs_native_limit) {
             this.showScreeNative();
             zs.platform.sync.hideBanner();
         }
-        this._settleBtn && (this._settleBtn.view.visible = false);
-        this._settleBtn = null;
     }
 
-    //#region 添加桌面和更多好玩
-    _addDeaskTopBtn: native_BtnAddDesk = null;
-    onShowAddDeskTop() {
-        if (this._addDeaskTopBtn) {
-            this._addDeaskTopBtn.view.visible = true;
-            this.windowExport
-                .setBase(this._addDeaskTopBtn)
-                .front();
-        } else {
-            this.windowExport
-                .attach(native_BtnAddDesk)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .scale(1.5, 1.5)
-                .update<native_BtnAddDesk>(native_BtnAddDesk, (unit) => {
-                    this._addDeaskTopBtn = unit;
-                    unit.apply();
-
-                })
-                .align(zs.fgui.AlignType.Right)
-        }
-        return this.windowExport;
-    }
-    onHideAddDeskTop() {
-        if (this._addDeaskTopBtn) {
-            this.windowExport.detach(this._addDeaskTopBtn);
-            this._addDeaskTopBtn = null;
-        }
-    }
-    //#endregion
-
-    //#region 原生的显示和隐藏
-    _bottomNative: native_vivoBottomNative = null;
-    showBottomNative() {
-        if (this._bottomNative) {
-            this._bottomNative.view.visible = true;
-            this.windowExport
-                .setBase(this._bottomNative)
-                .front();
-        } else {
-            this.windowExport
-                .attach(native_vivoBottomNative)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .update<native_vivoBottomNative>(native_vivoBottomNative, (unit) => {
-                    this._bottomNative = unit;
-                    unit.apply();
-
-                })
-                .align(zs.fgui.AlignType.Bottom)
-                .front();
-        }
-        return this.windowExport;
-    }
-    hideBottomNative() {
-        if (this._bottomNative) {
-            this.windowExport.detach(this._bottomNative);
-            this._bottomNative = null;
-        }
-    }
     _screeNative: native_vivoScreeNative = null;
     showScreeNative() {
         if (this._screeNative) {
@@ -194,11 +100,11 @@ export default class workflow extends zs.workflow {
         }
         return this.windowExport;
     }
+
     hideScreeNative() {
         if (this._screeNative) {
             this.windowExport.detach(this._screeNative);
             this._screeNative = null;
         }
     }
-    //#endregion
 }
