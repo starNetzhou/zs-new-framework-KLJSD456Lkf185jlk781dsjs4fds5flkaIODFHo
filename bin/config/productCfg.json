@@ -1,6 +1,5 @@
 {
     "PRODUCT_START": {
-        "switch": "!",
         "states": [
             "READY",
             "FULL_1",
@@ -22,10 +21,10 @@
                     "fill": "width",
                     "offsety": -200,
                     "switch": "zs_banner_vertical_enable",
-                    "autooffset": [
-                        "button_delay",
+                    "autooffset": {
+                        "button_delay":
                         "zs_button_delay_time"
-                    ],
+                    },
                     "event": "event_childnext",
                     "url": [
                         "export/export",
@@ -57,21 +56,26 @@
         "exitevent": "event_hide_full",
         "exporter": []
     },
+    "PRODUCT_BEGIN": {
+        "switch": "!"
+    },
     "PRODUCT_HOME_PLAY": {
         "states": [
             "VIDEO",
             "EGG"
         ]
     },
-    "PRODUCT_BEGIN": {
-        "switch": "!"
-    },
     "PRODUCT_HOME_PLAY.VIDEO": {
         "switch": "zs_start_game_video_switch",
         "event": "event_start_video"
     },
     "PRODUCT_HOME_PLAY.EGG": {
-        "check": "event_check_egg",
+        "check": [
+            [
+                "event_check_egg",
+                true
+            ]
+        ],
         "event": "event_common_egg",
         "exitevent": "event_hide_egg"
     },
@@ -186,10 +190,14 @@
     },
     "PRODUCT_PLAY_END": {
         "states": [
+            "EGG",
             "FULL_1",
             "SETTLE",
             "FULL_2"
         ]
+    },
+    "PRODUCT_PLAY_END.EGG": {
+        "switch": "!"
     },
     "PRODUCT_PLAY_END.FULL_1": {
         "switch": [

@@ -110,7 +110,7 @@ window.zs = window.zs || {};
             let configType = typeof config;
             if (configType === 'number' || configType === 'boolean' || Array.isArray(config)) {
                 result = config;
-            } else if (configType === 'objects') {
+            } else if (configType === 'object') {
                 for (let evt in config) {
                     let args = config[evt];
                     if (!Array.isArray(args) && args != null && args != undefined) {

@@ -109,7 +109,7 @@ export default class workflow extends zs.workflow {
         // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
         //注册了个获取按钮延迟时间的事件
         zs.core.workflow.registeEvent(workflow.button_delay, this, (value) => { return ProductKey[value] });
-        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return value; }, false);
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); });
         zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);
