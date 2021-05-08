@@ -52,14 +52,7 @@
         }
     },
     "PRODUCT_PLAY_END": {
-        "base": [
-            {
-                "type": "add_bottom_native",
-                "window": {
-                    "align": "bottom"
-                }
-            }
-        ]
+        "switch": "!"
     },
     "GAME_END": {}
 }
