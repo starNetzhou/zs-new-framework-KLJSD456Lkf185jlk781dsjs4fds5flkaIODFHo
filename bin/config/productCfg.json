@@ -52,7 +52,31 @@
         }
     },
     "PRODUCT_PLAY_END": {
-        "switch": "!"
+        "base": [
+            {
+                "type": "add_bottom_native",
+                "window": {
+                    "align": "bottom"
+                }
+            },
+            {
+                "type": "export_button",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "text": "继续游戏",
+                    "event": "event_childnext"
+                }
+            }
+        ]
     },
-    "GAME_END": {}
+    "GAME_END": {},
+    "PRODUCT_FINISH": {
+        "switch": "!"
+    }
 }
