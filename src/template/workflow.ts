@@ -54,16 +54,6 @@ export default class workflow extends zs.workflow {
         zs.fgui.configs.registeBase(workflow.add_bottom_native, native_oppoBottomNative);
         zs.fgui.configs.registeBase(workflow.add_screen_native, native_oppoScreeNative);
         zs.fgui.configs.registeBase(workflow.add_btn_moreGame, native_BtnMoreGame);
-
-        // 工作流注册
-        // this.fsm = new zs.fsm()
-        //     // .registe(workflow.GAME_HOME, workflow.GAME_START_NATIVE, 0, false, this, this.openScreeNative)
-        //     .registe(workflow.GAME_START_NATIVE, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-        //     .registe(workflow.GAME_PLAY, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-        //     .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
-        //     .registe(workflow.GAME_END, workflow.OPEN_SCREE_NATIVE, 0, false, this, this.openScreeNative)
-        //     .registe(workflow.OPEN_SCREE_NATIVE, workflow.GAME_HOME, 0, false, this, this.onGameHome)
-        //     .setDefault(workflow.GAME_HOME);
     }
 
     onGameHome(complete) {
