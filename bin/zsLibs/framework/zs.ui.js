@@ -123,23 +123,25 @@ window.zs.ui = window.zs.ui || {};
             this.bannerRange = [0.3, 0.7];
             this.awardDelay = [1000, 1000];
             this.closeDelay = [1000, 1040];
-            this.btnSrcOffset = 240;
+            this.btnSrcOffset = 280;
             this.btnDstOffset = 370;
             this.btnOffsetDelay = 800;
             this.btnOffsetTime = 500;
             this.btnIgnoreOffset = false;
-            if (!EggKnock.inited) {
-                EggKnock.inited = true;
-                if (zs.EggKnock) {
-                    zs.EggKnock.init();
-                    zs.core.onWorkflow(zs.workflow.PRODUCT_FINISH, Laya.Handler.create(this, () => {
-                        zs.EggKnock.markGameNum(true);
-                    }));
-                }
-            }
+            // if (!EggKnock.inited) {
+            //     EggKnock.inited = true;
+                // if (zs.EggKnock) {
+                //     zs.EggKnock.init();
+                //     zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
+                //         console.error("???")
+                //         zs.EggKnock.markGameNum(true);
+                //     }), true);
+                // }
+            // }
         }
         dispose() {
             Laya.timer.clear(this, this.tick);
+            Laya.Tween.clearAll(this.btnKnock);
             zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
             zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
             this.btnKnock && this.btnKnock.offClick && this.btnKnock.offClick(this, this.onClick);
@@ -159,11 +161,12 @@ window.zs.ui = window.zs.ui || {};
             this.rollbackNext = 0;
             this.isOpenAd = false;
             this.isGetAward = false;
-            this.bannerPoint = zs.utils.randInt(this.bannerRange[0], this.bannerRange[1]);
+            this.bannerPoint = zs.utils.randInt(this.bannerRange[0] * 100, this.bannerRange[1] * 100) * 0.01;
+            console.error(this.bannerPoint)
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
             this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
-            this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
+            // this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
             Laya.timer.loop(1, this, this.tick);
             this.updateProgress(this.progress);
             zs.EggKnock && zs.EggKnock.markReadyNum(true);

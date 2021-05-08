@@ -512,7 +512,7 @@ window.zs = window.zs || {};
                 zs.log.debug("ping: " + url);
                 await network.get(url, params, 1000)
                     .then((res) => {
-                        zs.log.debug("域名 " + url + " 正常通讯", "Network");
+                        zs.log.debug("域名 " + url + " 正常通讯", "Network", res);
                         network.domainIdx = i;
                         zs.product.city = res.city;
                         zs.product.timestamp = res.timestamp * 1000;

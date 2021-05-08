@@ -1763,7 +1763,7 @@ window.zs.exporter = window.zs.exporter || {};
             }
         }
         autoOffset() {
-            let fakeSwitch = false;
+            let fakeSwitch = true;
             this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
             if (fakeSwitch && this.autooffset != null && (this.offsetx != null || this.offsety != null)) {
                 let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.autooffset) : null;
@@ -1777,6 +1777,7 @@ window.zs.exporter = window.zs.exporter || {};
                 this.offsetx = null;
                 this.offsety = null;
             } else {
+                this.autooffset = null;
                 this.view.x += (this.offsetx || 0);
                 this.view.y += (this.offsety || 0);
             }

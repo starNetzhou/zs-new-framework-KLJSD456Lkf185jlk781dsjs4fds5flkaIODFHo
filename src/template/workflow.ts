@@ -108,8 +108,14 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
         // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
         //注册了个获取按钮延迟时间的事件
-        zs.core.workflow.registeEvent(workflow.button_delay, this, (value) => { return ProductKey[value] });
-        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); });
+        zs.core.workflow.registeEvent(workflow.button_delay, this, (value) => {
+            console.error("value", value, ProductKey[value])
+            return ProductKey[value]
+        });
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => {
+            let bool = zs.ui.EggKnock.checkEggOpen(value);
+            return bool;
+        });
         zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);
@@ -195,16 +201,15 @@ export default class workflow extends zs.workflow {
             .block(true)
             .update<knock_egg>(knock_egg, (unit) => {
                 this._commonEgg = unit;
-                unit
-                    .setEventHandler(
-                        Laya.Handler.create(this, () => {
-                            console.log("Get Award");
-                        }),
-                        Laya.Handler.create(this, () => {
-                            this.hideCommonEgg();
-                            zs.core.workflow.childNext();
-                        })
-                    )
+                unit.setEventHandler(
+                    Laya.Handler.create(this, () => {
+                        console.log("Get Award");
+                    }),
+                    Laya.Handler.create(this, () => {
+                        this.hideCommonEgg();
+                        zs.core.workflow.childNext();
+                    })
+                )
                     .apply();
             })
             .front();
@@ -225,12 +230,11 @@ export default class workflow extends zs.workflow {
             workflow.showPanel(exporter_fake_msg, zs.fgui.FitType.ScaleFit)
                 .update<exporter_fake_msg>(exporter_fake_msg, (unit) => {
                     this._fakeMsg = unit;
-                    unit
-                        .setCancelCallback(Laya.Handler.create(this, () => {
-                            if (ProductKey.zs_reminder_switch) {
-                                this.challengeExport();
-                            }
-                        }))
+                    unit.setCancelCallback(Laya.Handler.create(this, () => {
+                        if (ProductKey.zs_reminder_switch) {
+                            this.challengeExport();
+                        }
+                    }))
                         .apply();
                 })
                 .align(zs.fgui.AlignType.Top);
@@ -268,8 +272,9 @@ export default class workflow extends zs.workflow {
         this._challengeExport = null;
     }
 
-    fakeExit(event: string | string[]) {
-        if (!ProductKey.zs_history_list_jump) { return; }
+    fakeExit(event: string | string[], isHome?) {
+        if (!ProductKey.zs_jump_switch) { return; }
+        if (!ProductKey.zs_history_list_jump && isHome && ProductKey.zs_start_game_video_switch) { return; }
         if (this._fakeExit) {
             this._fakeExit.view.visible = true;
             workflow.getPanel().setBase(this._fakeExit);
