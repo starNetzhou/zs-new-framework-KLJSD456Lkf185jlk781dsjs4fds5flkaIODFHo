@@ -30,14 +30,45 @@
         ]
     },
     "PRODUCT_PLAY_END.SHARE": {
-        "event": "event_share_record"
+        "base": [
+            {
+                "type": "add_share_record",
+                "window": {
+                    "align": "center",
+                    "fit": true,
+                    "block": true
+                },
+                "base": {
+                    "event": "event_record_share_reward"
+                }
+            }
+        ]
     },
     "PRODUCT_PLAY_END.SETTLE": {
-        "switch": "!"
+        "event": "event_init_insert",
+        "base": [
+            {
+                "type": "export_button",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "width": 349,
+                    "height": 160,
+                    "offsety": -200,
+                    "text": "继续游戏",
+                    "event": "event_childnext"
+                }
+            }
+        ]
     },
-    "GAME_END": {
-    },
+    "GAME_END": {},
     "PRODUCT_FINISH": {
-        "switch": "!"
+        "switch": "zs_full_screen_ad",
+        "event": [
+            "event_load_insert",
+            "event_childnext"
+        ]
     }
 }

@@ -6,7 +6,7 @@ export default class RecordPage extends zs.fgui.baseGeneric<FGUI_RecordPage> {
 
     static typeDefine = FGUI_RecordPage;
 
-    public onShareHandler: Laya.Handler;
+    public event: any;
 
     constructor(component) {
         super(component);
@@ -17,6 +17,10 @@ export default class RecordPage extends zs.fgui.baseGeneric<FGUI_RecordPage> {
         }
     }
 
+    setRewardEvent(event) {
+        this.event = event;
+        return this;
+    }
 
     apply(): RecordPage {
         zs.platform.sync.recorderStop();
@@ -31,6 +35,13 @@ export default class RecordPage extends zs.fgui.baseGeneric<FGUI_RecordPage> {
         return this;
     }
 
+    applyConfig(config) {
+        if (config) {
+            config.event && this.setRewardEvent(config.event);
+        }
+        return this.apply();
+    }
+
     onCloseClick() {
         this.view.visible = false;
         zs.core.workflow.childNext();
@@ -43,7 +54,7 @@ export default class RecordPage extends zs.fgui.baseGeneric<FGUI_RecordPage> {
                 //分享录屏成功并领取奖励
                 zs.log.debug("分享录屏成功！");
                 this.setBtnTouchEnable(true);
-                this.onShareHandler && (this.onShareHandler.run());
+                zs.core.workflow.runEventConfig(this.event);
                 this.onCloseClick();
             }).catch(() => {
                 //分享录屏失败

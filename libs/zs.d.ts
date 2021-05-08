@@ -340,7 +340,7 @@ declare module zs {
          * 按配置执行事件
          * @param config 配置
          */
-        runEventConfig(config: string | string[]);
+        runEventConfig(config: any);
         /**
          * 注册工作流监听，用于监听工作流状态改变，建议在初始化（zs.core.init）后调用
          * @param key 状态名

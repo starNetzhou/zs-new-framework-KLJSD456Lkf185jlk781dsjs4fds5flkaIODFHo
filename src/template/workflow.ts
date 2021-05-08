@@ -15,10 +15,13 @@ export default class workflow extends zs.workflow {
     static readonly PRODUCT_FINISH = "PRODUCT_FINISH";;
 
     static readonly add_more_game = "add_more_game";
+    static readonly add_share_record = "add_share_record";
 
     static readonly event_game_play = "event_game_play";
     static readonly event_share_record = "event_share_record";
     static readonly event_init_insert = "event_init_insert";
+    static readonly event_load_insert = "event_load_insert";
+    static readonly event_record_share_reward = "event_record_share_reward";
 
     exporterPack = "export/export";
 
@@ -44,20 +47,14 @@ export default class workflow extends zs.workflow {
 
         exportBinder.bindAll();
         zs.fgui.configs.registeBase(workflow.add_more_game, BtnMoreGame);
-
-        zs.core.workflow.registeEvent(workflow.event_game_play, this, this.onGamePlay);
-        zs.core.workflow.registeEvent(workflow.event_share_record, this, this.showShareRecordPage);
+        zs.fgui.configs.registeBase(workflow.add_share_record, RecordPage);
+        zs.core.workflow.registeEvent(workflow.event_game_play, this, this.gamePlay);
         zs.core.workflow.registeEvent(workflow.event_init_insert, this, this.initInsert);
-        // this.fsm = new zs.fsm()
-        //     .registe(workflow.GAME_HOME, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-        //     .registe(workflow.GAME_PLAY, workflow.OPEN_SHARE_RECORD, 0, false, this, this.onShareRecordPage)
-        //     .registe(workflow.OPEN_SHARE_RECORD, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-        //     .registe(workflow.GAME_SETTLE, workflow.GAME_END, 0, false, this, this.onGameEnd)
-        //     .registe(workflow.GAME_END, workflow.GAME_HOME, 0, false, this)
-        //     .setDefault(workflow.GAME_HOME);
+        zs.core.workflow.registeEvent(workflow.event_load_insert, this, this.loadInsert);
+        zs.core.workflow.registeEvent(workflow.event_record_share_reward, this, this.onRecordShareReward);
     }
 
-    onGamePlay() {
+    gamePlay() {
         let zs_best_videotape_time = ProductKey.zs_best_videotape_time / 1000;
         let zs_hide_banner_switch = ProductKey.zs_hide_banner_switch;
         //开始录屏
@@ -90,35 +87,11 @@ export default class workflow extends zs.workflow {
         zs.platform.sync.initInsert({ id: ProductKey.zs_full_screen_adunit });
     }
 
-    onGameEnd(complete) {
-        complete.run();
-        this._settleBtn && (this._settleBtn.view.visible = false);
-        if (ProductKey.zs_full_screen_ad) {
-            zs.platform.sync.loadInsert({ closeHandler: () => { }, errorHandler: () => { } });
-        }
+    loadInsert() {
+        zs.platform.sync.loadInsert({ closeHandler: () => { }, errorHandler: () => { } });
     }
 
-    /**
-     * 显示分享录屏
-     * @returns 
-     */
-    showShareRecordPage() {
-        console.log("show Share Record");
-        if (this._shareRecordPage) {
-            this._shareRecordPage.view.visible = true;
-            this.windowExport.setBase(this._shareRecordPage).front();
-        } else {
-            this.windowExport.attach(RecordPage)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .fit()
-                .block(true)
-                .update<RecordPage>(RecordPage, (unit) => {
-                    this._shareRecordPage = unit;
-                    unit.onShareHandler = this.onShareHandler;
-                    unit.apply();
-                })
-                .setBase(this._shareRecordPage).align(zs.fgui.AlignType.Center).front();
-        }
-        return this._shareRecordPage;
+    onRecordShareReward() {
+        this.onShareHandler && this.onShareHandler.run();
     }
 }
