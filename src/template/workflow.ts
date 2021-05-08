@@ -57,8 +57,9 @@ export default class workflow extends zs.workflow {
     static readonly event_hide_egg = "event_hide_egg";
     static readonly event_hide_fake_msg = "event_hide_fake_msg";
     static readonly event_hide_fake_exit = "event_hide_fake_exit";
+    static readonly button_delay = "button_delay"
 
-    exporterPack = ["export/export","knock_fgui/KnockEgg"];
+    exporterPack = ["export/export", "knock_fgui/KnockEgg"];
     bannerIgnoreList = ['PRODUCT_START.FULL_1', 'PRODUCT_START.FULL_2', 'PRODUCT_PLAY_END.FULL_1', 'PRODUCT_PLAY_END.FULL_2'];
 
     windowFull: zs.fgui.window;
@@ -106,7 +107,9 @@ export default class workflow extends zs.workflow {
         zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, false);
         zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
         // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
-        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return true; }, false);
+        //注册了个获取按钮延迟时间的事件
+        zs.core.workflow.registeEvent(workflow.button_delay, this, (value) => { return ProductKey[value] });
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return value; }, false);
         zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
         zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);

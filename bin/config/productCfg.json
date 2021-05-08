@@ -19,7 +19,13 @@
                 "base": {
                     "width": 349,
                     "height": 160,
+                    "fill": "width",
                     "offsety": -200,
+                    "switch": "zs_banner_vertical_enable",
+                    "autooffset": [
+                        "button_delay",
+                        "zs_button_delay_time"
+                    ],
                     "event": "event_childnext",
                     "url": [
                         "export/export",
@@ -260,11 +266,14 @@
                     "alignoffsety": -100
                 },
                 "base": {
-                    "switch": "zs_button_delay_time",
+                    "switch": "zs_banner_vertical_enable",
                     "width": 200,
                     "fill": "width",
-                    "offsety": -100,
-                    "autooffset": true,
+                    "offsety": -200,
+                    "autooffset": [
+                        "button_delay",
+                        "zs_button_delay_time"
+                    ],
                     "event": "event_childnext",
                     "url": [
                         "export/export",
@@ -278,8 +287,8 @@
                 "type": "export_knock_1",
                 "switch": "zs_finish_jump",
                 "window": {
-                    "align": "center",
-                    "alignoffsety": 100
+                    "align": "bottom",
+                    "alignoffsety": -400
                 }
             }
         ]

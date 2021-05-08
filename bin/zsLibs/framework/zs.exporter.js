@@ -1872,6 +1872,9 @@ window.zs.exporter = window.zs.exporter || {};
                 this.clickignore = null;
                 this.offsetx = null;
                 this.offsety = null;
+            } else {
+                this.view.x += (this.offsetx || 0);
+                this.view.y += (this.offsety || 0);
             }
         }
         autoFade() {
