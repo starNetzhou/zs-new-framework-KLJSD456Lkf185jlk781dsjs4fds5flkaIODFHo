@@ -1,6 +1,11 @@
 {
     "PRODUCT_START": {
-        "switch": "!"
+        "switch": "!",
+        "states": [
+            "READY",
+            "FULL_1",
+            "FULL_2"
+        ]
     },
     "PRODUCT_START.READY": {
         "exporter": [
@@ -29,12 +34,9 @@
             "zs_full_screen2_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": [
-            [
-                "event_full_2",
-                true
-            ]
-        ],
+        "event": {
+            "event_full_2": true
+        },
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -43,12 +45,9 @@
             "zs_full_screen1_jump",
             "zs_auto_full_screen_jump_switch"
         ],
-        "event": [
-            [
-                "event_full_1",
-                true
-            ]
-        ],
+        "event": {
+            "event_full_1": true
+        },
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -78,22 +77,16 @@
             "SETTLE",
             "END"
         ],
-        "laterevent": [
-            [
-                "event_fake_exit",
-                "event_full_2"
-            ]
-        ],
+        "laterevent": {
+            "event_fake_exit": "event_full_2"
+        },
         "exitevent": "event_hide_fake_exit"
     },
     "GAME_HOME": {
         "base": [],
-        "laterevent": [
-            [
-                "event_fake_exit",
-                "event_full_2"
-            ]
-        ],
+        "laterevent": {
+            "event_fake_exit": "event_full_2"
+        },
         "exporter": [
             {
                 "type": "export_list",
@@ -196,12 +189,9 @@
         "switch": [
             "zs_full_screen1_jump"
         ],
-        "event": [
-            [
-                "event_full_1",
-                true
-            ]
-        ],
+        "event": {
+            "event_full_1": true
+        },
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -209,12 +199,9 @@
         "switch": [
             "zs_full_screen2_jump"
         ],
-        "event": [
-            [
-                "event_full_2",
-                true
-            ]
-        ],
+        "event": {
+            "event_full_2": true
+        },
         "exitevent": "event_hide_full",
         "exporter": []
     },
@@ -227,10 +214,9 @@
             "delay": true
         },
         "laterevent": [
-            [
-                "event_fake_exit",
-                "event_full_2"
-            ],
+            {
+                "event_fake_exit": "event_full_2"
+            },
             "event_fake_msg"
         ],
         "exitevent": [
@@ -277,7 +263,7 @@
                     "switch": "zs_button_delay_time",
                     "width": 200,
                     "fill": "width",
-                    "offsety": -200,
+                    "offsety": -100,
                     "autooffset": true,
                     "event": "event_childnext",
                     "url": [
