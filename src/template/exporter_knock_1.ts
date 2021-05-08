@@ -36,7 +36,7 @@ export default class exporter_knock_1 extends zs.fgui.baseGeneric<FGUI_knock_exp
     apply() {
         zs.exporter.dataMgr.load().then((result) => {
             if (!this.disposed) {
-                this.adData = result.promotion;
+                this.adData = result;
                 this.updateUI();
                 this.startKnock();
                 // this.view.x = -100;

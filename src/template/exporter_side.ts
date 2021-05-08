@@ -24,7 +24,6 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_Side) {
-
             this.content = component.content;
             this.adList = component.content.getChild("adList") as fairygui.GList;
             this.btnPopCtrl = component.content.btnPop.c1;
@@ -54,7 +53,7 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
     }
 
     updateUI() {
-        this.adList.numItems = Math.min(9, this.adData.length);
+        this.adData && (this.adList.numItems = Math.min(9, this.adData.length));
     }
 
     onAdListRender(index, item) {
@@ -94,10 +93,9 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
             this.bHide = true;
             zs.exporter.dataMgr.load().then((result) => {
                 if (!this.disposed) {
-                    this.adData = result.promotion;
+                    this.adData = result;
                     this.updateUI();
                 }
-
             });
             this.delayHandler = setTimeout(() => {
                 this.bHide = false;

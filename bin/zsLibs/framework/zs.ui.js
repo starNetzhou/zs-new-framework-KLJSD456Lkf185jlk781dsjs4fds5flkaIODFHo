@@ -234,14 +234,15 @@ window.zs.ui = window.zs.ui || {};
         }
         onFinish() {
             if (this.isGetAward) { return; }
-            zs.EggKnock && zs.EggKnock.markAwardNum(true);
             this.onGetAward();
             this.isGetAward = true;
             this.awardCount = zs.utils.randInt(this.awardDelay[0], this.awardDelay[1]);
             this.closeCount = zs.utils.randInt(this.closeDelay[0], this.closeDelay[1]);
         }
         onBannerCheck() { }
-        onGetAward() { }
+        onGetAward() {
+            zs.EggKnock && zs.EggKnock.markAwardNum(true);
+        }
         onDispose() { }
     }
     EggKnock.inited = false;

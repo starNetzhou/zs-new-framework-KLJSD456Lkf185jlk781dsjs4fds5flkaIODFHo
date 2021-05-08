@@ -1106,7 +1106,7 @@ declare module zs.ui {
      * @param itemName 组件名
      */
     function readURL(pack: fairygui.UIPackage, itemName: string);
-  
+
     /**
      * 导出部件
      */
@@ -2419,6 +2419,14 @@ interface ExporterData {
      */
     position_type: number,
     /**
+     * 广告分组ID
+     */
+    group_id: number;
+    /**
+     * 图片ID
+     */
+    img_id: number;
+    /**
      * 类型
      */
     type: number
@@ -2537,12 +2545,12 @@ declare module zs.exporter {
         /**
          * 获取导出数据
          */
-        static load(): Promise<ExporterDataList>;
+        static load(): Promise<ExporterData[]>;
         /**
          * 导出统计
          * @param appid 导出appid
          */
-        static collectExport(appid: string);
+        static collectExport(info: ExporterData);
     }
     /**
      * 导出列表管理

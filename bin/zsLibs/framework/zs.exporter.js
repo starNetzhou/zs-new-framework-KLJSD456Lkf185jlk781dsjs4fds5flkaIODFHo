@@ -103,7 +103,7 @@ window.zs.exporter = window.zs.exporter || {};
                             let unlinkAd = utils.getCacheNewDay("unlinkAd") || {};
                             unlinkAd[appInfo.appid] = true;
                             utils.setCache("unlinkAd", unlinkAd);
-                            dataMgr.collectExport(appInfo.app_id);
+                            dataMgr.collectExport(appInfo);
                             resolve(null);
                         }).catch(() => {
                             utils.navigateErrorHandler && utils.navigateErrorHandler.run();
@@ -150,16 +150,63 @@ window.zs.exporter = window.zs.exporter || {};
             return null;
         }
 
-        static collectExport(appid) {
+        static collectSource() {
+            if (!zs.configs.gameCfg.newAds) { return; }
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/source";
+            let sysInfo = zs.platform.sync.getLaunchOptions();
+            if (!sysInfo || !sysInfo.referrerInfo || !sysInfo.referrerInfo.appId) { return; }
+            let signParams = {
+                user_id: zs.core.userId,
+                from_app_id: sysInfo.referrerInfo.appId,
+                to_app_id: zs.core.appId,
+                scene: zs.product.scene,
+                zhise: (sysInfo && sysInfo.query && sysInfo.query.zhise) ? sysInfo.query.zhise : ""
+            };
+            zs.network.nativeRequest(url, signParams, 'POST', true)
+                .then((res) => {
+                    console.log("collect source success!");
+                }).catch((res) => {
+                    console.log("collect source failed!");
+                });
+        }
+
+        static collectExport(info) {
+            if (zs.configs.newAds) {
+                this.collectExportNew(info);
+            } else {
+                this.collectExportOld(info);
+            }
+        }
+
+
+        static collectExportNew(info) {
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/jump";
+            let signParams = {
+                user_id: zs.core.userId,
+                from_app_id: zs.core.appId,
+                to_app_id: info.app_id,
+                position: info.position_type,
+                group_id: info.group_id,
+                img_id: info.img_id
+            };
+            zs.network.nativeRequest(url, signParams, 'POST', true)
+                .then((res) => {
+                    console.log("collect export success!");
+                }).catch((res) => {
+                    console.log("collect export failed!");
+                });
+        }
+
+        static collectExportOld(info) {
             if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
-            let sysInfo = null;
-            sysInfo = wx.getLaunchOptionsSync();
+            let sysInfo = zs.platform.sync.getLaunchOptions();
             let signParams = {
                 user_id: zs.core.userId,
                 from_id: zs.core.appId,
-                to_id: appid,
+                to_id: info.app_id,
                 timestamp: curTime,
                 scene: zs.product.scene,
                 zhise: (sysInfo && sysInfo.query && sysInfo.query.zhise) ? sysInfo.query.zhise : ""
@@ -172,7 +219,63 @@ window.zs.exporter = window.zs.exporter || {};
                 });
         }
 
-        static load() {
+        static loadNew() {
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/list";
+            let data = { appid: "wxb98ea71a0e79f124" };
+            return new Promise((resolve, reject) => {
+                let cache = dataMgr.getCache(dataMgr.exportCacheNew);
+                if (cache) {
+                    return resolve(cache);
+                }
+                if (dataMgr.cacheSetting) {
+                    if (dataMgr.requestList == null) {
+                        dataMgr.requestList = [];
+                    }
+                    dataMgr.requestList.push((data) => {
+                        resolve(data);
+                    });
+                    return;
+                }
+                dataMgr.cacheSetting = true;
+                zs.network.nativeRequest(url, data, 'POST', true)
+                    .then((result) => {
+                        let data = [];
+                        for (let key in result.data) {
+                            let value = result.data[key];
+                            if (value == null || !Array.isArray(value) || value.length <= 0) { continue; }
+                            for (let i = 0, n = value.length; i < n; i++) {
+                                value[i].position_type = value[i].position;
+                                value[i].app_title = value[i].name;
+                                value[i].app_icon = value[i].icon;
+                                value[i].appid = value[i].app_id;
+                            };
+                            data = data.concat(value);
+                        }
+                        dataMgr.setCache(dataMgr.exportCacheNew, data);
+                        console.log("load success: ", data);
+                        if (dataMgr.requestList && dataMgr.requestList.length > 0) {
+                            for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
+                                dataMgr.requestList[i].call(this, data);
+                            }
+                        }
+                        dataMgr.requestList = null;
+                        dataMgr.cacheSetting = false;
+                        resolve(data);
+                    }).catch((result) => {
+                        let data = [];
+                        if (dataMgr.requestList && dataMgr.requestList.length > 0) {
+                            for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
+                                dataMgr.requestList[i].call(this, data);
+                            }
+                        }
+                        dataMgr.requestList = null;
+                        dataMgr.cacheSetting = false;
+                        resolve(data);
+                    })
+            });
+        }
+
+        static loadOld() {
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/index";
             let currentTime = Math.round(new Date().getTime() / 1000).toString();
             let data = {
@@ -190,25 +293,20 @@ window.zs.exporter = window.zs.exporter || {};
                     }
                     dataMgr.requestList.push((data) => {
                         resolve(data);
-                    })
+                    });
                     return;
                 }
                 dataMgr.cacheSetting = true;
                 zs.network.nativeRequest(url, data, 'POST', true)
                     .then((result) => {
-                        let data = {
-                            more: result.data["position-1"] || [],
-                            promotion: result.data["position-2"] || [],
-                            indexFloat: result.data["position-3"] || [],
-                            banner: result.data["position-4"] || [],
-                            indexLeft: result.data["position-7"] || [],
-                            gameFloat: result.data["position-8"] || [],
-                            endPage: result.data["position-9"] || [],
-                            indexLeftFloat: result.data["position-11"] || [],
-                            backAd: result.data["position-12"] || [],
-                            iosLinkAd: result.data["position-13"] || []
+                        let data = [];
+                        for (let key in result.data) {
+                            let value = result.data[key];
+                            if (value == null || !Array.isArray(value)) { continue; }
+                            data = data.concat(value);
                         }
                         dataMgr.setCache(dataMgr.exportCache, data);
+                        console.log("load success: ", data);
                         if (dataMgr.requestList && dataMgr.requestList.length > 0) {
                             for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
                                 dataMgr.requestList[i].call(this, data);
@@ -219,18 +317,7 @@ window.zs.exporter = window.zs.exporter || {};
                         resolve(data);
                     })
                     .catch((error) => {
-                        let data = {
-                            more: [],
-                            promotion: [],
-                            indexFloat: [],
-                            banner: [],
-                            indexLeft: [],
-                            gameFloat: [],
-                            endPage: [],
-                            indexLeftFloat: [],
-                            backAd: [],
-                            iosLinkAd: []
-                        }
+                        let data = [];
                         if (dataMgr.requestList && dataMgr.requestList.length > 0) {
                             for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
                                 dataMgr.requestList[i].call(this, data);
@@ -243,10 +330,20 @@ window.zs.exporter = window.zs.exporter || {};
             });
         }
 
+        static load() {
+            if (zs.configs.gameCfg.newAds) {
+                return this.loadNew();
+            } else {
+                return this.loadOld();
+            }
+        }
+
     }
     dataMgr.URL = "https://ad.ali-yun.wang/api/";
+    dataMgr.NEWURL = "http://test-gamesapi.zxmn2018.com/";
     dataMgr.expireTime = 60000;
     dataMgr.exportCache = 'ExpCache';
+    dataMgr.exportCacheNew = 'ExpCacheNew';
 
     class list extends zs.fgui.base {
         constructor(component) {
@@ -317,7 +414,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -341,7 +438,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -364,11 +461,10 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                // 数据打乱一下
-                result && result.promotion && result.promotion.sort((a, b) => {
+                result && result.sort((a, b) => {
                     return a < b ? -1 : 1
                 })
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -392,7 +488,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -416,7 +512,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
