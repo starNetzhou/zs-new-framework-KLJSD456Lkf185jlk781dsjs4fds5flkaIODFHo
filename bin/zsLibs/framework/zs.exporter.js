@@ -288,7 +288,7 @@ window.zs.exporter = window.zs.exporter || {};
         dispose() {
             super.dispose();
             this.startOffsetDelayHandler && clearTimeout(this.startOffsetDelayHandler);
-            Laya.Tween.clear(this.view);
+            Laya.Tween.clearAll(this.view);
             if (this.shakeTime > 0) {
                 this.stopShake();
             }
@@ -2001,6 +2001,9 @@ window.zs.exporter = window.zs.exporter || {};
                 this.clickignore = null;
                 this.offsetx = null;
                 this.offsety = null;
+            } else {
+                this.view.x += (this.offsetx || 0);
+                this.view.y += (this.offsety || 0);
             }
         }
         autoFade() {
@@ -2017,7 +2020,7 @@ window.zs.exporter = window.zs.exporter || {};
             if (this.autooffset != null && this.offsetDelayHandler == null) {
                 this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
             }
-            if (this.autofade != null || !this.isFading) {
+            if (this.autofade != null && !this.isFading) {
                 this.view.alpha = 0;
                 this.view.touchable = false;
                 this.autoFade();

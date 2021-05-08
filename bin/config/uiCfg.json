@@ -7,11 +7,10 @@
                 "alignoffsety": -100
             },
             "base": {
+                "switch": "zs_banner_vertical_enable",
                 "width": 349,
                 "height": 160,
                 "offsety": -200,
-                "autofade": 1000,
-                "autooffset": 2000,
                 "fakeevent": "event_full_continue",
                 "event": "event_childnext",
                 "url": [
@@ -27,11 +26,10 @@
                 "alignoffsety": -100
             },
             "base": {
+                "switch": "zs_banner_vertical_enable",
                 "width": 349,
                 "height": 160,
                 "offsety": -200,
-                "autofade": 1000,
-                "autooffset": 2000,
                 "fakeevent": "event_full_continue",
                 "event": "event_hide_full",
                 "url": [
@@ -43,6 +41,6 @@
     },
     "binder": {
         "full": "btn_full",
-        "full_popup":"btn_full_close"
+        "full_popup": "btn_full_close"
     }
 }
