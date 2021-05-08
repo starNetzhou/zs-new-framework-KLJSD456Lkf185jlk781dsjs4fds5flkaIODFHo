@@ -52,9 +52,6 @@
         }
     },
     "PRODUCT_PLAY_END": {
-        "base": {}
-    },
-    "GAME_SETTLE": {
         "base": [
             {
                 "type": "add_bottom_native",
@@ -63,9 +60,6 @@
                 }
             }
         ]
-    },
-    "OVER_FULL_2": {
-        "banner": {}
     },
     "GAME_END": {}
 }
