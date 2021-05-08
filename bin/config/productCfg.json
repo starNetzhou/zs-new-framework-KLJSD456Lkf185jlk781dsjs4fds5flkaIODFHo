@@ -55,16 +55,6 @@
         "base": {}
     },
     "GAME_SETTLE": {
-        "exporter": [
-            {
-                "type": "export_knock",
-                "switch": "zs_finish_jump",
-                "window": {
-                    "align": "center",
-                    "alignoffsety": -30
-                }
-            }
-        ],
         "base": [
             {
                 "type": "add_bottom_native",
