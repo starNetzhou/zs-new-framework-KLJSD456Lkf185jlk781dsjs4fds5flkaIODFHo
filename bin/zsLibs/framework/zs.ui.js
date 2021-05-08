@@ -140,6 +140,7 @@ window.zs.ui = window.zs.ui || {};
         }
         dispose() {
             Laya.timer.clear(this, this.tick);
+            Laya.Tween.clearAll(this.btnKnock);
             zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
             zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
             this.btnKnock && this.btnKnock.offClick && this.btnKnock.offClick(this, this.onClick);
