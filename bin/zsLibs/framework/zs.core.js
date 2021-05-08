@@ -508,8 +508,12 @@ window.zs = window.zs || {};
                 case 2:
                     if (this.fsm != null) {
                         let childFSM = this.fsmList[this.fsm.current];
+                        let isRunNext = false;
                         if (childFSM && ((target && !childFSM.runTransition(target)) || !childFSM.runNext())) {
                             this.onChildFSMBeforeChanged(null, childFSM.current);
+                            isRunNext = true;
+                        }
+                        if (!childFSM || isRunNext) {
                             let lastState = this.fsm.current;
                             if (!this.fsm.runNext()) {
                                 zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
