@@ -17,16 +17,6 @@ export default class GameLogic extends Laya.Script {
         // 新建工作流
         zs.core.workflow = new workflow();
 
-        // 在GAME_PLAY中设置子状态机
-        // zs.core.workflow.setFSM(workflow.GAME_PLAY,
-        //     new zs.fsm()
-        //         .registe("START", "READY")
-        //         .registe("READY", "PLAY")
-        //         .registe("PLAY", "SETTLE")
-        //         .registe("SETTLE", "END")
-        //         .setDefault("START")
-        // );
-
         // 绑定示例FGUI资源
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
             zs_exampleBinder.bindAll();
@@ -53,12 +43,12 @@ export default class GameLogic extends Laya.Script {
         zs.core.onWorkflow(workflow.GAME_HOME, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_HOME");
             // 展示FGUI界面
-            this.examplePage = zs.fgui.manager.show(true, zs_example)
+            this.examplePage = zs.fgui.manager.open(zs_example)
                 .update<zs_example>(zs_example, (unit) => {
                     // 设置FGUI界面状态
                     unit.setWorkflowState(workflow.GAME_HOME)
                         .setBtnText("继续（主状态）")
-                        .setBtnClickEvent(this, this.workflowNext)
+                        .setBtnClickEvent(this, this.workflowChildNext)
                 })
                 .getBase() as zs_example;
 
@@ -73,7 +63,6 @@ export default class GameLogic extends Laya.Script {
             console.log("Workflow ===== GAME_PLAY START");
             this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.START')
                 .setBtnText("继续（子状态）")
-                .setBtnClickEvent(this, this.workflowChildNext)
                 .show();
         }));
         zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
@@ -92,7 +81,6 @@ export default class GameLogic extends Laya.Script {
             console.log("Workflow ===== GAME_PLAY END");
             this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.END')
                 .setBtnText("继续（主状态）")
-                .setBtnClickEvent(this, this.workflowNext)
                 .show();
         }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {

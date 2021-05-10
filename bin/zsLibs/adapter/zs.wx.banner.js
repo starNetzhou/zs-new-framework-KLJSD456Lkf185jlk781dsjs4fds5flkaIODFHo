@@ -1,5 +1,7 @@
 window.zs = window.zs || {};
 window.zs.wx = window.zs.wx || {};
+window.zs.wx.banner = window.zs.wx.banner || {};
+
 
 (function (exports, Laya) {
     'use strict';

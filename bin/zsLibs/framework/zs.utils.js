@@ -20,9 +20,9 @@ window.zs = window.zs || {};
                 }, timeout);
             });
         }
-        static isToday(timestamp) {
+        static isToday(timestamp, isSecond) {
             let tsNow = Date.now();
-            if (tsNow - timestamp > 86400) { return false; }
+            if (tsNow - timestamp > isSecond ? 86400 : 86400000) { return false; }
             let now = new Date(tsNow);
             let target = new Date(timestamp);
             if (now.getDate() != target.getDate()) {
@@ -146,6 +146,12 @@ window.zs = window.zs || {};
                 }
             }
             return result;
+        }
+        static getItem(key) {
+            return Laya.LocalStorage.getItem(zs.core.appId + '.' + key);
+        }
+        static setItem(key, value) {
+            Laya.LocalStorage.setItem(zs.core.appId + '.' + key, value);
         }
 
     }

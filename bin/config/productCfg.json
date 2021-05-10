@@ -1,22 +1,28 @@
 {
+    "PRODUCT_START": {
+        "switch": "!"
+    },
+    "PRODUCT_BEGIN": {
+        "switch": "!"
+    },
+    "GAME_HOME": {},
+    "PRODUCT_HOME_PLAY": {
+        "switch": "!"
+    },
     "GAME_PLAY": {
         "states": [
             "START",
-            [
-                "READY",
-                "PLAY",
-                "SETTLE"
-            ],
-            [
-                "PLAY",
-                "SETTLE",
-                "START"
-            ],
-            [
-                "SETTLE",
-                "READY",
-                "START"
-            ]
+            "READY",
+            "PLAY",
+            "SETTLE",
+            "END"
         ]
+    },
+    "PRODUCT_PLAY_END": {
+        "switch": "!"
+    },
+    "GAME_END": {},
+    "PRODUCT_FINISH": {
+        "switch": "!"
     }
 }
