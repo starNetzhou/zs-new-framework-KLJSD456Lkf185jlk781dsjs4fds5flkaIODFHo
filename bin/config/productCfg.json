@@ -1,32 +1,116 @@
 {
-    "GAME_START": {},
-    "START_FULL_1": {
-        "banner": {
-            "delay": true
-        }
+    "PRODUCT_START": {
+        "switch": "!",
+        "states": [
+            "FULL_1",
+            "FULL_2"
+        ]
     },
-    "START_FULL_2": {
-        "banner": {
-            "delay": true
-        }
+    "PRODUCT_START.READY": {
+        "exporter": [
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "width": 349,
+                    "height": 160,
+                    "fill": "width",
+                    "offsety": -200,
+                    "switch": "zs_banner_vertical_enable",
+                    "autooffset": {
+                        "button_delay": "zs_button_delay_time"
+                    },
+                    "event": "event_childnext",
+                    "url": [
+                        "export/export",
+                        "btn_continue"
+                    ]
+                }
+            }
+        ]
+    },
+    "PRODUCT_START.FULL_1": {
+        "switch": [
+            "zs_full_screen2_jump",
+            "zs_auto_full_screen_jump_switch"
+        ],
+        "event": {
+            "event_full_2": true
+        },
+        "exitevent": "event_hide_full",
+        "exporter": []
+    },
+    "PRODUCT_START.FULL_2": {
+        "switch": [
+            "zs_full_screen1_jump",
+            "zs_auto_full_screen_jump_switch"
+        ],
+        "event": {
+            "event_full_1": true
+        },
+        "exitevent": "event_hide_full",
+        "exporter": []
+    },
+    "PRODUCT_BEGIN": {
+        "switch": "!"
+    },
+    "PRODUCT_HOME_PLAY": {
+        "states": [
+            "VIDEO",
+            "EGG"
+        ]
+    },
+    "PRODUCT_HOME_PLAY.VIDEO": {
+        "switch": "zs_start_game_video_switch",
+        "event": "event_start_video"
+    },
+    "PRODUCT_HOME_PLAY.EGG": {
+        "check": [
+            [
+                "event_check_egg",
+                true
+            ]
+        ],
+        "event": "event_common_egg",
+        "exitevent": "event_hide_egg"
+    },
+    "GAME_PLAY": {
+        "states": [
+            "START",
+            "READY",
+            "PLAY",
+            "SETTLE",
+            "END"
+        ],
+        "laterevent": {
+            "event_fake_exit": "event_full_2"
+        },
+        "exitevent": "event_hide_fake_exit"
     },
     "GAME_HOME": {
-        "banner": {},
         "base": [],
+        "laterevent": {
+            "event_fake_exit": "event_full_2"
+        },
         "exporter": [
             {
                 "type": "export_list",
                 "switch": "zs_game_start_jump_switch",
                 "window": {
                     "align": "topleft",
-                    "alignoffsety": 300
+                    "alignoffsety": 250
                 },
                 "base": {
                     "item": "export_item_2",
                     "mode": "side",
                     "width": 300,
                     "max": 2,
-                    "shaketime": 3000
+                    "shaketime": 3000,
+                    "startfadedelay": 1000
                 }
             },
             {
@@ -34,14 +118,15 @@
                 "switch": "zs_game_start_jump_switch",
                 "window": {
                     "align": "topright",
-                    "alignoffsety": 300
+                    "alignoffsety": 250
                 },
                 "base": {
                     "item": "export_item_2",
                     "mode": "side",
                     "width": 300,
                     "max": 2,
-                    "shaketime": 3000
+                    "shaketime": 3000,
+                    "startfadedelay": 1000
                 }
             },
             {
@@ -56,7 +141,12 @@
                     "height": 260,
                     "max": 10,
                     "marginleft": 10,
-                    "marginright": 10
+                    "marginright": 10,
+                    "background": [
+                        "export/export",
+                        "bg_bg"
+                    ],
+                    "backgroundalpha": 0.7
                 }
             },
             {
@@ -64,81 +154,129 @@
                 "switch": "zs_game_start_jump_switch",
                 "window": {
                     "align": "left",
-                    "alignoffsety": 100
+                    "alignoffsety": 0,
+                    "scale": [
+                        0.9,
+                        0.9
+                    ]
                 }
             }
         ]
-    },
-    "GAME_PREPARE": {},
-    "EXPORT_COMMON_EGG": {
-        "banner": {}
     },
     "GAME_PLAY.PLAY": {
         "banner": {
             "switch": "zs_game_banner_show_switch"
         },
         "exporter": [
-        ]
-    },
-    "EXPORT_GAME_EGG": {
-        "banner": {}
-    },
-    "OVER_FULL_1": {
-        "banner": {
-            "delay": true
-        }
-    },
-    "GAME_SETTLE": {
-        "banner": {
-            "delay": true
-        },
-        "exporter": [
             {
                 "type": "export_list",
                 "window": {
-                    "align": "left",
-                    "alignoffsetx": 288
+                    "align": "top"
                 },
                 "base": {
-                    "item": "export_item_2",
-                    "mode": "vlist",
-                    "width": 260,
+                    "item": "export_item_7",
+                    "mode": "hlist",
+                    "height": 270,
                     "max": 10,
-                    "linegap": 10,
-                    "margintop": 20,
-                    "marginbottom": 20,
+                    "marginleft": 10,
+                    "marginright": 10,
                     "background": [
                         "export/export",
-                        "bg_8"
-                    ]
-                }
-            },
-            {
-                "type": "export_list",
-                "window": {
-                    "align": "right",
-                    "alignoffsetx": -288
-                },
-                "base": {
-                    "item": "export_item_2",
-                    "mode": "vlist",
-                    "width": 260,
-                    "max": 10,
-                    "linegap": 10,
-                    "margintop": 20,
-                    "marginbottom": 20,
-                    "background": [
-                        "export/export",
-                        "bg_8"
-                    ]
+                        "bg_bg"
+                    ],
+                    "backgroundalpha": 0.7
                 }
             }
         ]
     },
-    "OVER_FULL_2": {
+    "PRODUCT_PLAY_END": {
+        "states": [
+            "EGG",
+            "FULL_1",
+            "SETTLE",
+            "FULL_2"
+        ]
+    },
+    "PRODUCT_PLAY_END.EGG": {
+        "switch": "!"
+    },
+    "PRODUCT_PLAY_END.FULL_1": {
+        "switch": [
+            "zs_full_screen1_jump"
+        ],
+        "event": {
+            "event_full_1": true
+        },
+        "exitevent": "event_hide_full",
+        "exporter": []
+    },
+    "PRODUCT_PLAY_END.FULL_2": {
+        "switch": [
+            "zs_full_screen2_jump"
+        ],
+        "event": {
+            "event_full_2": true
+        },
+        "exitevent": "event_hide_full",
+        "exporter": []
+    },
+    "PRODUCT_PLAY_END.SETTLE": {
+        "switch": [
+            "!zs_skip_settle",
+            "zs_version"
+        ],
         "banner": {
             "delay": true
-        }
-    },
-    "GAME_END": {}
+        },
+        "laterevent": [
+            {
+                "event_fake_exit": "event_full_2"
+            },
+            "event_fake_msg"
+        ],
+        "exitevent": [
+            "event_hide_fake_exit",
+            "event_hide_fake_msg"
+        ],
+        "base": [
+            {
+                "type": "export_loader",
+                "window": {
+                    "align": "topleft",
+                    "block": true,
+                    "fit": true
+                },
+                "base": {
+                    "alpha": 0.5,
+                    "url": [
+                        "export/export",
+                        "bg_bg"
+                    ]
+                }
+            },
+            {
+                "type": "export_button",
+                "key": "test",
+                "window": {
+                    "align": "bottom",
+                    "alignoffsety": -100
+                },
+                "base": {
+                    "switch": "zs_banner_vertical_enable",
+                    "width": 400,
+                    "fill": "width",
+                    "offsety": -200,
+                    "autooffset": [
+                        "button_delay",
+                        "zs_button_delay_time"
+                    ],
+                    "event": "event_childnext",
+                    "url": [
+                        "export/export",
+                        "btn_continue"
+                    ]
+                }
+            }
+        ]
+    }
 }

@@ -14,22 +14,17 @@ import exporter_fake_msg from "./exporter_fake_msg";
 import ProductKey from "./ProductKey";
 import exporter_fake_exit from "./exporter_fake_exit";
 import exporter_friend_challenge from "./exporter_friend_challenge";
-import ad_egg from "./ad_egg";
-import exporter_btn_confirm from "./exporter_btn_confirm";
-import exporter_background from "./exporter_background";
+import knock_egg from "./knock_egg";
 
 export default class workflow extends zs.workflow {
-    static readonly GAME_START = 'GAME_START';
-    static readonly START_FULL_1 = 'START_FULL_1';
-    static readonly START_FULL_2 = 'START_FULL_2';
-    static readonly GAME_HOME = 'GAME_HOME';
-    static readonly GAME_PREPARE = 'GAME_PREPARE';
-    static readonly EXPORT_COMMON_EGG = 'EXPORT_COMMON_EGG';
-    static readonly GAME_PLAY = 'GAME_PLAY';
-    static readonly OVER_FULL_1 = 'OVER_FULL_1';
-    static readonly GAME_SETTLE = 'GAME_SETTLE';
-    static readonly OVER_FULL_2 = 'OVER_FULL_2';
-    static readonly GAME_END = 'GAME_END';
+    static readonly PRODUCT_START = "PRODUCT_START";
+    static readonly PRODUCT_BEGIN = "PRODUCT_BEGIN";
+    static readonly GAME_HOME = "GAME_HOME";
+    static readonly PRODUCT_HOME_PLAY = "PRODUCT_HOME_PLAY";
+    static readonly GAME_PLAY = "GAME_PLAY";
+    static readonly PRODUCT_PLAY_END = "PRODUCT_PLAY_END";
+    static readonly GAME_END = "GAME_END";
+    static readonly PRODUCT_FINISH = "PRODUCT_FINISH";
 
     static readonly exporterSide = "export_side";
     static readonly exporterKnock = "export_knock";
@@ -42,6 +37,21 @@ export default class workflow extends zs.workflow {
     static readonly exportItem6 = "export_item_6";
     static readonly exportItem7 = "export_item_7";
 
+    static readonly event_full_1 = "event_full_1";
+    static readonly event_full_2 = "event_full_2";
+    static readonly event_start_video = "event_start_video";
+    static readonly event_common_egg = "event_common_egg";
+    static readonly event_fake_exit = "event_fake_exit";
+    static readonly event_fake_msg = "event_fake_msg";
+    static readonly event_fake_delay = "event_fake_delay";
+    static readonly event_hide_full = "event_hide_full";
+    static readonly event_full_continue = "event_full_continue";
+    static readonly event_check_egg = "event_check_egg";
+    static readonly event_hide_egg = "event_hide_egg";
+    static readonly event_hide_fake_msg = "event_hide_fake_msg";
+    static readonly event_hide_fake_exit = "event_hide_fake_exit";
+    static readonly button_delay = "button_delay"
+
     exporterPack = "export/export";
     bannerIgnoreList = ['START_FULL_1', 'START_FULL_2', 'OVER_FULL_1', 'OVER_FULL_2'];
 
@@ -50,20 +60,18 @@ export default class workflow extends zs.workflow {
     _challengeExport: exporter_friend_challenge;
     _fakeMsg: exporter_fake_msg;
     _fakeExit: exporter_fake_exit;
-    _commonEgg: ad_egg;
-    _gameEgg: ad_egg;
-    _background: exporter_background;
-    _settleBtn: exporter_btn_confirm;
-    _panel: zs.fgui.window;
+    _commonEgg: knock_egg;
 
-    get panel() {
-        if (this._panel == null) {
-            this._panel = zs.fgui.window.create().show();
-        }
-        return this._panel;
+    static showPanel(type?: typeof zs.fgui.base, fit?: zs.fgui.FitType): zs.fgui.window {
+        return zs.fgui.manager.show(true, type, "Workflow_Export", fit);
+    }
+
+    static getPanel(): zs.fgui.window {
+        return zs.fgui.manager.get("Workflow_Export", true);
     }
 
     registe() {
+        super.registe();
         // 绑定工作流FGUI组件
         exportBinder.bindAll();
         // 注册模块
@@ -88,216 +96,192 @@ export default class workflow extends zs.workflow {
             exporter_fake_msg.nickList = res;
             exporter_friend_challenge.nickList = res;
         });
-        // 注册工作流状态
-        this.fsm = new zs.fsm()
-            .registe(workflow.GAME_START, workflow.START_FULL_1, 0, false, this, this.onStartFull1)
-            .registe(workflow.START_FULL_1, workflow.START_FULL_2, 0, false, this, this.onStartFull2)
-            .registe(workflow.START_FULL_2, workflow.GAME_HOME)
-            .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
-            .registe(workflow.GAME_PREPARE, workflow.EXPORT_COMMON_EGG, 0, false, this, this.onCommonEgg)
-            .registe(workflow.EXPORT_COMMON_EGG, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
-            .registe(workflow.GAME_PLAY, workflow.OVER_FULL_1, 0, false, this, this.onOverFull1)
-            .registe(workflow.OVER_FULL_1, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
-            .registe(workflow.GAME_SETTLE, workflow.OVER_FULL_2, 0, false, this, this.onOverFull2)
-            .registe(workflow.OVER_FULL_2, workflow.GAME_END)
-            .registe(workflow.GAME_END, workflow.GAME_HOME)
-            .setDefault(workflow.GAME_START, true);
+        zs.core.workflow.registeEvent(workflow.event_full_1, this, this.showFull1);
+        zs.core.workflow.registeEvent(workflow.event_full_2, this, this.showFull2);
+        zs.core.workflow.registeEvent(workflow.event_start_video, this, this.onGameVideo);
+        zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
+        zs.core.workflow.registeEvent(workflow.event_fake_exit, this, this.fakeExit);
+        zs.core.workflow.registeEvent(workflow.event_fake_msg, this, this.fakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_fake_delay, this, this.fakeContinueDelay, 1000);
+        zs.core.workflow.registeEvent(workflow.event_hide_full, this, this.hideWindowFull, false);
+        zs.core.workflow.registeEvent(workflow.event_full_continue, this, this.onFullContinue);
+        // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
+        //注册了个获取按钮延迟时间的事件
+        zs.core.workflow.registeEvent(workflow.button_delay, this, (value) => {
+            console.error("value", value, ProductKey[value])
+            return ProductKey[value]
+        });
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => {
+            let bool = zs.ui.EggKnock.checkEggOpen(value);
+            return bool;
+        });
+        zs.core.workflow.registeEvent(workflow.event_hide_egg, this, this.hideCommonEgg);
+        zs.core.workflow.registeEvent(workflow.event_hide_fake_msg, this, this.hideFakeMsg);
+        zs.core.workflow.registeEvent(workflow.event_hide_fake_exit, this, this.hideFakeExit);
+        // // 注册工作流状态
+        // this.fsm = new zs.fsm()
+        //     .registe(workflow.GAME_START, workflow.START_FULL_1, 0, false, this, this.onStartFull1)
+        //     .registe(workflow.START_FULL_1, workflow.START_FULL_2, 0, false, this, this.onStartFull2)
+        //     .registe(workflow.START_FULL_2, workflow.GAME_HOME)
+        //     .registe(workflow.GAME_HOME, workflow.GAME_PREPARE, 0, false, this, this.onGamePrepare)
+        //     .registe(workflow.GAME_PREPARE, workflow.EXPORT_COMMON_EGG, 0, false, this, this.onCommonEgg)
+        //     .registe(workflow.EXPORT_COMMON_EGG, workflow.GAME_PLAY, 0, false, this, this.onGamePlay)
+        //     .registe(workflow.GAME_PLAY, workflow.OVER_FULL_1, 0, false, this, this.onOverFull1)
+        //     .registe(workflow.OVER_FULL_1, workflow.GAME_SETTLE, 0, false, this, this.onGameSettle)
+        //     .registe(workflow.GAME_SETTLE, workflow.OVER_FULL_2, 0, false, this, this.onOverFull2)
+        //     .registe(workflow.OVER_FULL_2, workflow.GAME_END)
+        //     .registe(workflow.GAME_END, workflow.GAME_HOME)
+        //     .setDefault(workflow.GAME_START, true);
     }
 
-    onStartFull1(complete) {
-        complete.run();
-        console.log("开局全屏1", ProductKey.zs_jump_switch, ProductKey.zs_full_screen2_jump, ProductKey.zs_auto_full_screen_jump_switch);
-        var bOpenFull = ProductKey.zs_full_screen2_jump && ProductKey.zs_auto_full_screen_jump_switch;
-        if (bOpenFull) {
-            this.showFull2(true)
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    onStartFull2(complete) {
-        complete.run();
-        console.log("开局全屏2", ProductKey.zs_jump_switch, ProductKey.zs_full_screen1_jump, ProductKey.zs_auto_full_screen_jump_switch);
-        var bOpenFull = ProductKey.zs_full_screen1_jump && ProductKey.zs_auto_full_screen_jump_switch;
-        if (bOpenFull) {
-            this.showFull1(true)
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    onGamePrepare(complete) {
-        complete.run();
-        var bVideo = ProductKey.zs_start_game_video_switch;
-        console.log("开局视频", bVideo)
-        if (bVideo) {
+    onGameVideo() {
+        if (ProductKey.zs_start_game_video_switch) {
             zs.platform.async.playVideo().then(() => {
-                zs.core.workflow.next();
+                zs.core.workflow.childNext();
             }).catch(() => {
-                zs.core.workflow.next();
+                zs.core.workflow.childNext();
             })
         } else {
-            zs.core.workflow.next();
+            zs.core.workflow.childNext();
         }
     }
 
-    isNumber(val) {
-        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-        if (regPos.test(val) || regNeg.test(val)) {
-            return true;
-        } else {
-            return false;
-        }
+    fakeContinueDelay(value) {
+        return value;
     }
 
-    async checkEgg(bCommon) {
-        return new Promise(async (resolve, reject) => {
-            var curGameCount = 1;
-            await zs.network.download('LevelInfo').then((res) => {
-                // console.error("level = ", res)
-                curGameCount = res;
-            });
-            console.log("--------------", curGameCount)
-            var zs_ready_click_num = ProductKey.zs_ready_click_num;
-            var zs_click_award_num = ProductKey.zs_click_award_num;
-            var zs_click_award_since = ProductKey.zs_click_award_since;
-            var isNew = false;
-            var appId = zs.core.appId;
-            if (isNew && zs_click_award_since && zs_click_award_since > 0) {
-                let gameNum = Laya.LocalStorage.getItem(appId + "day_game_num");
-                console.debug("当前局数" + gameNum, zs_click_award_since + "局后开启砸金蛋");
-                if (!gameNum || Number(gameNum) < zs_click_award_since) {
-                    return reject();
-                }
-            }
-            let clicknum = bCommon ? zs_ready_click_num : zs_click_award_num;
-            if (clicknum == null || clicknum.trim() == "") { clicknum = "0"; }
-            let num = JSON.parse(clicknum);
-            if (this.isNumber(num)) {
-                let openNum = bCommon ? Laya.LocalStorage.getItem(appId + "open_ready_num") : ((!bCommon) ? Laya.LocalStorage.getItem(appId + "open_award_num") : 0);
-                console.log("bCommon" + bCommon, "限制:" + num, "已:" + openNum);
-                //如果是-1则是无限制
-                if (num == -1) return resolve(null);
-                if (Number(num) > Number(openNum)) return resolve(null);
-            }
-            console.log("限制:" + num);
-            if (Array.isArray(num) && num.length > 0) {
-                if (num.length == 1 && num[0] == -1)
-                    return resolve(null);
-                var index = num.indexOf(curGameCount);
-                if (index != -1) {
-                    return resolve(null);
-                }
-            }
-            return reject();
-        })
+    onFullContinue() {
+        let checkInit = !zs.platform.sync.hasBanner();
+        zs.platform.sync.updateBanner({ isWait: false, checkInit: checkInit });
     }
 
-    async onCommonEgg(complete) {
-        complete.run();
-        var bEgg;
-        await this.checkEgg(true).then(() => {
-            bEgg = true;
-        }).catch(() => {
-            bEgg = false;
-        })
-        console.log("通用砸金蛋", bEgg)
-        if (bEgg) {
-            this.commonEgg();
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    async onGameEgg(complete) {
-        complete.run();
-        var bEgg;
-        await this.checkEgg(false).then(() => {
-            bEgg = true;
-        }).catch(() => {
-            bEgg = false;
-        })
-        console.log("游戏砸金蛋", bEgg)
-        if (bEgg) {
-            this.gameEgg();
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    onGamePlay(complete) {
-        complete.run();
-        // 假退出
-        var bFakeExit = ProductKey.zs_history_list_jump;
-        console.log("假退出开关", ProductKey.zs_history_list_jump);
-        // bFakeExit = true;
-        if (bFakeExit) {
-            this.fakeExit();
-        }
-    }
-
-    onOverFull1(complete) {
-        complete.run();
-        this.hideFakeExit();
-        console.log("结束全屏1", ProductKey.zs_full_screen1_jump)
-        var bOpenFull = ProductKey.zs_full_screen1_jump;
-        if (bOpenFull) {
-            this.showFull1(true)
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    onGameSettle(complete) {
-        complete.run();
-        if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
-            var bFakeExit = ProductKey.zs_history_list_jump;
-            console.log("假退出开关", ProductKey.zs_history_list_jump)
-            // bFakeExit = true;
-            if (bFakeExit) {
-                this.fakeExit();
-            }
-            console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
-            if (ProductKey.zs_false_news_switch) {
-                this.fakeMsg();
-            }
-
-            this.showBackground();
-
-            if (this._settleBtn) {
-                this._commonEgg.view.visible = true;
-            } else {
-                this._settleBtn = this.panel.attach(exporter_btn_confirm)
-                    .align(zs.fgui.AlignType.Bottom, 0, -150)
-                    .front()
-                    .getBase() as exporter_btn_confirm;
-            }
-        } else {
-            zs.core.workflow.next();
-        }
-    }
-
-    onOverFull2(complete) {
-        complete.run();
-        this.hideFakeExit();
-        console.log("结束全屏2", ProductKey.zs_jump_switch, ProductKey.zs_full_screen2_jump)
-        var bOpenFull = ProductKey.zs_full_screen2_jump;
-        if (bOpenFull) {
-            this.showFull2(true);
-        } else {
-            zs.core.workflow.next();
-        }
-        this.hideBackground();
-        this.hideFakeMsg();
-        this._settleBtn && this.panel.detach(this._settleBtn);
-        this._settleBtn = null;
-    }
-
-    hideWindowFull() {
+    hideWindowFull(autoNext) {
         this.windowFull && this.windowFull.dispose();
         this.windowFull = null;
+        autoNext && zs.core.workflow.childNext();
     }
+
+    // onStartFull1(complete) {
+    //     complete.run();
+    //     console.log("开局全屏1", ProductKey.zs_jump_switch, ProductKey.zs_full_screen2_jump, ProductKey.zs_auto_full_screen_jump_switch);
+    //     var bOpenFull = ProductKey.zs_full_screen2_jump && ProductKey.zs_auto_full_screen_jump_switch;
+    //     if (bOpenFull) {
+    //         this.showFull2(true)
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+    // onStartFull2(complete) {
+    //     complete.run();
+    //     console.log("开局全屏2", ProductKey.zs_jump_switch, ProductKey.zs_full_screen1_jump, ProductKey.zs_auto_full_screen_jump_switch);
+    //     var bOpenFull = ProductKey.zs_full_screen1_jump && ProductKey.zs_auto_full_screen_jump_switch;
+    //     if (bOpenFull) {
+    //         this.showFull1(true)
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+    // onGamePrepare(complete) {
+    //     complete.run();
+    //     var bVideo = ProductKey.zs_start_game_video_switch;
+    //     console.log("开局视频", bVideo)
+    //     if (bVideo) {
+    //         zs.platform.async.playVideo().then(() => {
+    //             zs.core.workflow.next();
+    //         }).catch(() => {
+    //             zs.core.workflow.next();
+    //         })
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+
+    // async onCommonEgg(complete) {
+    //     complete.run();
+    //     var bEgg;
+    //     await this.checkEgg(true).then(() => {
+    //         bEgg = true;
+    //     }).catch(() => {
+    //         bEgg = false;
+    //     })
+    //     console.log("通用砸金蛋", bEgg)
+    //     if (bEgg) {
+    //         this.commonEgg();
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+    // onGamePlay(complete) {
+    //     complete.run();
+    //     // 假退出
+    //     var bFakeExit = ProductKey.zs_history_list_jump;
+    //     console.log("假退出开关", ProductKey.zs_history_list_jump);
+    //     // bFakeExit = true;
+    //     if (bFakeExit) {
+    //         this.fakeExit();
+    //     }
+    // }
+
+    // onOverFull1(complete) {
+    //     complete.run();
+    //     this.hideFakeExit();
+    //     console.log("结束全屏1", ProductKey.zs_full_screen1_jump)
+    //     var bOpenFull = ProductKey.zs_full_screen1_jump;
+    //     if (bOpenFull) {
+    //         this.showFull1(true)
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+    // onGameSettle(complete) {
+    //     complete.run();
+    //     if (!ProductKey.zs_skip_settle && ProductKey.zs_version) {
+    //         var bFakeExit = ProductKey.zs_history_list_jump;
+    //         console.log("假退出开关", ProductKey.zs_history_list_jump)
+    //         // bFakeExit = true;
+    //         if (bFakeExit) {
+    //             this.fakeExit();
+    //         }
+    //         console.log("微信假消息", ProductKey.zs_jump_switch, ProductKey.zs_false_news_switch)
+    //         if (ProductKey.zs_false_news_switch) {
+    //             this.fakeMsg();
+    //         }
+
+    //         this.showBackground();
+
+    //         if (this._settleBtn) {
+    //             this._commonEgg.view.visible = true;
+    //         } else {
+    //             this._settleBtn = this.panel.attach(exporter_btn_confirm)
+    //                 .align(zs.fgui.AlignType.Bottom, 0, -150)
+    //                 .front()
+    //                 .getBase() as exporter_btn_confirm;
+    //         }
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    // }
+
+    // onOverFull2(complete) {
+    //     complete.run();
+    //     this.hideFakeExit();
+    //     console.log("结束全屏2", ProductKey.zs_jump_switch, ProductKey.zs_full_screen2_jump)
+    //     var bOpenFull = ProductKey.zs_full_screen2_jump;
+    //     if (bOpenFull) {
+    //         this.showFull2(true);
+    //     } else {
+    //         zs.core.workflow.next();
+    //     }
+    //     this.hideBackground();
+    //     this.hideFakeMsg();
+    //     this._settleBtn && this.panel.detach(this._settleBtn);
+    //     this._settleBtn = null;
+    // }
 
     showFull1(auto: boolean) {
         if (this.windowFull) {
@@ -320,8 +304,7 @@ export default class workflow extends zs.workflow {
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
                     unit.setClickContinue(
                         Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { this.fsm.runNext(); }
+                            this.hideWindowFull(auto);
                         }, null, false))
                         .apply();
                 })
@@ -351,8 +334,7 @@ export default class workflow extends zs.workflow {
                 .update<zs.exporter.full>(zs.exporter.full, (unit) => {
                     unit.setClickContinue(
                         Laya.Handler.create(this, () => {
-                            this.hideWindowFull();
-                            if (auto) { this.fsm.runNext(); }
+                            this.hideWindowFull(auto);
                         }, null, false))
                         .apply();
                 })
@@ -362,96 +344,40 @@ export default class workflow extends zs.workflow {
     }
 
     commonEgg() {
-        if (this._commonEgg) {
-            this._commonEgg.view.visible = true;
-            this._commonEgg
-                .setCloseCallback(Laya.Handler.create(this, () => {
-                    console.log("关闭砸金蛋")
-                    this.hideCommonEgg();
-                    this.fsm.runNext();
-                    var appId = zs.core.appId;
-                    let num = Laya.LocalStorage.getItem(`${appId}open_ready_num`);
-                    num || (num = '0');
-                    Laya.LocalStorage.setItem(`${appId}open_ready_num`, `${Number(num) + 1}`);
-                }))
-                .apply()
-            this.panel.setBase(this._commonEgg);
-        } else {
-            this.panel
-                .attach(ad_egg)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .fit()
-                .block(true)
-                .update<ad_egg>(ad_egg, (unit) => {
-                    this._commonEgg = unit;
-                    unit
-                        .setCloseCallback(Laya.Handler.create(this, () => {
-                            console.log("关闭砸金蛋")
+        if (this._commonEgg) { return; }
+        return workflow.showPanel(knock_egg)
+            .block(true)
+            .update<knock_egg>(knock_egg, (unit) => {
+                this._commonEgg = unit;
+                unit
+                    .setEventHandler(
+                        Laya.Handler.create(this, () => {
+
+                        }),
+                        Laya.Handler.create(this, () => {
                             this.hideCommonEgg();
-                            this.fsm.runNext();
-                        }))
-                        .apply()
-                });
-        }
-        return this.panel.front();
+                            zs.core.workflow.childNext();
+                        })
+                    )
+                    .apply();
+            })
+            .front();
     }
 
     hideCommonEgg() {
-        this._commonEgg && (this.panel.detach(this._commonEgg));
+        this._commonEgg && (workflow.getPanel().detach(this._commonEgg));
         this._commonEgg = null;
     }
 
-    gameEgg() {
-        if (this._gameEgg) {
-            this._gameEgg.view.visible = true;
-            this._gameEgg
-                .setCloseCallback(Laya.Handler.create(this, () => {
-                    console.log("关闭砸金蛋")
-                    this.hideGameEgg();
-                    this.fsm.runNext();
-                }))
-                .apply();
-            this.panel.setBase(this._gameEgg);
-        } else {
-            this.panel
-                .attach(ad_egg)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .block(true)
-                .fit()
-                .update<ad_egg>(ad_egg, (unit) => {
-                    this._gameEgg = unit;
-                    unit
-                        .setCloseCallback(Laya.Handler.create(this, () => {
-                            console.log("关闭砸金蛋")
-                            this.hideGameEgg();
-                            this.fsm.runNext();
-                            var appId = zs.core.appId;
-                            let num = Laya.LocalStorage.getItem(`${appId}open_award_num`);
-                            num || (num = '0');
-                            Laya.LocalStorage.setItem(`${appId}open_award_num`, `${Number(num) + 1}`);
-                        }))
-                        .apply()
-                });
-        }
-        return this.panel.front();
-    }
-
-    hideGameEgg() {
-        this._gameEgg && this.panel.detach(this._gameEgg);
-        this._gameEgg = null;
-    }
-
     fakeMsg() {
+        if (!ProductKey.zs_false_news_switch) { return; }
         if (this._fakeMsg) {
             this._fakeMsg.view.visible = true;
             this._fakeMsg.apply();
-            this.panel
+            workflow.getPanel()
                 .setBase(this._fakeMsg)
-                .front();
         } else {
-            this.panel
-                .attach(exporter_fake_msg)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
+            workflow.showPanel(exporter_fake_msg, zs.fgui.FitType.ScaleFit)
                 .update<exporter_fake_msg>(exporter_fake_msg, (unit) => {
                     this._fakeMsg = unit;
                     unit
@@ -462,29 +388,24 @@ export default class workflow extends zs.workflow {
                         }))
                         .apply();
                 })
-                .align(zs.fgui.AlignType.Top)
-                .front();
+                .align(zs.fgui.AlignType.Top);
         }
-        return this.panel;
+        return workflow.getPanel().front();
     }
 
     hideFakeMsg() {
-        this._fakeMsg && this.panel.detach(this._fakeMsg);
-        this._fakeMsg = null
+        this._fakeMsg && workflow.getPanel().detach(this._fakeMsg);
+        this._fakeMsg = null;
     }
 
     challengeExport() {
         if (this._challengeExport) {
             this._challengeExport.view.visible = true;
             this._challengeExport.apply();
-            this.panel
-                .setBase(this._challengeExport)
-                .front();
+            workflow.getPanel()
+                .setBase(this._challengeExport);
         } else {
-            this.panel
-                .attach(exporter_friend_challenge)
-                .scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight)
-                .fit()
+            workflow.showPanel(exporter_friend_challenge)
                 .block(true)
                 .update<exporter_friend_challenge>(exporter_friend_challenge, (unit) => {
                     this._challengeExport = unit;
@@ -493,27 +414,25 @@ export default class workflow extends zs.workflow {
                             this.hideChallenge();
                         }))
                         .apply()
-                })
-                .show()
-                .front();
+                });
         }
-        return this.panel;
+        return workflow.getPanel().front();
     }
 
     hideChallenge() {
-        this._challengeExport && this.panel.detach(this._challengeExport);
+        this._challengeExport && workflow.getPanel().detach(this._challengeExport);
         this._challengeExport = null;
     }
 
-    fakeExit() {
+    fakeExit(event: string | string[] | { [key: string]: any }, isHome?: boolean) {
+        if (!ProductKey.zs_jump_switch) { return; }
+        if (!ProductKey.zs_history_list_jump && isHome && ProductKey.zs_start_game_video_switch) { return; }
         if (this._fakeExit) {
             this._fakeExit.view.visible = true;
-            this.panel
-                .setBase(this._fakeExit)
-                .front();
+            workflow.getPanel()
+                .setBase(this._fakeExit);
         } else {
-            this.panel
-                .attach(exporter_fake_exit)
+            workflow.showPanel(exporter_fake_exit, zs.fgui.FitType.None)
                 .update<exporter_fake_exit>(exporter_fake_exit, (unit) => {
                     this._fakeExit = unit;
                     unit.setClickHandler(Laya.Handler.create(this, () => {
@@ -521,31 +440,14 @@ export default class workflow extends zs.workflow {
                     }, null, false));
                 })
                 .align(zs.fgui.AlignType.TopLeft, 10, 80)
-                .scale(1.5, 1.5)
-                .front();
+                .scale(1.5, 1.5);
         }
 
-        return this.panel;
+        return workflow.getPanel().front();
     }
 
     hideFakeExit() {
-        this._fakeExit && this.panel.detach(this._fakeExit);
+        this._fakeExit && workflow.getPanel().detach(this._fakeExit);
         this._fakeExit = null;
     }
-
-    showBackground(alpha?: number, color?: string) {
-        if (!this._background) {
-            this._background = this.exportWindow.attach(exporter_background, 0).front().getBase() as exporter_background;
-        } else {
-            this._background.view.visible = true;
-        }
-        alpha && (this._background.alpha = alpha);
-        color && (this._background.color = color);
-    }
-
-    hideBackground() {
-        this._background && this.exportWindow.detach(this._background);
-        this._background = null;
-    }
-
 }

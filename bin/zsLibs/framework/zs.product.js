@@ -32,11 +32,11 @@ window.zs = window.zs || {};
                 this.registe(key, switchs[key]);
             }
             if (!zs.configs.gameCfg.debug) {
-                this.scene = Laya.LocalStorage.getItem(this.firstSceneCache);
+                this.scene = zs.utils.getItem(this.firstSceneCache);
                 if (!this.scene) {
                     this.scene = zs.platform.sync.getScene();
                     if (this.scene) {
-                        Laya.LocalStorage.setItem(this.firstSceneCache, this.scene);
+                        zs.utils.setItem(this.firstSceneCache, this.scene);
                     }
                 }
 

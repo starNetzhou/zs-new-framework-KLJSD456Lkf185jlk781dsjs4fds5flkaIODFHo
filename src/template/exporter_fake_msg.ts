@@ -46,7 +46,7 @@ export default class exporter_fake_msg extends zs.fgui.baseGeneric<FGUI_fake_msg
     apply() {
         this.tweenHide();
         zs.exporter.dataMgr.load().then((result) => {
-            var adDatas = result.promotion;
+            var adDatas = result;
             this.adData = adDatas[Math.floor(Math.random() * adDatas.length)];
             var desc = this.adData && this.adData.app_title || "游戏";
             let nameList = exporter_fake_msg.nickList || [];
@@ -89,7 +89,7 @@ export default class exporter_fake_msg extends zs.fgui.baseGeneric<FGUI_fake_msg
         // console.log("点击了", this.adData)
         this.tweenHide();
         zs.platform.async.navigateToOther({ appInfo: this.adData }).then(() => {
-            zs.exporter.dataMgr.collectExport(this.adData.app_id);
+            zs.exporter.dataMgr.collectExport(this.adData);
         }).catch(() => {
             // 点击了取消跳转   需要打开挑战界面
             this.callback && this.callback.run();

@@ -87,10 +87,15 @@ window.zs.fgui = window.zs.fgui || {};
             this.disposed = false;
             this._view = component;
             component.baseCtrl = this;
+            this._id = base.usedId;
+            base.usedId++;
             this.init();
         }
         get view() {
             return this._view;
+        }
+        get id() {
+            return this._id;
         }
         static make(type) {
             if (type && type.prototype instanceof fairygui.GComponent) {
@@ -121,6 +126,7 @@ window.zs.fgui = window.zs.fgui || {};
         apply() { return this; }
         applyConfig() { return this; }
     }
+    base.usedId = 0;
     base.typeDefine = null;
 
     class baseGeneric extends base {
@@ -128,6 +134,18 @@ window.zs.fgui = window.zs.fgui || {};
     }
 
     class window {
+        get listByKeys() {
+            if (this._listByKeys == null) {
+                this._listByKeys = {};
+            }
+            return this._listByKeys;
+        }
+        get list() {
+            if (this._list == null) {
+                this._list = {};
+            }
+            return this._list;
+        }
         static create(x, y, width, height) {
             if (x == null) {
                 x = 0;
@@ -155,7 +173,7 @@ window.zs.fgui = window.zs.fgui || {};
             panel.height = height;
             return win;
         }
-        attach(ctr, index) {
+        attach(ctr, index, key) {
             this.lastBase = null;
             if (ctr == null || this.window == null) {
                 return this;
@@ -171,7 +189,34 @@ window.zs.fgui = window.zs.fgui || {};
             } else {
                 view.opaque = false;
             }
-            this.lastBase = new ctr(view);
+            let newBase = new ctr(view);
+            this.lastBase = newBase;
+            key && (this.listByKeys[key] = newBase);
+            this.list[key] = newBase;
+
+            if (zs.configs.uiCfg && zs.configs.uiCfg.base && zs.configs.uiCfg.binder && zs.configs.uiCfg.binder[key]) {
+                let binder = zs.configs.uiCfg.binder[key];
+                if (Array.isArray(binder)) {
+                    for (let i = 0, n = binder.length; i < n; i++) {
+                        let base = zs.configs.uiCfg.base[binder];
+                        if (!base) { continue; }
+                        if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
+                            continue;
+                        }
+                        this.applyConfig(base);
+                    }
+                } else {
+                    let base = zs.configs.uiCfg.base[binder];
+                    if (base) {
+                        if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
+                            this.applyConfig(base);
+                        }
+                    }
+                }
+            }
+
+            this.setBase(newBase);
+
             return this;
         }
         detach(ctr) {
@@ -182,11 +227,13 @@ window.zs.fgui = window.zs.fgui || {};
                 ctr.dispose();
                 this.window.contentPane.removeChild(ctr.view, true);
             }
+            this.list[ctr.id] && (delete this.list[ctr.id]);
             return this;
         }
-        setBase(ctr) {
+        setBase(ctr, key) {
             if (ctr && ctr.view) {
                 this.lastBase = ctr;
+                key && (this.listByKeys[key] = ctr);
             } else {
                 this.lastBase = null;
             }
@@ -194,6 +241,25 @@ window.zs.fgui = window.zs.fgui || {};
         }
         getBase() {
             return this.lastBase;
+        }
+        getBaseByKey(key) {
+            let ctr = this.listByKeys[key];
+            if (!ctr || ctr.disposed) { return null; }
+            return ctr;
+        }
+        getBaseByType(type) {
+            let result = [];
+            for (let key in this.list) {
+                let ctr = this.list[key];
+                if (!ctr || ctr.disposed) {
+                    delete this.list[key];
+                    continue;
+                }
+                if (ctr instanceof type) {
+                    result.push(ctr);
+                }
+            }
+            return result;
         }
         clearBase() {
             this.lastBase = null;
@@ -492,15 +558,17 @@ window.zs.fgui = window.zs.fgui || {};
         applyConfig(config) {
             let type = configs.bases[config.type];
             if (type == null) { return this; }
-            this.attach(type);
+            this.attach(type, null, config.key);
             if (config.window) {
                 config.window.width != null && config.window.width != undefined && (this.setWidth(config.window.width));
                 config.window.height != null && config.window.height != undefined && (this.setHeight(config.window.height));
-                if (zs.configs.gameCfg.autoScaleFit || (config.window.scalefit != null && config.window.scalefit != undefined)) {
-                    if (!config.window.scalefit || !Array.isArray(config.window.scalefit) || config.window.scalefit.length <= 1) {
-                        this.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
-                    } else {
-                        this.scaleFit(config.window.scalefit[0], config.window.scalefit[1]);
+                if (!config.window.ignoreAutoScaleFit) {
+                    if (zs.configs.gameCfg.autoScaleFit || (config.window.scalefit != null && config.window.scalefit != undefined)) {
+                        if (!config.window.scalefit || !Array.isArray(config.window.scalefit) || config.window.scalefit.length <= 1) {
+                            this.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
+                        } else {
+                            this.scaleFit(config.window.scalefit[0], config.window.scalefit[1]);
+                        }
                     }
                 }
                 if (config.window.scale && Array.isArray(config.window.scale) && config.window.scale.length > 1) {
@@ -599,6 +667,25 @@ window.zs.fgui = window.zs.fgui || {};
             return this._list;
         }
 
+        static get(key, autoCreate) {
+            let panel = this.defaultPanel;
+            if (key != null && key.trim().length > 0) {
+                key = key.trim();
+                panel = this.list[key];
+            }
+
+            if (panel == null && autoCreate) {
+                panel = window.create();
+                if (key != null && key.trim().length > 0) {
+                    this.list[key] = panel;
+                } else {
+                    this.defaultPanel = panel;
+                }
+            }
+
+            return panel;
+        }
+
         static open(type, key, fit) {
             let panel = this.defaultPanel;
 
@@ -615,7 +702,7 @@ window.zs.fgui = window.zs.fgui || {};
 
             if (type) {
                 panel.attach(type);
-                if (!fit) { fit = FitType.Both; }
+                if (fit == null || fit == undefined) { fit = FitType.Both; }
                 switch (fit) {
                     case FitType.Fit:
                         panel.fit();
@@ -631,7 +718,7 @@ window.zs.fgui = window.zs.fgui || {};
 
             panel.show();
 
-            if (key != null && key.length > 0) {
+            if (key != null && key.trim().length > 0) {
                 this.list[key] = panel;
             } else {
                 this.defaultPanel = panel;
@@ -648,6 +735,21 @@ window.zs.fgui = window.zs.fgui || {};
             }
 
             if (panel != null) {
+                if (type) {
+                    panel.attach(type);
+                    if (fit == null || fit == undefined) { fit = FitType.Both; }
+                    switch (fit) {
+                        case FitType.Fit:
+                            panel.fit();
+                            break;
+                        case FitType.ScaleFit:
+                            panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
+                            break;
+                        case FitType.Both:
+                            panel.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight).fit();
+                            break;
+                    }
+                }
                 panel.show();
             } else if (autoCreate) {
                 return this.open(type, key, fit);
@@ -794,6 +896,7 @@ window.zs.fgui = window.zs.fgui || {};
     }
 
     exports.AlignType = AlignType;
+    exports.FitType = FitType;
     exports.configs = configs;
     exports.init = init;
     exports.loadPack = loadPack;

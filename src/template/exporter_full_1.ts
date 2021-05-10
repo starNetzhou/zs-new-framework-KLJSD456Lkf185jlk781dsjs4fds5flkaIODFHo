@@ -165,8 +165,8 @@ export default class exporter_full_1 extends zs.exporter.full {
             this.list_2.numItems = 0;
             zs.exporter.dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setData_1(result.promotion);
-                this.setData_2(result.promotion);
+                this.setData_1(result);
+                this.setData_2(result);
 
                 this.list_1.numItems = this._datas_1 ? this._datas_1.length : 0;
                 this.list_2.numItems = this._datas_2 ? this._datas_2.length : 0;

@@ -89,7 +89,7 @@ export default class exporter_side extends zs.fgui.baseGeneric<FGUI_Side> {
             this.bHide = true;
             zs.exporter.dataMgr.load().then((result) => {
                 if (!this.disposed) {
-                    this.adData = result.promotion;
+                    this.adData = result;
                     this.updateUI();
                 }
 

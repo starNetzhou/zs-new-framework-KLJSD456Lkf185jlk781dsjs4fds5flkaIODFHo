@@ -56,7 +56,7 @@ export default class exporter_friend_challenge extends zs.fgui.baseGeneric<FGUI_
     }
     apply() {
         zs.exporter.dataMgr.load().then((result) => {
-            var adDatas = result.promotion;
+            var adDatas = result;
             this.adData = adDatas[Math.floor(Math.random() * adDatas.length)];
             var gameName = this.adData && this.adData.app_title || "游戏";
             var gameIcon = this.adData && this.adData.app_icon;
@@ -84,7 +84,7 @@ export default class exporter_friend_challenge extends zs.fgui.baseGeneric<FGUI_
     }
     onBtnYesClick() {
         zs.platform.async.navigateToOther({ appInfo: this.adData }).then(() => {
-            zs.exporter.dataMgr.collectExport(this.adData.app_id);
+            zs.exporter.dataMgr.collectExport(this.adData);
         });
         this.callback && this.callback.run();
     }

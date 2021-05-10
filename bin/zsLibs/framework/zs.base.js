@@ -44,20 +44,5 @@ window.zs.base = window.zs.base || {};
         }
     }
 
-    class workflow extends zs.workflow {
-        registe() {
-            this.fsm = new zs.fsm()
-                .registe(workflow.GAME_HOME, workflow.GAME_PLAY)
-                .registe(workflow.GAME_PLAY, workflow.GAME_END)
-                .registe(workflow.GAME_END, workflow.GAME_HOME)
-                .setDefault(workflow.GAME_HOME);
-        }
-    }
-
-    workflow.GAME_HOME = "GAME_HOME";
-    workflow.GAME_PLAY = "GAME_PLAY";
-    workflow.GAME_END = "GAME_END";
-
     exports.entry = entry;
-    exports.workflow = workflow;
 }(window.zs.base = window.zs.base || {}))

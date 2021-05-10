@@ -148,7 +148,7 @@ export default class exporter_full_2 extends zs.exporter.full {
             view.list.numItems = 0;
             zs.exporter.dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                let data = result.promotion || [];
+                let data = result || [];
                 this.rankData = data;
                 view.list.numItems = this.rankData ? this.rankData.length : 0;
                 this.enterJumpExport();
