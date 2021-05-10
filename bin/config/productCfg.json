@@ -69,12 +69,9 @@
         "event": "event_start_video"
     },
     "PRODUCT_HOME_PLAY.EGG": {
-        "check": [
-            [
-                "event_check_egg",
-                true
-            ]
-        ],
+        "check": {
+            "event_check_egg": true
+        },
         "event": "event_common_egg",
         "exitevent": "event_hide_egg"
     },
