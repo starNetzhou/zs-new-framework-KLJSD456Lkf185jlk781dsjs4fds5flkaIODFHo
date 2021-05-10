@@ -598,25 +598,7 @@ window.zs = window.zs || {};
             }
             if (!isPassed) { return false; }
             if (check) {
-                if (Array.isArray(check)) {
-                    for (let i = 0, n = check.length; i < n; i++) {
-                        let c = check[i];
-                        let evt = null;
-                        let args = null;
-                        if (Array.isArray(c)) {
-                            let lenC = c.length;
-                            if (lenC <= 0) { continue; }
-                            evt = c[0];
-                            lenC > 1 && (args = c.slice(1, lenC));
-                        } else {
-                            evt = c;
-                        }
-                        isPassed = this.applyEventReturn(evt, args);
-                        if (!isPassed) { break; }
-                    }
-                } else {
-                    isPassed = this.applyEventReturn(check);
-                }
+                isPassed = this.readConfigReturn(check);
             }
             return isPassed;
         }
