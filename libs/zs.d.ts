@@ -144,6 +144,36 @@ declare module zs {
     }
 
     /**
+     * 状态机状态
+     */
+    interface fsmState {
+        /**
+         * 优先级
+         */
+        priority: number,
+        /**
+         * 监听调用者
+         */
+        thisObj: any,
+        /**
+         * 转换事件
+         */
+        transition: Function,
+        /**
+         * 转换条件
+         */
+        condition: Function,
+        /**
+         * 自动跳转
+         */
+        auto: boolean,
+        /**
+         * 状态打断
+         */
+        canBreak: boolean
+    }
+
+    /**
      * 资源包状态
      */
     enum PackageState {
@@ -591,6 +621,12 @@ declare module zs {
          * @param auto 自动状态，开启后将自动转换状态
          */
         init(state: string, auto?: boolean);
+        /**
+         * 获取状态机状态
+         * @param from 起始状态名
+         * @param to 目标状态名
+         */
+        getState(from: string, to: string): fsmState;
         /**
          * 注册状态
          * @param from 开始状态名

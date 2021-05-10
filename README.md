@@ -101,6 +101,21 @@ zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () =>
     console.log("Workflow ====== GAME_PLAY PLAY");
 }));
 ```
+
+### - 在配置表中设置子状态机
+除了在代码中调用接口定义子状态机，SDK也支持在productCfg.json中设置来自动创建子状态机，使用方式如下
+``` json
+"GAME_PLAY": {
+        "states": [
+            "START",
+            "READY",
+            ["PLAY", "PREPARE"],
+            "SETTLE",
+            "END"
+        ]
+    }
+```
+
 ### - 框架初始化
 通过执行`zs.core.init(ProductKey);`来启动SDK，之后整个SDK将按照既定的工作流开始运行。
 ### - 完整实例

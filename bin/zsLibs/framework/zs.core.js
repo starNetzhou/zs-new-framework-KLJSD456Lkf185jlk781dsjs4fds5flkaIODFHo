@@ -149,40 +149,42 @@ window.zs = window.zs || {};
             for (let key in config) {
                 key = key.trim();
                 if (this.fsmList[key]) { continue; }
-                let info = config[key].states;
-                if (!info || info.length <= 0) { continue; }
+                let states = config[key].states;
+                if (!states || states.length <= 0) { continue; }
                 let defaultState = null;
                 let lastState = null;
                 let fsm = new zs.fsm();
-                for (let i = 0, n = info.length; i < n; i++) {
-                    let state = info[i];
-                    if (state == null || state.length <= 0) { continue; }
+                for (let i = 0, n = states.length; i < n; i++) {
+                    let state = states[i];
+                    if (state == null || typeof state !== 'string') { continue; }
+                    state = state.trim();
+                    if (state.length <= 0) { continue; }
                     if (!defaultState) {
-                        if (Array.isArray(state)) {
-                            lastState = state[0];
-                            defaultState = state[0];
-                        } else {
-                            lastState = state;
-                            defaultState = state;
-                        }
+                        defaultState = state;
+                        lastState = state;
                         continue;
                     }
-                    if (Array.isArray(state)) {
-                        for (let k = 0, kn = state.length; k < kn; k++) {
-                            if (k == 0) {
-                                fsm.registe(lastState, state[k]);
-                            } else {
-                                fsm.registe(lastState, state[k], -1);
-                            }
-                        }
-                        lastState = state[0];
-                    } else {
-                        fsm.registe(lastState, state);
-                        lastState = state;
-                    }
+                    fsm.registe(lastState, state);
+                    lastState = state;
                 }
                 if (defaultState) {
                     fsm.setDefault(defaultState);
+                    let substates = config[key].substates;
+                    if (substates && Array.isArray(substates)) {
+                        for (let i = 0, n = substates.length; i < n; i++) {
+                            let list = substates[i];
+                            if (list == null || !Array.isArray(list) || list.length <= 1) { continue; }
+                            let lastState = null;
+                            for (let j = 0, m = list.length; j < m; j++) {
+                                let state = list[j];
+                                if (state == null || typeof state !== 'string') { continue; }
+                                state = state.trim();
+                                if (state.length <= 0 || fsm.getState(lastState, state)) { continue; }
+                                lastState && fsm.registe(lastState, state, fsm.list[lastState] != null ? -1 : 0);
+                                lastState = state;
+                            }
+                        }
+                    }
                     this.fsmList[key] = fsm;
                 }
             }
