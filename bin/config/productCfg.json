@@ -22,8 +22,7 @@
                     "offsety": -200,
                     "switch": "zs_banner_vertical_enable",
                     "autooffset": {
-                        "button_delay":
-                        "zs_button_delay_time"
+                        "button_delay": "zs_button_delay_time"
                     },
                     "event": "event_childnext",
                     "url": [
