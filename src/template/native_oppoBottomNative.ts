@@ -18,7 +18,7 @@ export default class native_oppoBottomNative extends zs.fgui.base {
     adId: string;
     /**设置 原生 按钮的隐藏和显示 */
     set closeBtnVisible(val) {
-        this.owner.btnClose.visible = this.owner.btnCloseBg.visible = val;
+        this.owner.btnClose.visible = val;
     }
 
     static make(): FGUI_ScreeNative | FGUI_BottomNative {
@@ -64,6 +64,8 @@ export default class native_oppoBottomNative extends zs.fgui.base {
         })
         return this;
     }
+
+
     /**
      * 加载广告成功
      * @param data 加载广告完成返回的 广告数据
@@ -98,7 +100,6 @@ export default class native_oppoBottomNative extends zs.fgui.base {
                 if (zs_native_touch_switch) {
                     this.closeBtnVisible = true;
                     this.owner.btnClose.width = this.owner.btnClose.height = 32;
-                    this.owner.btnCloseBg.alpha = 0.75;
                 }
                 if (zs_native_click_switch && zs_jump_time > 0) {
                     this.closeBtnVisible = false;
