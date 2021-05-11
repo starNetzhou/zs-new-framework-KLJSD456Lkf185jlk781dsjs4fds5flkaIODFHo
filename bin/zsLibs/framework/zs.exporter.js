@@ -337,9 +337,8 @@ window.zs.exporter = window.zs.exporter || {};
                 return this.loadOld();
             }
         }
-
     }
-    dataMgr.URL = "https://ad.ali-yun.wang/api/";
+    dataMgr.URL = "https://zsad.zxmn2018.com";
     dataMgr.NEWURL = "http://test-gamesapi.zxmn2018.com/";
     dataMgr.expireTime = 60000;
     dataMgr.exportCache = 'ExpCache';
