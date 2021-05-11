@@ -109,7 +109,7 @@ zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () =>
         "states": [
             "START",
             "READY",
-            ["PLAY", "PREPARE"],
+            "PLAY",
             "SETTLE",
             "END"
         ]
