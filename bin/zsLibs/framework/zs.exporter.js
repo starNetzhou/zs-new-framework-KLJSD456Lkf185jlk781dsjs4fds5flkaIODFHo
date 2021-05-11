@@ -152,7 +152,7 @@ window.zs.exporter = window.zs.exporter || {};
 
         static collectSource() {
             if (!zs.configs.gameCfg.newAds) { return; }
-            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/source";
+            let url = dataMgr.NEWURL + "v1/ad/source";
             let sysInfo = zs.platform.sync.getLaunchOptions();
             if (!sysInfo || !sysInfo.referrerInfo || !sysInfo.referrerInfo.appId) { return; }
             let signParams = {
@@ -181,7 +181,7 @@ window.zs.exporter = window.zs.exporter || {};
 
         static collectExportNew(info) {
             if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
-            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/jump";
+            let url = dataMgr.NEWURL + "v1/ad/jump";
             let signParams = {
                 user_id: zs.core.userId,
                 from_app_id: zs.core.appId,
@@ -200,7 +200,7 @@ window.zs.exporter = window.zs.exporter || {};
 
         static collectExportOld(info) {
             if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
-            let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/collect";
+            let url = dataMgr.URL + "appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
             let sysInfo = zs.platform.sync.getLaunchOptions();
             let signParams = {
@@ -220,7 +220,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
 
         static loadNew() {
-            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/list";
+            let url = dataMgr.NEWURL + "v1/ad/list";
             let data = { appid: "wxb98ea71a0e79f124" };
             return new Promise((resolve, reject) => {
                 let cache = dataMgr.getCache(dataMgr.exportCacheNew);
@@ -276,7 +276,7 @@ window.zs.exporter = window.zs.exporter || {};
         }
 
         static loadOld() {
-            let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/index";
+            let url = dataMgr.URL + "appad_new/index";
             let currentTime = Math.round(new Date().getTime() / 1000).toString();
             let data = {
                 appid: zs.configs.gameCfg.appId,
@@ -337,9 +337,8 @@ window.zs.exporter = window.zs.exporter || {};
                 return this.loadOld();
             }
         }
-
     }
-    dataMgr.URL = "https://ad.ali-yun.wang/api/";
+    dataMgr.URL = "https://zsad.zxmn2018.com";
     dataMgr.NEWURL = "http://test-gamesapi.zxmn2018.com/";
     dataMgr.expireTime = 60000;
     dataMgr.exportCache = 'ExpCache';

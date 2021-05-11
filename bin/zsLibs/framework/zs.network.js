@@ -245,6 +245,19 @@ window.zs = window.zs || {};
         static async init() {
             let gameCfg = zs.configs.gameCfg;
             network.defaultData = gameCfg.network;
+            let webSetting = await zs.resource.nativeLoad(gameCfg.remoteWebSettingURL || network.remoteWebSettingURL);
+            if (webSetting) {
+                webSetting.webDomains && (network.listDomain = webSetting.webDomains);
+                if (webSetting.webApis) {
+                    webSetting.webApis.ping && (network.mapWebApi.ping = webSetting.webApis.ping);
+                    webSetting.webApis.login && (network.mapWebApi.login = webSetting.webApis.login);
+                    webSetting.webApis.config && (network.mapWebApi.config = webSetting.webApis.config);
+                    webSetting.webApis.update && (network.mapWebApi.update = webSetting.webApis.update);
+                    webSetting.webApis.download && (network.mapWebApi.download = webSetting.webApis.download);
+                }
+                webSetting.exportDomainOld && (zs.exporter.dataMgr.URL = webSetting.exportDomainOld);
+                webSetting.exportDomainNew && (zs.exporter.dataMgr.NEWURL = webSetting.exportDomainNew);
+            }
 
             await network.ping();
             let loginInfo = {
@@ -597,6 +610,7 @@ window.zs = window.zs || {};
     network.city = null;
     network.timestamp = null;
     network.defaultData = {};
+    network.remoteWebSettingURL = "https://changshazhise01-1254961065.cos.ap-guangzhou.myqcloud.com/zhise/new_framework/web.json";
     network.listDomain = [
         // "http://test-gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com",
