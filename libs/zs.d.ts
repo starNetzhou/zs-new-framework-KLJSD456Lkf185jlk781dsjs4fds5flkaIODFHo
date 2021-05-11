@@ -1835,6 +1835,10 @@ interface exportInfo {
  */
 declare module zs.platform {
     /**
+     * 平台实例
+     */
+    const proxy: any;
+    /**
      * 初始化方法（无需主动调用）
      */
     function init();

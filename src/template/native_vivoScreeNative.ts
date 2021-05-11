@@ -50,21 +50,25 @@ export default class native_vivoScreeNative extends zs.fgui.base {
 
     apply() {
         // console.log("🐑 : --- >>> 手动隐藏 ", "bottonNativeUI");
-        this.owner.visible = false;
         this.closed = false;
-        zs.platform.async.isBeforeGameAccount().then(() => {
-            this.adUnit = ProductKey.zs_native_adunit;
-            //初始化原生
-            zs.platform.sync.initNativeAd({ id: this.adUnit });
-            //加载原生
-            zs.platform.async.loadNativeAd().then((data) => {
-                this.onAdLoaded(data);
-            }).catch((err) => {
-                this.onAdError(err);
+        if (zs.platform.proxy) {
+            this.owner.visible = false;
+            zs.platform.async.isBeforeGameAccount().then(() => {
+                this.adUnit = ProductKey.zs_native_adunit;
+                //初始化原生
+                zs.platform.sync.initNativeAd({ id: this.adUnit });
+                //加载原生
+                zs.platform.async.loadNativeAd().then((data) => {
+                    this.onAdLoaded(data);
+                }).catch((err) => {
+                    this.onAdError(err);
+                })
+            }).catch(() => {
+                this.closeView();
             })
-        }).catch(() => {
-            this.closeView();
-        })
+        } else {
+            this.owner.visible = true;
+        }
         return this;
     }
 
