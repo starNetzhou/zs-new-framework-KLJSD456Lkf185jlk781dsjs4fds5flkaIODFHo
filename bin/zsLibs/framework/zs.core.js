@@ -113,7 +113,7 @@ window.zs = window.zs || {};
             } else if (configType === 'object') {
                 for (let evt in config) {
                     let args = config[evt];
-                    if (!Array.isArray(args) && args != null && args != undefined) {
+                    if (args != null && args != undefined && !Array.isArray(args)) {
                         args = [args];
                     }
                     result = this.applyEventReturn(evt, args);
@@ -127,7 +127,6 @@ window.zs = window.zs || {};
         runEventConfig(event) {
             if (event == null || event == undefined) { return; }
             let eventType = typeof event;
-            console.log(eventType);
             if (eventType === 'string') {
                 this.callEvent(event);
             } else if (Array.isArray(event)) {
