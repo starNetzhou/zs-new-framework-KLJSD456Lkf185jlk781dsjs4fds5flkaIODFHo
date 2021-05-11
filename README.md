@@ -11,6 +11,7 @@
 > 配置文件
 > - bin/config/gameCfg.json  
 > - bin/config/productCfg.json  
+> - bin/config/uiCfg.json
 
 > 模版文件
 > - src/template/ProductKey.ts  
