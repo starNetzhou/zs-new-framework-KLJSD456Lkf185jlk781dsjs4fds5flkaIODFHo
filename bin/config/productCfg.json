@@ -7,7 +7,7 @@
         ]
     },
     "PRODUCT_START.READY": {
-        "exporter": [
+        "base": [
             {
                 "type": "export_button",
                 "key": "test",
@@ -277,10 +277,9 @@
                     "width": 200,
                     "fill": "width",
                     "offsety": -200,
-                    "autooffset": [
-                        "button_delay",
-                        "zs_button_delay_time"
-                    ],
+                    "autooffset": {
+                        "event_product_value": "zs_button_delay_time"
+                    },
                     "event": "event_childnext",
                     "url": [
                         "export/export",

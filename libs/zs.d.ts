@@ -337,6 +337,11 @@ declare module zs {
          */
         callEventReturn(key: string, args?: any[]): any;
         /**
+         * 按配置执行事件，获取返回值
+         * @param config 配置
+         */
+        readConfigReturn(config: any): any;
+        /**
          * 按配置执行事件
          * @param config 配置
          */
@@ -1281,13 +1286,17 @@ declare module zs.ui {
          */
         static make(): LayaLoading;
         /**
+         * （虚方法）预加载方法，主要用于预加载loading资源包
+         */
+        static preload(): Promise<void>;
+        /**
          * 加载进度
          */
         progress: number;
         /**
-         * （虚方法）预加载方法，主要用于预加载loading资源包
+         * 初始化方法
          */
-        preload(): Promise<void>;
+        init();
         /**
          * 更新进度
          * @param value 
