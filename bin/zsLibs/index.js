@@ -5,7 +5,6 @@ if (typeof qg !== "undefined") {
     loadLib("zsLibs/adapter/zs.platform.oppo.js");
 }
 loadLib("zsLibs/adapter/zs.platform.config.js")
-loadLib("zsLibs/adapter/zs.eggknock.js")
 loadLib("zsLibs/framework/zs.log.js")
 loadLib("zsLibs/framework/zs.resource.js")
 loadLib("zsLibs/framework/zs.utils.js")

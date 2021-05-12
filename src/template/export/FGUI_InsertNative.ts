@@ -1,6 +1,6 @@
 /** This is an automatically generated class by FairyGUI. Please do not modify it. **/
 
-export default class FGUI_BottomNative extends fgui.GComponent {
+export default class FGUI_InsertNative extends fgui.GComponent {
 
 	public btnAdImg:fgui.GButton;
 	public btnConfirm:fgui.GButton;
@@ -8,8 +8,8 @@ export default class FGUI_BottomNative extends fgui.GComponent {
 	public btnClose:fgui.GButton;
 	public static URL:string = "ui://8mc57yxkiwh90";
 
-	public static createInstance():FGUI_BottomNative {
-		return <FGUI_BottomNative>(fgui.UIPackage.createObject("export", "BottomNative"));
+	public static createInstance():FGUI_InsertNative {
+		return <FGUI_InsertNative>(fgui.UIPackage.createObject("export", "InsertNative"));
 	}
 
 	protected onConstruct():void {

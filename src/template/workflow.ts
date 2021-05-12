@@ -1,8 +1,8 @@
 import exportBinder from "./export/exportBinder";
-import native_oppoBottomNative from "./native_oppoBottomNative";
 import native_oppoScreeNative from "./native_oppoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
 import native_BtnMoreGame from "./native_BtnMoreGame";
+import native_oppoInsertNative from "./native_oppoInsertNative";
 
 export default class workflow extends zs.workflow {
     static readonly PRODUCT_START = "PRODUCT_START";
@@ -20,8 +20,8 @@ export default class workflow extends zs.workflow {
     static readonly add_btn_deskTopIcon = "add_btn_deskTopIcon";
     /**添加更多好玩按钮 */
     static readonly add_btn_moreGame = "add_btn_moreGame";
-    /**添加底部原生 */
-    static readonly add_bottom_native = "add_bottom_native";
+    /**添加嵌入原生 */
+    static readonly add_insert_native = "add_insert_native";
     /**添加屏幕原生 */
     static readonly add_screen_native = "add_screen_native";
 
@@ -32,8 +32,8 @@ export default class workflow extends zs.workflow {
         exportBinder.bindAll();
 
         zs.fgui.configs.registeBase(workflow.add_btn_deskTopIcon, native_BtnAddDesk);
-        zs.fgui.configs.registeBase(workflow.add_bottom_native, native_oppoBottomNative);
-        zs.fgui.configs.registeBase(workflow.add_screen_native, native_oppoScreeNative);
         zs.fgui.configs.registeBase(workflow.add_btn_moreGame, native_BtnMoreGame);
+        zs.fgui.configs.registeBase(workflow.add_insert_native, native_oppoInsertNative);
+        zs.fgui.configs.registeBase(workflow.add_screen_native, native_oppoScreeNative);
     }
 }

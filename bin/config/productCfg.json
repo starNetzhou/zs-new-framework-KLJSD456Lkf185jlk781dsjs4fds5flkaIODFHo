@@ -35,16 +35,17 @@
     },
     "PRODUCT_HOME_PLAY": {
         "switch": "zs_native_limit",
-        "base": [
-            {
-                "type": "add_screen_native",
-                "window": {
-                    "align": "center",
-                    "fit": true,
-                    "block": true
-                }
+        "base": {
+            "type": "add_screen_native",
+            "window": {
+                "align": "center",
+                "fit": true,
+                "block": true
+            },
+            "base": {
+                "closeevent": "event_childnext"
             }
-        ]
+        }
     },
     "GAME_PLAY": {
         "banner": {
@@ -54,9 +55,9 @@
     "PRODUCT_PLAY_END": {
         "base": [
             {
-                "type": "add_bottom_native",
+                "type": "add_insert_native",
                 "window": {
-                    "align": "bottom"
+                    "align": "center"
                 }
             },
             {

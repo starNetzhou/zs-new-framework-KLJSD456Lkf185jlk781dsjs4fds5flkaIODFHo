@@ -4,7 +4,7 @@ import FGUI_addDeskBtn from "./export/FGUI_addDeskBtn";
 * @ Author: yangcheng
 * @ Data: 2021-03-11 15:48
 */
-export default class native_BtnAddDesk extends zs.fgui.base {// oppo 原生平台的添加桌面方法
+export default class native_BtnAddDesk extends zs.fgui.base {
     static make() {
         let view = FGUI_addDeskBtn.createInstance();
         return view;
@@ -26,7 +26,7 @@ export default class native_BtnAddDesk extends zs.fgui.base {// oppo 原生平�
     }
     apply() {
         let view = this.view as FGUI_addDeskBtn;
-        view.visible = false;
+        view.visible = zs.platform.proxy ? false : true;
         //true 就是 有 icon false 是没有
         zs.platform.async.hasDesktopIcon().then((hasIcon) => {
             view.visible = !hasIcon;

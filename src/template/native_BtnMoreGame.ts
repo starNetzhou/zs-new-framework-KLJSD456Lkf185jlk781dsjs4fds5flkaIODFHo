@@ -4,33 +4,20 @@ import FGUI_MoreGameBtn from "./export/FGUI_MoreGameBtn";
 * @ Author: yangcheng
 * @ Data: 2021-03-11 15:48
 */
-export default class native_BtnMoreGame extends zs.fgui.base {//分享更多好玩 oppo 原生平台的资源互推
+export default class native_BtnMoreGame extends zs.fgui.baseGeneric<FGUI_MoreGameBtn> {
 
-    static make() {
-        let view = FGUI_MoreGameBtn.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_MoreGameBtn;
-    }
-    check(component) {
-        if (component instanceof FGUI_MoreGameBtn) {
-            return true;
-        }
-        return false;
-    }
+    static typeDefine = FGUI_MoreGameBtn;
 
     constructor(component) {
         super(component);
         if (component && component instanceof FGUI_MoreGameBtn) {
-            (this.view as FGUI_MoreGameBtn).btnMoreGame.onClick(this, this.onClick);
+            component.btnMoreGame.onClick(this, this.onClick);
         }
     }
 
     apply() {
         let qgg = window['qg'] as any;
         if (qgg) {
-            //获取当前平台的版本 大于等于 1076 才展示这个按钮
             (this.view as FGUI_MoreGameBtn).visible = qgg.getSystemInfoSync().platformVersionCode >= 1076;
         }
         return this;

@@ -128,11 +128,11 @@ declare module zs {
     }
 
     interface productCfg {
-        switch?: string | string[],
-        check?: string | any[],
-        event?: string | any[],
-        laterevent?: string | any[],
-        exitevent?: string | any[],
+        switch?: any,
+        check?: any,
+        event?: any,
+        laterevent?: any,
+        exitevent?: any,
         banner?: bannerCfg,
         exporter?: exporterCfg[],
         base?: exporterCfg[]
@@ -1530,6 +1530,10 @@ declare module zs.fgui {
          */
         get id(): number;
         /**
+         * 父级窗口
+         */
+        get window(): window;
+        /**
          * 控件是否被销毁
          */
         disposed: boolean;
@@ -1834,6 +1838,10 @@ interface exportInfo {
  * 平台模块
  */
 declare module zs.platform {
+    /**
+     * 平台实例
+     */
+    const proxy: any;
     /**
      * 初始化方法（无需主动调用）
      */
@@ -3230,7 +3238,7 @@ declare module zs.exporter {
          * 设置延迟出现时间
          * @param value 时间值
          */
-        setAutoFade(value: number | string | string[]): button;
+        setAutoFade(value: any): button;
         /**
          * 设置延迟出现过渡事件
          * @param value 时间值
@@ -3240,7 +3248,7 @@ declare module zs.exporter {
          * 设置自动偏移时间
          * @param value 时间值
          */
-        setAutoOffset(value: number | string | string[]): button;
+        setAutoOffset(value: any): button;
         /**
          * 设置按钮X偏移
          * @param value 偏移值
@@ -3270,17 +3278,17 @@ declare module zs.exporter {
          * 设置假事件延迟
          * @param value 时间值
          */
-        setFakeDelay(value: number | string | string[]): button;
+        setFakeDelay(value: any): button;
         /**
          * 设置假事件
          * @param value 事件名
          */
-        setFakeEvent(value: string | string[]): button;
+        setFakeEvent(value: any): button;
         /**
          * 设置点击事件
          * @param value 事件名
          */
-        setEvent(value: string | string[]): button;
+        setEvent(value: any): button;
     }
     /**
      * 全屏导出基类
