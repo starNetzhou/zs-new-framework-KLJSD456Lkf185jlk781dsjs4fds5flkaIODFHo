@@ -1,6 +1,18 @@
 {
     "PRODUCT_START": {
-        "switch": "!"
+        "base": {
+            "type": "add_insert_native",
+            "window": {
+                "align": "center"
+            },
+            "base": {
+                "closesize": 40,
+                "closetouchsize": 30,
+                "confirmtext": "点击跳过",
+                "confirmswitch": "zs_native_click_switch",
+                "closeevent": "event_childnext"
+            }
+        }
     },
     "PRODUCT_BEGIN": {
         "switch": "!"
@@ -10,7 +22,7 @@
             "auto": true,
             "isDelay": true
         },
-        "event": "event_home_banner",
+        "laterevent": "event_home_banner",
         "exitevent": "event_hide_screen_native",
         "base": [
             {
@@ -51,8 +63,10 @@
     },
     "GAME_END": {},
     "PRODUCT_FINISH": {
+        "switch": "zs_native_limit",
         "event": [
-            "event_finish_screen_native",
+            "event_show_screen_native",
+            "event_hide_banner",
             "event_childnext"
         ]
     }

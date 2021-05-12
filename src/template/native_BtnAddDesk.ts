@@ -26,7 +26,7 @@ export default class native_BtnAddDesk extends zs.fgui.base {
     }
     apply() {
         let view = this.view as FGUI_addDeskBtn;
-        view.visible = false;
+        view.visible = zs.platform.proxy ? false : true;
         //true 就是 有 icon false 是没有
         zs.platform.async.hasDesktopIcon().then((hasIcon) => {
             view.visible = !hasIcon;
