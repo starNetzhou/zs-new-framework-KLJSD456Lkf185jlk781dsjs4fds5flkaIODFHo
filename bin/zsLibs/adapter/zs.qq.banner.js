@@ -1,12 +1,10 @@
 window.zs = window.zs || {};
-window.zs.wx = window.zs.wx || {};
-window.zs.wx.banner = window.zs.wx.banner || {};
-
+window.zs.qq = window.zs.qq || {};
 
 (function (exports, Laya) {
     'use strict';
 
-    class WxBanner {
+    class QQBanner {
         constructor(adUnitId, isWait, pos, loadFunc) {
             this.adUnitId = adUnitId;
             this.isLoad = false;
@@ -18,17 +16,17 @@ window.zs.wx.banner = window.zs.wx.banner || {};
             this.initBanner();
             //10s未能成功加载就销毁这个对象
             var s = this;
-            this.loadTime = setTimeout(function () { console.log("加载超时"); s.destroy() }, 10000);
-            this.showTime = "";
+            this.loadTimer = setTimeout(function () { console.log("加载超时"); s.destroy() }, 10000);
+            this.showTime = 0;
             this.birthTime = 0;
             this.inErr = false;
         }
-
+        /**生存时间 */
         get liveTime() {
             if (!this.birthTime) return 0;
             return new Date().getTime() - this.birthTime;
         }
-
+        /**是否展示超过配置时间，最低3s */
         get showEd() {
             var num = Number(zs.product.get("zs_banner_show_number"));
             var time = num ? num : 0;
@@ -37,20 +35,23 @@ window.zs.wx.banner = window.zs.wx.banner || {};
         }
 
         initBanner() {
-            if (!window["wx"] || !window["wx"].createBannerAd) {
+            if (!window["qq"] || !window["qq"].createBannerAd) {
                 console.log("环境异常,无法创建");
                 return;
             }
             console.log("进入banner初始化" + this.adUnitId);
             var s = this;
+            let offSetW = window.screen.availWidth / Laya.stage.width;
+            let offSetH = window.screen.availHeight / Laya.stage.height;
+            let left = this.pos ? (this.pos.left != null ? this.pos.left * offSetW : (this.pos.right != null ? ((Laya.stage.width - this.pos.right) * offSetW - 350) : (this.pos.centerX != null ? (Laya.stage.width / 2 + this.pos.centerX) * offSetW - 350 / 2 : (window.screen.availWidth - 350) / 2))) : (window.screen.availWidth - 350) / 2;
+            let top = this.pos ? (this.pos.top != null ? this.pos.top * offSetH : (this.pos.bottom != null ? ((Laya.stage.height - this.pos.bottom) * offSetH - 86) : (this.pos.centerY != null ? (Laya.stage.height / 2 + this.pos.centerY) * offSetH - 86 / 2 : (window.screen.availHeight - 86)))) : (window.screen.availHeight - 86);
             if (this.bannerAd == null) {
-                var pos = getAdPos(this.pos, WxBannerMgr.Instance.realSize ? WxBannerMgr.Instance.realSize.w : 300, WxBannerMgr.Instance.realSize ? WxBannerMgr.Instance.realSize.h : 104)
-                this.bannerAd = wx.createBannerAd({
+                this.bannerAd = qq.createBannerAd({
                     adUnitId: s.adUnitId,
                     style: {
-                        left: pos.left,
-                        top: pos.top,
-                        width: 300
+                        left: left,
+                        top: top,
+                        width: 350
                     }
                 });
             }
@@ -60,23 +61,22 @@ window.zs.wx.banner = window.zs.wx.banner || {};
             }
             this.bannerAd.onLoad(function () {
                 s.isLoad = true;
-                s.loadTime && clearTimeout(s.loadTime);
+                s.loadTimer && clearTimeout(s.loadTimer);
                 s.loadFunc && s.loadFunc();
                 s.birthTime = new Date().getTime();
                 if (!s.isWait) s.show();
             })
             this.bannerAd.onError(function (err) {
                 console.error("Banner err:", err);
-                WxBannerMgr.Instance.inErr();
+                QQBannerMgr.Instance.inErr();
                 s.inErr = true;
-                s.isWait = true;
             });
 
             this.bannerAd.onResize(this.onResize.bind(this));
         }
 
         onResize(size) {
-            WxBannerMgr.Instance.realSize = { w: size.width, h: size.height };
+            QQBannerMgr.Instance.realSize = { w: size.width, h: size.height };
         }
 
         getOffsetY() {
@@ -84,30 +84,31 @@ window.zs.wx.banner = window.zs.wx.banner || {};
         }
 
         show() {
-            if (this.bannerAd == null || !this.isLoad || this.inErr) return;
+            if (this.bannerAd == null || !this.isLoad) return;
+            if (!this.bannerAd.show) return;
             this.isShow = true;
             this.isWait = false;
             var s = this;
-            this.updatePosition()//修改位置是否影响曝光？？
-            this.bannerAd.show().then(function () {
-                console.warn("banner标号" + s.bannerIndex + "展示成功,当前已展示时间" + s.showLong);
-                s.showTime = new Date().getTime();
-                s.isWait && s.hide();
-            });
+            this.updatePosition();
+            try {
+                this.bannerAd.show().then(function () {
+                    console.warn("banner标号" + s.bannerIndex + "展示成功,当前已展示时间" + s.showLong);
+                    s.showTime = new Date().getTime();
+                    if (s.isWait) { s.hide(); }
+                });
+            } catch (e) {
+                console.log("banner报错了");
+            }
         }
-        //移到用户上次点击位置  top 弃用！
-        updateTouchPos() {
-            if (!this.bannerAd || !WxBannerMgr.Instance.realSize || Laya.stage.mouseY == null || Laya.stage.mouseX == null) return;
-            // this.bannerAd.style.left = Laya.stage.mouseX * window.screen.availWidth / Laya.stage.width - WxBannerMgr.Instance.realSize.w / 2;
-            this.bannerAd.style.top = Laya.stage.mouseY * window.screen.availHeight / Laya.stage.height - WxBannerMgr.Instance.realSize.h / 2;
-        }
-
         //正常展示位置
         updatePosition() {
-            if (!this.bannerAd || !WxBannerMgr.Instance.realSize) return;
-            var pos = getAdPos(this.pos, WxBannerMgr.Instance.realSize ? WxBannerMgr.Instance.realSize.w : 300, WxBannerMgr.Instance.realSize ? WxBannerMgr.Instance.realSize.h : 104);
-            this.bannerAd.style.left = pos.left;
-            this.bannerAd.style.top = pos.top;
+            if (!this.bannerAd || !QQBannerMgr.Instance.realSize) return;
+            let offSetW = window.screen.availWidth / Laya.stage.width;
+            let offSetH = window.screen.availHeight / Laya.stage.height;
+            let left = this.pos ? (this.pos.left ? this.pos.left * offSetW : (this.pos.right ? ((Laya.stage.width - this.pos.right) * offSetW - QQBannerMgr.Instance.realSize.w) : (this.pos.centerX ? (Laya.stage.width / 2 + this.pos.centerX) * offSetW - QQBannerMgr.Instance.realSize.width / 2 : (window.screen.availWidth - QQBannerMgr.Instance.realSize.w) / 2))) : (window.screen.availWidth - QQBannerMgr.Instance.realSize.w) / 2;
+            let top = this.pos ? (this.pos.top ? this.pos.top * offSetH : (this.pos.bottom ? ((Laya.stage.height - this.pos.bottom) * offSetH - QQBannerMgr.Instance.realSize.h) : (this.pos.centerY ? (Laya.stage.height / 2 + this.pos.centerY) * offSetH - QQBannerMgr.Instance.realSize.height / 2 : (window.screen.availHeight - QQBannerMgr.Instance.realSize.h)))) : (window.screen.availHeight - QQBannerMgr.Instance.realSize.h);
+            this.bannerAd.style.top = top;
+            this.bannerAd.style.left = left;
         }
 
         hide() {
@@ -137,23 +138,22 @@ window.zs.wx.banner = window.zs.wx.banner || {};
         }
 
         updateY(top) {
-            if (this.bannerAd && WxBannerMgr.Instance.realSize) {
+            if (this.bannerAd && QQBannerMgr.Instance.realSize) {
                 this.bannerAd.style.top = top * window.screen.availHeight / Laya.stage.height;
             }
         }
 
         updateX(left) {
-            if (this.bannerAd && WxBannerMgr.Instance.realSize) {
+            if (this.bannerAd && QQBannerMgr.Instance.realSize) {
                 this.bannerAd.style.left = left * window.screen.availWidth / Laya.stage.width;
             }
         }
     }
 
-    class WxBannerMgr {
-
-        //曝光banner集合
+    class QQBannerMgr {
         constructor() {
-            this.wxbannerArray = [];
+            //曝光banner集合
+            this.qqbannerArray = [];
             this.bannerIds = [];
             /**当为false不自动展示，不自动刷新 */
             this.isWait = false;
@@ -162,10 +162,8 @@ window.zs.wx.banner = window.zs.wx.banner || {};
             this.length = 0;
             this.inErrTime = false;
             this.errTimer = null;
-            this.createNum = 0;
             //banner实例的标号
             this.bannerIndex = 0;
-            this.checkInit = false;
             this.idCdArr = [];
             this.realSize = null;
             var s = this;
@@ -175,7 +173,7 @@ window.zs.wx.banner = window.zs.wx.banner || {};
                 var ftime = zs.product.get("zs_banner_refresh_time");
                 if (!s.isWait && s.lastFreshTime && ftime && time - s.lastFreshTime > ftime) {
                     console.log("自动刷新");
-                    s.checkBanner(s.isWait, s.pos, s.length, s.checkInit);
+                    s.checkBanner(s.isWait, s.pos);
                 }
             }, 1000);
         }
@@ -202,11 +200,9 @@ window.zs.wx.banner = window.zs.wx.banner || {};
         }
         /**一个刷新banner的方法
          * @param isWait 是否等待展示（为false时会自动刷新或去池子中banner展示，为true需手动调用展示）
-         * @param pos banner居左居右居上居下居中 （laya.stage 坐标)
-         * @param length
-         * @param checkInit 该属性为true时  才会去创建banner并加入banner池
+         * @param pos banner位置信息 （laya.stage 坐标 left,right,centerX,top,bottom,centerY)
          */
-        checkBanner(isWait, pos, length, checkInit) {
+        checkBanner(isWait, pos) {
             if (!this.bannerIds) {
                 console.log("未设置bannerID");
                 return;
@@ -219,22 +215,20 @@ window.zs.wx.banner = window.zs.wx.banner || {};
             this.lastFreshTime = new Date().getTime();
             this.isWait = isWait;
             this.pos = pos;
-            this.length = length ? Math.min(this.bannerIds.length, length) : 1;
-            this.checkInit = checkInit;
-            var num = 0;
             let eNum = 0;
-            for (let i = this.wxbannerArray.length - 1; i >= 0; i--) {
-                let banner = this.wxbannerArray[i];
+            for (let i = this.qqbannerArray.length - 1; i >= 0; i--) {
+                let banner = this.qqbannerArray[i];
                 if (banner.inErr) {
                     banner.destroy();
+                    console.log("banner" + banner.bannerIndex + "报错了");
                 }
-                else if (this.wxbannerArray.length > 5 && banner.showEd && banner.liveTime > 30000) {
+                if (this.qqbannerArray.length > 5 && banner.showEd && banner.liveTime > 30000) {
                     console.log("banner" + banner.bannerIndex + "生存时长超30s并已展示时长" + banner.showLong);
                     banner.destroy();
                 }
                 if (!banner.bannerAd) {
-                    console.log("banner已销毁");
-                    this.wxbannerArray.splice(i, 1);
+                    console.log("banner" + banner.bannerIndex + "已销毁");
+                    this.qqbannerArray.splice(i, 1);
                     continue;
                 }
                 if (!banner.isLoad) {
@@ -243,28 +237,17 @@ window.zs.wx.banner = window.zs.wx.banner || {};
                 }
                 if (banner.isLoad && !banner.showEd && !banner.isShow) {
                     console.log("存在加载完成但未展示的banner");
-                    if (!this.isWait) {
-                        this.showBanner(this.pos, 1);
-                    }
-                    num++;
-                    if (num >= this.length) return;
+                    eNum++;
+                    break;
                 }
             }
-            if (eNum >= this.length || this.inErrTime) {
-                console.log("当前拉取中大于配置次或者出现banner报错,暂停拉取");
+            if (eNum >= 1 || this.inErrTime) {
+                console.log("存在拉取中的banner或为报错状态,暂停拉取");
                 if (!this.isWait) {
-                    this.showBanner(this.pos, this.length - num);
+                    this.showBanner(pos);
                 }
                 return;
             }
-            if (!checkInit) {
-                console.error("checkInit为false，不创建banner");
-                if (!this.isWait) {
-                    this.showBanner(this.pos, this.length - num);
-                }
-                return;
-            }
-            this.createNum = this.length - num;
             this.createBanner();
         }
         /**不提供外部调用 */
@@ -272,90 +255,52 @@ window.zs.wx.banner = window.zs.wx.banner || {};
             if (this.inErrTime) {
                 console.log("处于报错状态取消创建");
             }
-            if (!this.createNum || this.createNum <= 0 || this.inErrTime) return;
+            if (this.inErrTime) return;
             let r = Math.floor(Math.random() * this.bannerIds.length);
-            let banner = new WxBanner(this.bannerIds[r], this.isWait, this.pos, this.createBanner);
+            let banner = new QQBanner(this.bannerIds[r], this.isWait, this.pos);
             banner.bannerIndex = this.bannerIndex;
             this.bannerIndex++;
-            this.wxbannerArray.push(banner);
-            this.createNum--;
+            this.qqbannerArray.push(banner);
         }
-        /**展示banner的方法，先找是否有展示时长不达标的 再找已展示达标中展示时长最低的  （弃用其中的位置设定） */
-        showBanner(pos, length) {
-            var num = 0;
-            length = length ? Math.min(this.bannerIds.length, length) : 1;
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
+        /**展示banner的方法，先找是否有展示时长不达标的 再找已展示达标中展示时长最低的  */
+        showBanner(pos) {
+            for (let i = 0; i < this.qqbannerArray.length; i++) {
+                let banner = this.qqbannerArray[i];
                 if (banner.isLoad && !banner.showEd && !banner.isShow) {
                     banner.pos = pos;
                     banner.show();
-                    num++;
-                    if (num >= length) return;
+                    this.isWait = false;
+                    return;
                 }
             }
             let showBanner = null;
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
+            for (let i = 0; i < this.qqbannerArray.length; i++) {
+                let banner = this.qqbannerArray[i];
                 if (banner.isLoad && !banner.isShow) {
                     if (!showBanner || banner.showLong < showBanner.showLong) {
                         showBanner = banner;
                     }
                 }
             }
-            if (showBanner) { showBanner.pos = pos; showBanner.show() };
+            if (showBanner) {
+                showBanner.pos = pos;
+                showBanner.show();
+                this.isWait = false;
+            }
             !showBanner && console.log("不存在加载完并且没有正在展示的banner");
-        }
-        /**使正在展示的banner位移至用户上次点击位置  （已弃用，被和谐了） */
-        toTouch() {
-            let num = 0;
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
-                if (banner.isLoad && banner.isShow) {
-                    banner.updateTouchPos();
-                    num++;
-                }
-            }
-            if (num == 0) console.log("没有正在展示的banner");
-        }
-        /**回归正常位置的方法  （已弃用） */
-        updatePos() {
-            let num = 0;
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
-                if (banner.isLoad && banner.isShow) {
-                    banner.updatePosition(toTouch);
-                    num++;
-                }
-            }
-            if (num == 0) console.log("没有正在展示的banner");
         }
         /**检查banner合集  隐藏所有banner 使自动刷新失效 */
         hideAll() {
-            for (let i = 0; i < this.wxbannerArray.length; i++) {
-                let banner = this.wxbannerArray[i];
+            for (let i = 0; i < this.qqbannerArray.length; i++) {
+                let banner = this.qqbannerArray[i];
                 banner.hide();
             }
             this.isWait = true;
         }
     }
-    WxBannerMgr.Instance = new WxBannerMgr();
-    /**获取广告位置
-    * @param pos 广告在Laya上的适配信息 {left,right,centerX,top,bottom,centerY}
-    * @param width 广告的宽 手机屏幕像素宽
-    * @param height 广告的高 手机屏幕像素高
-    */
-    var getAdPos = function (pos, width, height) {
-        if (!width || !height) {
-            console.log("????干嘛吖！！！");
-            return { left: 0, top: 0 };
-        }
-        let offSetW = window.screen.availWidth / Laya.stage.width;
-        let offSetH = window.screen.availHeight / Laya.stage.height;
-        let left = pos ? (pos.left != null ? pos.left * offSetW : (pos.right != null ? ((Laya.stage.width - pos.right) * offSetW - width) : (pos.centerX != null ? (Laya.stage.width / 2 + pos.centerX) * offSetW - width / 2 : (window.screen.availWidth - width) / 2))) : (window.screen.availWidth - width) / 2;
-        let top = pos ? (pos.top != null ? pos.top * offSetH : (pos.bottom != null ? ((Laya.stage.height - pos.bottom) * offSetH - height) : (pos.centerY != null ? (Laya.stage.height / 2 + pos.centerY) * offSetH - height / 2 : (window.screen.availHeight - height)))) : (window.screen.availHeight - height);
-        return { left: left, top: top };
-    }
-    exports.WxBanner = WxBanner;
-    exports.WxBannerMgr = WxBannerMgr;
+    QQBannerMgr.Instance = new QQBannerMgr();
 
-}(window.zs.wx.banner = window.zs.wx.banner || {}, Laya));
+    exports.QQBanner = QQBanner;
+    exports.QQBannerMgr = QQBannerMgr;
+
+}(window.zs.qq.banner = window.zs.qq.banner || {}, Laya));

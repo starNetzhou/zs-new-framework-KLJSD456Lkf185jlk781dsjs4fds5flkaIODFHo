@@ -103,7 +103,7 @@ window.zs.exporter = window.zs.exporter || {};
                             let unlinkAd = utils.getCacheNewDay("unlinkAd") || {};
                             unlinkAd[appInfo.appid] = true;
                             utils.setCache("unlinkAd", unlinkAd);
-                            dataMgr.collectExport(appInfo.app_id);
+                            dataMgr.collectExport(appInfo);
                             resolve(null);
                         }).catch(() => {
                             utils.navigateErrorHandler && utils.navigateErrorHandler.run();
@@ -150,16 +150,63 @@ window.zs.exporter = window.zs.exporter || {};
             return null;
         }
 
-        static collectExport(appid) {
+        static collectSource() {
+            if (!zs.configs.gameCfg.newAds) { return; }
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/source";
+            let sysInfo = zs.platform.sync.getLaunchOptions();
+            if (!sysInfo || !sysInfo.referrerInfo || !sysInfo.referrerInfo.appId) { return; }
+            let signParams = {
+                user_id: zs.core.userId,
+                from_app_id: sysInfo.referrerInfo.appId,
+                to_app_id: zs.core.appId,
+                scene: zs.product.scene,
+                zhise: (sysInfo && sysInfo.query && sysInfo.query.zhise) ? sysInfo.query.zhise : ""
+            };
+            zs.network.nativeRequest(url, signParams, 'POST', true)
+                .then((res) => {
+                    console.log("collect source success!");
+                }).catch((res) => {
+                    console.log("collect source failed!");
+                });
+        }
+
+        static collectExport(info) {
+            if (zs.configs.newAds) {
+                this.collectExportNew(info);
+            } else {
+                this.collectExportOld(info);
+            }
+        }
+
+
+        static collectExportNew(info) {
+            if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/jump";
+            let signParams = {
+                user_id: zs.core.userId,
+                from_app_id: zs.core.appId,
+                to_app_id: info.app_id,
+                position: info.position_type,
+                group_id: info.group_id,
+                img_id: info.img_id
+            };
+            zs.network.nativeRequest(url, signParams, 'POST', true)
+                .then((res) => {
+                    console.log("collect export success!");
+                }).catch((res) => {
+                    console.log("collect export failed!");
+                });
+        }
+
+        static collectExportOld(info) {
             if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
-            let sysInfo = null;
-            sysInfo = wx.getLaunchOptionsSync();
+            let sysInfo = zs.platform.sync.getLaunchOptions();
             let signParams = {
                 user_id: zs.core.userId,
                 from_id: zs.core.appId,
-                to_id: appid,
+                to_id: info.app_id,
                 timestamp: curTime,
                 scene: zs.product.scene,
                 zhise: (sysInfo && sysInfo.query && sysInfo.query.zhise) ? sysInfo.query.zhise : ""
@@ -172,7 +219,63 @@ window.zs.exporter = window.zs.exporter || {};
                 });
         }
 
-        static load() {
+        static loadNew() {
+            let url = (zs.configs.gameCfg.exportURL || dataMgr.NEWURL) + "v1/ad/list";
+            let data = { appid: "wxb98ea71a0e79f124" };
+            return new Promise((resolve, reject) => {
+                let cache = dataMgr.getCache(dataMgr.exportCacheNew);
+                if (cache) {
+                    return resolve(cache);
+                }
+                if (dataMgr.cacheSetting) {
+                    if (dataMgr.requestList == null) {
+                        dataMgr.requestList = [];
+                    }
+                    dataMgr.requestList.push((data) => {
+                        resolve(data);
+                    });
+                    return;
+                }
+                dataMgr.cacheSetting = true;
+                zs.network.nativeRequest(url, data, 'POST', true)
+                    .then((result) => {
+                        let data = [];
+                        for (let key in result.data) {
+                            let value = result.data[key];
+                            if (value == null || !Array.isArray(value) || value.length <= 0) { continue; }
+                            for (let i = 0, n = value.length; i < n; i++) {
+                                value[i].position_type = value[i].position;
+                                value[i].app_title = value[i].name;
+                                value[i].app_icon = value[i].icon;
+                                value[i].appid = value[i].app_id;
+                            };
+                            data = data.concat(value);
+                        }
+                        dataMgr.setCache(dataMgr.exportCacheNew, data);
+                        console.log("load success: ", data);
+                        if (dataMgr.requestList && dataMgr.requestList.length > 0) {
+                            for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
+                                dataMgr.requestList[i].call(this, data);
+                            }
+                        }
+                        dataMgr.requestList = null;
+                        dataMgr.cacheSetting = false;
+                        resolve(data);
+                    }).catch((result) => {
+                        let data = [];
+                        if (dataMgr.requestList && dataMgr.requestList.length > 0) {
+                            for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
+                                dataMgr.requestList[i].call(this, data);
+                            }
+                        }
+                        dataMgr.requestList = null;
+                        dataMgr.cacheSetting = false;
+                        resolve(data);
+                    })
+            });
+        }
+
+        static loadOld() {
             let url = (zs.configs.gameCfg.exportURL || dataMgr.URL) + "appad_new/index";
             let currentTime = Math.round(new Date().getTime() / 1000).toString();
             let data = {
@@ -190,25 +293,20 @@ window.zs.exporter = window.zs.exporter || {};
                     }
                     dataMgr.requestList.push((data) => {
                         resolve(data);
-                    })
+                    });
                     return;
                 }
                 dataMgr.cacheSetting = true;
                 zs.network.nativeRequest(url, data, 'POST', true)
                     .then((result) => {
-                        let data = {
-                            more: result.data["position-1"] || [],
-                            promotion: result.data["position-2"] || [],
-                            indexFloat: result.data["position-3"] || [],
-                            banner: result.data["position-4"] || [],
-                            indexLeft: result.data["position-7"] || [],
-                            gameFloat: result.data["position-8"] || [],
-                            endPage: result.data["position-9"] || [],
-                            indexLeftFloat: result.data["position-11"] || [],
-                            backAd: result.data["position-12"] || [],
-                            iosLinkAd: result.data["position-13"] || []
+                        let data = [];
+                        for (let key in result.data) {
+                            let value = result.data[key];
+                            if (value == null || !Array.isArray(value)) { continue; }
+                            data = data.concat(value);
                         }
                         dataMgr.setCache(dataMgr.exportCache, data);
+                        console.log("load success: ", data);
                         if (dataMgr.requestList && dataMgr.requestList.length > 0) {
                             for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
                                 dataMgr.requestList[i].call(this, data);
@@ -219,18 +317,7 @@ window.zs.exporter = window.zs.exporter || {};
                         resolve(data);
                     })
                     .catch((error) => {
-                        let data = {
-                            more: [],
-                            promotion: [],
-                            indexFloat: [],
-                            banner: [],
-                            indexLeft: [],
-                            gameFloat: [],
-                            endPage: [],
-                            indexLeftFloat: [],
-                            backAd: [],
-                            iosLinkAd: []
-                        }
+                        let data = [];
                         if (dataMgr.requestList && dataMgr.requestList.length > 0) {
                             for (let i = 0, n = dataMgr.requestList.length; i < n; i++) {
                                 dataMgr.requestList[i].call(this, data);
@@ -243,10 +330,20 @@ window.zs.exporter = window.zs.exporter || {};
             });
         }
 
+        static load() {
+            if (zs.configs.gameCfg.newAds) {
+                return this.loadNew();
+            } else {
+                return this.loadOld();
+            }
+        }
+
     }
     dataMgr.URL = "https://ad.ali-yun.wang/api/";
+    dataMgr.NEWURL = "http://test-gamesapi.zxmn2018.com/";
     dataMgr.expireTime = 60000;
     dataMgr.exportCache = 'ExpCache';
+    dataMgr.exportCacheNew = 'ExpCacheNew';
 
     class list extends zs.fgui.base {
         constructor(component) {
@@ -287,6 +384,8 @@ window.zs.exporter = window.zs.exporter || {};
         }
         dispose() {
             super.dispose();
+            this.startOffsetDelayHandler && clearTimeout(this.startOffsetDelayHandler);
+            Laya.Tween.clearAll(this.view);
             if (this.shakeTime > 0) {
                 this.stopShake();
             }
@@ -315,7 +414,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -339,7 +438,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -362,11 +461,10 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                // 数据打乱一下
-                result && result.promotion && result.promotion.sort((a, b) => {
+                result && result.sort((a, b) => {
                     return a < b ? -1 : 1
                 })
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -390,7 +488,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -414,7 +512,7 @@ window.zs.exporter = window.zs.exporter || {};
                 .setMaxItems(max);
             dataMgr.load().then((result) => {
                 if (this.disposed) return;
-                this.setDatas(result.promotion)
+                this.setDatas(result)
                     .apply();
             });
             if (autoApply) {
@@ -834,6 +932,44 @@ window.zs.exporter = window.zs.exporter || {};
             this._transition = transition;
             return this;
         }
+        get startOffsetX() {
+            return this._startoffsetx;
+        }
+        setStartOffsetX(value) {
+            this._startoffsetx = value;
+            return this;
+        }
+        get startOffsetY() {
+            return this._startoffsety;
+        }
+        setStartOffsetY(value) {
+            this._startoffsety = value;
+            return this;
+        }
+        get startOffsetTime() {
+            return this._startoffsettime;
+        }
+        setStartOffsetTime(value) {
+            this._startoffsettime = value;
+        }
+        get startOffsetDelay() {
+            return this._startoffsetdelay;
+        }
+        setStartOffsetDelay(value) {
+            this._startoffsetdelay = value;
+        }
+        get startFadeDelay() {
+            return this._startfadedelay;
+        }
+        setStartFadeDelay(value) {
+            this._startfadedelay = value;
+        }
+        get startFadeTime() {
+            return this._startfadetime;
+        }
+        setStartFadeTime(value) {
+            this._startfadetime = value;
+        }
         setDataHandler(handler) {
             if (handler) {
                 handler.once = false;
@@ -931,6 +1067,21 @@ window.zs.exporter = window.zs.exporter || {};
                 if (this.shakeTime && this.shakeTime > 0) {
                     Laya.timer.once(this.shakeTime, this, this.refreshItem)
                 }
+            }
+
+            if ((this._startoffsetx != null || this._startoffsety != null) && this.startOffsetDelayHandler == null) {
+                this.startOffsetDelayHandler = setTimeout(() => {
+                    let targetX = this.view.x + (this._startoffsetx || 0);
+                    let targetY = this.view.y + (this._startoffsety || 0);
+                    console.log(this.view.x + " : " + this._startoffsetx, this.view.y + " : " + this._startoffsety);
+                    Laya.Tween.to(this.view, { x: targetX, y: targetY }, this._startoffsettime || 500, null, null, this._startoffsetdelay || 0);
+                }, 1);
+            }
+            if (this._startfadedelay != null || this._startfadetime != null) {
+                this.view.alpha = 0;
+                Laya.Tween.to(this.view, { alpha: 1 }, this._startfadetime || 500, null, null, this._startfadedelay || 0);
+                this._startfadedelay = null;
+                this._startfadetime = null;
             }
             return this;
         }
@@ -1080,6 +1231,12 @@ window.zs.exporter = window.zs.exporter || {};
                 config.virtual && (this.virtual());
                 config.bounce != null && config.bounce != undefined && (this.bounce(config.bounce));
                 config.shaketime != null && config.shaketime != undefined && (this.setShakeTime(config.shaketime));
+                config.startoffsetx != null && config.startoffsetx != undefined && (this.setStartOffsetX(config.startoffsetx));
+                config.startoffsety != null && config.startoffsety != undefined && (this.setStartOffsetY(config.startoffsety));
+                config.startoffsettime != null && config.startoffsettime != undefined && (this.setStartOffsetTime(config.startoffsettime));
+                config.startoffsetdelay != null && config.startoffsetdelay != undefined && (this.setStartOffsetDelay(config.startoffsetdelay));
+                config.startfadedelay != null && config.startfadedelay != undefined && (this.setStartFadeDelay(config.startfadedelay));
+                config.startfadetime != null && config.startfadetime != undefined && (this.setStartFadeTime(config.startfadetime));
             }
             return this.apply();
         }
@@ -1181,7 +1338,7 @@ window.zs.exporter = window.zs.exporter || {};
             if (this._itemRendererHandler) {
                 this._itemRendererHandler.runWith([item, data]);
             } else {
-                item.picture.icon = data.app_icon;
+                item.picture && item.picture.icon && (item.picture.icon = data.app_icon);
                 if (data.app_title && item.title) {
                     item.title.text = data.app_title;
                 } else if (item.title) {
@@ -1287,219 +1444,71 @@ window.zs.exporter = window.zs.exporter || {};
     list.transitionShakeLeft = 'shakeLeft';
     list.transitionShakeRight = 'shakeRight';
 
-    class card extends zs.fgui.base {
-        constructor(component) {
-            super(component);
-            if (component && component instanceof zs.ui.FGUI_card) {
-                component.on(Laya.Event.CLICK, this, this.onClickItem);
-            }
-        }
-        static make() {
-            let view = zs.ui.FGUI_card.createInstance();
-            return view;
-        }
-        static type() {
-            return zs.ui.FGUI_card;
-        }
-        check(component) {
-            if (component instanceof zs.ui.FGUI_card) {
-                return true;
-            }
-            return false;
-        }
-        get itemURL() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.url;
-            }
-            return null;
-        }
-        setItem(type) {
-            let cardView = this.view;
-            cardView && cardView.loader && (cardView.loader.url = type.URL);
-            return this;
-        }
-        get autoSize() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.autoSize;
-            }
-            return null;
-        }
-        setAutoSize(value) {
-            let cardView = this.view;
-            cardView && cardView.loader && (cardView.loader.autoSize = value);
-            return this;
-        }
-        get width() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.width;
-            }
-            return null;
-        }
-        setWidth(width, keepRatio) {
-            this.setAutoSize(false);
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let scale = width / cardView.loader.sourceWidth;
-                cardView.loader.width = width;
-                if (keepRatio) {
-                    cardView.loader.height = scale * cardView.loader.sourceHeight;
-                }
-            }
-            return this;
-        }
-        get height() {
-            if (this.view && this.view instanceof zs.ui.FGUI_card) {
-                return this.view.loader.height;
-            }
-            return null;
-        }
-        setHeight(height, keepRatio) {
-            this.setAutoSize(false);
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let scale = height / cardView.loader.sourceHeight;
-                cardView.loader.height = height;
-                if (keepRatio) {
-                    cardView.loader.width = scale * cardView.loader.sourceWidth;
-                }
-            }
-            return this;
-        }
-        setTransition(transition, stop) {
-            let cardView = this.view;
-            if (cardView) {
-                let t = cardView.getTransition(transition);
-                if (t) {
-                    if (stop) {
-                        t.stop();
-                    }
-                    else {
-                        t.play();
-                    }
-                }
-            }
-            return this;
-        }
-        setData(data) {
-            let cardView = this.view;
-            if (cardView && cardView.loader) {
-                let item = cardView.loader.component;
-                item.data = data;
-                if (this._cardRendererHandler) {
-                    this._cardRendererHandler.runWith([item, data]);
-                } else {
-                    if (item instanceof zs.ui.FGUI_item) {
-                        item.picture.icon = data.url;
-                        item.title.text = data.title;
-                        if (item.desc && data.desc) {
-                            item.desc.text = data.desc;
-                        } else if (item.desc) {
-                            item.desc.text = "";
-                        }
-                    }
-                }
-            }
-            return this;
-        }
-        applyConfig(config) {
-            if (config) {
-                let item = null;
-                config.item && (item = zs.fgui.configs.items[config.item]);
-                item && (this.setItem(item));
-                if (config.autosize != null && config.autosize != undefined) {
-                    this.setAutoSize(config.autosize);
-                } else {
-                    config.width != null && this.setWidth(config.width, config.keepratio);
-                    config.height != null && this.setHeight(config.height, config.keepratio);
-                }
-            }
-        }
-        setDataHandler(handler) {
-            if (handler) {
-                handler.once = false;
-                this._cardRendererHandler = handler;
-            }
-            return this;
-        }
-        setClickHandler(clickHandler) {
-            this._clickHandler = clickHandler;
-            return this;
-        }
-        onClickItem(item, evt) {
-            if (this._clickHandler) {
-                this._clickHandler.runWith(item);
-            } else {
-                utils.navigateToMiniProgram(item.info);
-            }
-        }
-    }
-
     class loader extends zs.fgui.base {
         constructor(component) {
             super(component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
-            let loaderInst = new fairygui.GLoader();
-            loaderInst.alpha = 1;
-            loaderInst.x = 0;
-            loaderInst.y = 0;
-            loaderInst.width = component.width;
-            loaderInst.height = component.height;
-            loaderInst.addRelation(component, fairygui.RelationType.Width);
-            loaderInst.addRelation(component, fairygui.RelationType.Height);
-            loaderInst.autoSize = false;
-            loaderInst.fill = fairygui.LoaderFillType.ScaleFree;
-            component.addChild(loaderInst);
-            this.loader = loaderInst;
+            component.alpha = 1;
+            component.x = 0;
+            component.y = 0;
+            component.autoSize = false;
+            component.fill = fairygui.LoaderFillType.ScaleFree;
+        }
+        static make() {
+            return new fairygui.GLoader();
         }
         get url() {
-            return this.loader ? this.loader.url : null;
+            return this.view.url;
         }
-        set url(value) {
-            if (this.loader) {
-                if (Array.isArray(value) && value.length > 1) {
-                    zs.fgui.loadPack(value[0]).then((res) => {
-                        this.loader.url = zs.ui.readURL(res, value[1]);
-                    });
-                } else {
-                    this.loader.url = value;
-                }
+        setURL(value) {
+            if (Array.isArray(value) && value.length > 1) {
+                zs.fgui.loadPack(value[0]).then((res) => {
+                    this.view.url = zs.ui.readURL(res, value[1]);
+                });
+            } else {
+                this.view.url = value;
             }
+            return this;
         }
         get alpha() {
-            return this.loader ? this.loader.alpha : 0;
+            return this.view.alpha;
         }
-        set alpha(value) {
-            this.loader && (this.loader.alpha = value);
+        setAlpha(value) {
+            this.view.alpha = value;
+            return this;
         }
         get width() {
-            return this.loader ? this.loader.width : 0;
+            return this.view.width;
         }
-        set width(value) {
-            this.loader && (this.loader.width = value);
+        setWidth(value) {
+            this.view.width = value;
+            return this;
         }
         get height() {
-            return this.loader ? this.loader.height : 0;
+            return this.view.height;
         }
-        set height(value) {
-            this.loader && (this.loader.height = value);
+        setHeight(value) {
+            this.view.height = value;
+            return this;
         }
         get x() {
-            return this.loader ? this.loader.x : 0;
+            return this.view.x;
         }
-        set x(value) {
-            this.loader && (this.loader.x = value);
+        setX(value) {
+            this.view.x = value;
+            return this;
         }
         get y() {
-            return this.loader ? this.loader.y : 0;
+            return this.view.y;
         }
-        set y(value) {
-            this.loader && (this.loader.y = value);
+        setY(value) {
+            this.view.y = value;
+            return this;
         }
         get fill() {
-            if (!this.loader) { return null; }
             let type = "free";
-            switch (this.loader.fill) {
+            switch (this.view.fill) {
                 case fairygui.LoaderFillType.None:
                     type = "none";
                     break;
@@ -1521,8 +1530,7 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return type;
         }
-        set fill(value) {
-            if (!this.loader) { return; }
+        setFill(value) {
             let type = fairygui.LoaderFillType.ScaleFree;
             switch (value) {
                 case "scale":
@@ -1544,17 +1552,18 @@ window.zs.exporter = window.zs.exporter || {};
                     type = fairygui.LoaderFillType.None;
                     break;
             }
-            this.loader.fill = type;
+            this.view.fill = type;
+            return this;
         }
         applyConfig(config) {
             if (config) {
-                config.alpha != null && (this.alpha = config.alpha);
-                config.url && (this.url = config.url);
-                config.width != null && (this.width = config.width);
-                config.height != null && (this.height = config.height);
-                config.x != null && (this.x = config.x);
-                config.y != null && (this.y = config.y);
-                config.fill && (this.fill = config.fill);
+                config.alpha != null && (this.setAlpha(config.alpha));
+                config.url && (this.setURL(config.url));
+                config.width != null && (this.setWidth(config.width));
+                config.height != null && (this.setHeight(config.height));
+                config.x != null && (this.setX(config.x));
+                config.y != null && (this.setY(config.y));
+                config.fill && (this.setFill(config.fill));
             }
             return this;
         }
@@ -1565,35 +1574,32 @@ window.zs.exporter = window.zs.exporter || {};
             super(component);
             component.width = zs.configs.gameCfg.designWidth;
             component.height = zs.configs.gameCfg.designHeight;
-            let graphInst = new fairygui.GGraph();
-            this.graph = graphInst;
-            graphInst.alpha = 0.5;
-            graphInst.x = 0;
-            graphInst.y = 0;
-            graphInst.width = component.width;
-            graphInst.height = component.height;
-            graphInst.addRelation(component, fairygui.RelationType.Width);
-            graphInst.addRelation(component, fairygui.RelationType.Height);
-            this.graph.drawRect(0, '#000000', '#000000');
-            component.addChild(graphInst);
-            console.log(fairygui.GRoot.inst.width + " : " + fairygui.GRoot.inst.height, this.graph);
+            component.alpha = 0.5;
+            component.x = 0;
+            component.y = 0;
+            component.drawRect(0, '#000000', '#000000');
+        }
+        static make() {
+            return new fairygui.GGraph();
         }
         get color() {
-            return this.graph ? this.graph.color : "";
+            return this.view.color;
         }
-        set color(value) {
-            this.graph && (this.graph.color = value);
+        setColor(value) {
+            this.view.color = value;
+            return this;
         }
         get alpha() {
-            return this.graph ? this.graph.alpha : 0;
+            return this.view.alpha;
         }
-        set alpha(value) {
-            this.graph && (this.graph.alpha = value);
+        setAlpha(value) {
+            this.view.alpha = value;
+            return this;
         }
         applyConfig(config) {
             if (config) {
-                config.color && (this.color = config.color);
-                config.alpha != null && (this.alpha = config.alpha);
+                config.color && (this.setColor(config.color));
+                config.alpha != null && (this.setAlpha(config.alpha));
             }
             return this;
         }
@@ -1624,7 +1630,7 @@ window.zs.exporter = window.zs.exporter || {};
             icon.fill = fairygui.LoaderFillType.ScaleFree;
             component.addChild(icon);
             this.icon = icon;
-            this.url = [zs.fgui.configs.pack_basic, "msg_background"];
+            this.setURL([zs.fgui.configs.pack_basic, "msg_background"]);
             let title = new fairygui.GBasicTextField();
             title.autoSize = fairygui.AutoSizeType.None;
             title.x = 0;
@@ -1642,11 +1648,14 @@ window.zs.exporter = window.zs.exporter || {};
             this.title = title;
         }
         dispose() {
+            Laya.Tween.clearAll(this.view);
             this.fakeDelayHandler && clearTimeout(this.fakeDelayHandler);
+            this.clickDelayHandler && clearTimeout(this.clickDelayHandler);
+            this.offsetDelayHandler && clearTimeout(this.offsetDelayHandler);
             super.dispose();
         }
         get url() { return this.icon ? this.icon.url : null; }
-        set url(value) {
+        setURL(value) {
             if (this.icon) {
                 if (Array.isArray(value) && value.length > 1) {
                     zs.fgui.loadPack(value[0]).then((res) => {
@@ -1656,22 +1665,45 @@ window.zs.exporter = window.zs.exporter || {};
                     this.icon.url = value;
                 }
             }
+            return this;
         }
         get alpha() { return this.icon ? this.icon.alpha : null; }
-        set alpha(value) { this.icon && (this.icon.alpha = value); }
+        setAlpha(value) {
+            this.icon && (this.icon.alpha = value);
+            return this;
+        }
         get width() { return this.view.width; }
-        set width(value) { this.view.width = value; }
+        setWidth(value) {
+            this.view.width = value;
+            return this;
+        }
         get height() { return this.view.height; }
-        set height(value) { this.view.height = value; }
+        setHeight(value) {
+            this.view.height = value;
+            return this;
+        }
         get font() { return this.title ? this.title.font : null; }
-        set font(value) { this.title && (this.title.font = value); }
+        setFont(value) {
+            this.title && (this.title.font = value);
+            return this;
+        }
         get fontsize() { return this.title ? this.title.fontSize : 0; }
-        set fontsize(value) { this.title && (this.title.fontSize = value); }
+        setFontSize(value) {
+            this.title && (this.title.fontSize = value);
+            return this;
+        }
         get text() { return this.title ? this.title.text : null; }
-        set text(value) { this.title && (this.title.text = value); }
+        setText(value) {
+            this.title && (this.title.text = value);
+            return this;
+        }
         get fontcolor() { return this.title ? this.title.color : null; }
-        set fontcolor(value) { this.title && (this.title.color = value); }
-        set switch(value) {
+        setFontColor(value) {
+            this.title && (this.title.color = value);
+            return this;
+        }
+        get switch() { return this._switch }
+        setSwitch(value) {
             if (Array.isArray(value)) {
                 for (let i = 0; i < value.length; i++) {
                     const element = zs.product.get(i);
@@ -1686,8 +1718,8 @@ window.zs.exporter = window.zs.exporter || {};
                 this._switch = zs.product.get(value);
                 return;
             }
+            return this;
         }
-        get switch() { return this._switch }
         get fill() {
             if (!this.icon) { return null; }
             let type = "free";
@@ -1713,7 +1745,7 @@ window.zs.exporter = window.zs.exporter || {};
             }
             return type;
         }
-        set fill(value) {
+        setFill(value) {
             if (!this.icon) { return; }
             let type = fairygui.LoaderFillType.ScaleFree;
             switch (value) {
@@ -1737,10 +1769,59 @@ window.zs.exporter = window.zs.exporter || {};
                     break;
             }
             this.icon.fill = type;
+            return this;
+        }
+        setAutoFade(value) {
+            this.autofade = value;
+            this.isFading = false;
+            return this;
+        }
+        setAutoFadeTime(value) {
+            this.autofadetime = value;
+            return this;
+        }
+        setAutoOffset(value) {
+            this.autooffset = value;
+            return this;
+        }
+        setOffsetX(value) {
+            this.offsetx = value;
+            return this;
+        }
+        setOffsetY(value) {
+            this.offsety = value;
+            return this;
+        }
+        setOffsetTime(value) {
+            this.offsettime = value;
+            return this;
+        }
+        setClickIgnore(value) {
+            this.clickignore = value;
+            return this;
+        }
+        setClickAlways(value) {
+            this.clickalways = value;
+            return this;
+        }
+        setFakeDelay(value) {
+            this.fakedelay = value;
+            return this;
+        }
+        setFakeEvent(value) {
+            this.fakeevent = value;
+            return this;
+        }
+        setEvent(value) {
+            this.event = value;
+            return this;
         }
         onClicked() {
+            if (this.autooffset != null || this.autofade != null) { return; }
             this.view.touchable = false;
-            if (this.switch && (this.offsetx || this.offsety)) {
+            let fakeSwitch = false;
+            this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
+            if (fakeSwitch && (this.offsetx || this.offsety)) {
                 let targetX = this.view.x + (this.offsetx || 0);
                 let targetY = this.view.y + (this.offsety || 0);
                 Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
@@ -1749,8 +1830,8 @@ window.zs.exporter = window.zs.exporter || {};
                 this.offsetx = null;
                 this.offsety = null;
                 this.onFakeClicked();
-            } else if (this.switch && this.clickignore) {
-                setTimeout(() => {
+            } else if (fakeSwitch && this.clickignore) {
+                this.clickDelayHandler = setTimeout(() => {
                     this.view.touchable = true;
                 }, Number(zs.product.get("zs_button_delay_time")));
                 this.clickignore = null;
@@ -1763,25 +1844,13 @@ window.zs.exporter = window.zs.exporter || {};
             }
         }
         onFakeClicked() {
-            if (this.fakeevent && zs.core.workflow) {
-                let delay = null;
-                if (this.fakedelay) {
-                    if (typeof this.fakedelay === 'number') {
-                        delay = this.fakedelay;
-                    } else if (Array.isArray(this.fakedelay) && this.fakedelay.length > 0) {
-                        let evt = this.fakedelay[0];
-                        let args = this.fakedelay.length > 1 ? this.fakedelay.slice(1, this.fakedelay.length) : null;
-                        delay = zs.core.workflow.applyEventReturn(evt, args);
-                    } else if (typeof this.fakedelay === 'string' && this.fakedelay.trim().length > 0) {
-                        delay = zs.core.workflow.applyEventReturn(this.fakedelay);
-                    }
-                }
+            if (this.fakeevent) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.fakedelay) : null;
                 if (!delay || typeof delay !== 'number' || delay <= 0) {
                     zs.core.workflow.runEventConfig(this.fakeevent);
                 } else {
                     this.readyEvent = this.fakeevent;
                     this.fakeDelayHandler = setTimeout(() => {
-                        console.log("fake delay handled");
                         zs.core.workflow.runEventConfig(this.readyEvent);
                         this.readyEvent = null;
                     }, delay);
@@ -1789,31 +1858,75 @@ window.zs.exporter = window.zs.exporter || {};
                 this.fakeevent = null;
             }
         }
-        applyConfig(config) {
-            if (config) {
-                config.url && (this.url = config.url);
-                config.fill && (this.fill = config.fill);
-                config.alpha != null && (this.alpha = config.alpha);
-                config.width != null && (this.width = config.width);
-                config.height != null && (this.height = config.height);
-                config.font && (this.font = config.font);
-                config.fontsize != null && (this.fontsize = config.fontsize);
-                config.fontcolor && (this.fontcolor = config.fontcolor);
-                config.text && (this.text = config.text);
-                config.offsetx != null && (this.offsetx = config.offsetx);
-                config.offsety != null && (this.offsety = config.offsety);
-                config.offsettime != null && (this.offsettime = config.offsettime);
-                config.clickignore && (this.clickignore = config.clickignore);
-                config.clickalways && (this.clickalways = config.clickalways);
-                config.fakedelay != null && (this.fakedelay = config.fakedelay);
-                config.fakeevent && (this.fakeevent = config.fakeevent);
-                config.event && (this.event = config.event);
-                config.switch && (this.switch = config.switch);
+        autoOffset() {
+            let fakeSwitch = false;
+            this.switch && zs.core.workflow && (fakeSwitch = zs.core.workflow.checkSwitch(this.switch));
+            if (fakeSwitch && this.autooffset != null && (this.offsetx != null || this.offsety != null)) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.autooffset) : null;
+                if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
+                let targetX = this.view.x + (this.offsetx || 0);
+                let targetY = this.view.y + (this.offsety || 0);
+                Laya.Tween.to(this.view, { x: targetX, y: targetY }, this.offsettime || 800, null, Laya.Handler.create(this, () => {
+                    this.autooffset = null;
+                }), delay);
+                this.clickignore = null;
+                this.offsetx = null;
+                this.offsety = null;
+            } else {
+                this.autooffset = null;
+                this.view.x += (this.offsetx || 0);
+                this.view.y += (this.offsety || 0);
+            }
+        }
+        autoFade() {
+            if (this.autofade != null) {
+                let delay = zs.core.workflow ? zs.core.workflow.readConfigReturn(this.autofade) : null;
+                if (!delay || typeof delay !== 'number' || delay <= 0) { delay = 0; }
+                Laya.Tween.to(this.view, { alpha: 1 }, this.autofadetime || 0, null, Laya.Handler.create(this, () => {
+                    this.view.touchable = true;
+                    this.autofade = null;
+                }), delay);
+            }
+        }
+        apply() {
+            if (this.autooffset != null && this.offsetDelayHandler == null) {
+                this.offsetDelayHandler = setTimeout(() => { this.autoOffset(); }, 1);
+            }
+            if (this.autofade != null && !this.isFading) {
+                this.view.alpha = 0;
+                this.view.touchable = false;
+                this.autoFade();
+                this.isFading = true;
             }
             return this;
         }
+        applyConfig(config) {
+            if (config) {
+                config.url && (this.setURL(config.url));
+                config.fill && (this.setFill(config.fill));
+                config.alpha != null && (this.setAlpha(config.alpha));
+                config.width != null && (this.setWidth(config.width));
+                config.height != null && (this.setHeight(config.height));
+                config.font && (this.setFont(config.font));
+                config.fontsize != null && (this.setFontSize(config.fontsize));
+                config.fontcolor && (this.setFontColor(config.fontcolor));
+                config.text && (this.setText(config.text));
+                config.autofade != null && (this.setAutoFade(config.autofade));
+                config.autofadetime != null && (this.setAutoFadeTime(config.autofadetime));
+                config.autooffset != null && (this.setAutoOffset(config.autooffset));
+                config.offsetx != null && (this.setOffsetX(config.offsetx));
+                config.offsety != null && (this.setOffsetY(config.offsety));
+                config.offsettime != null && (this.setOffsetTime(config.offsettime));
+                config.clickignore && (this.setClickIgnore(config.clickignore));
+                config.clickalways && (this.setClickAlways(config.clickalways));
+                config.fakedelay != null && (this.setFakeDelay(config.fakedelay));
+                config.fakeevent && (this.setFakeEvent(config.fakeevent));
+                config.event && (this.setEvent(config.event));
+                config.switch && (this.setSwitch(config.switch));
+            }
+            return this.apply();
+        }
     }
-
     class full extends zs.fgui.base {
         setMistaken() { return this; }
         setClickContinue(handler) {
@@ -1850,7 +1963,6 @@ window.zs.exporter = window.zs.exporter || {};
     exports.utils = utils;
     exports.dataMgr = dataMgr;
     exports.list = list;
-    exports.card = card;
     exports.loader = loader;
     exports.background = background;
     exports.button = button;

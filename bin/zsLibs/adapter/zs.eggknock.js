@@ -13,9 +13,9 @@ window.zs = window.zs || {};
             let timestamp = zs.utils.getItem(EggKnock.key_game_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
                 zs.utils.setItem(EggKnock.key_game_num_time_stamp, Date.now().toString());
-                zs.utils.setItem(EggKnock.key_game_num, "0");
+                zs.utils.setItem(EggKnock.key_game_num, "1");
             }
-            EggKnock.day_game_num = zs.utils.getItem(EggKnock.key_game_num) || 0;
+            EggKnock.day_game_num = zs.utils.getItem(EggKnock.key_game_num) || 1;
             if (autoPlus) {
                 EggKnock.day_game_num = Number(EggKnock.day_game_num) + 1;
             } else {
@@ -27,9 +27,9 @@ window.zs = window.zs || {};
             let timestamp = zs.utils.getItem(EggKnock.key_award_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
                 zs.utils.setItem(EggKnock.key_award_num_time_stamp, Date.now().toString());
-                zs.utils.setItem(EggKnock.key_award_num, "0");
+                zs.utils.setItem(EggKnock.key_award_num, "1");
             }
-            EggKnock.open_award_num = zs.utils.getItem(EggKnock.key_award_num) || 0;
+            EggKnock.open_award_num = zs.utils.getItem(EggKnock.key_award_num) || 1;
             if (autoPlus) {
                 EggKnock.open_award_num = Number(EggKnock.open_award_num) + 1;
             } else {
@@ -41,9 +41,9 @@ window.zs = window.zs || {};
             let timestamp = zs.utils.getItem(EggKnock.key_ready_num_time_stamp);
             if (timestamp == null || timestamp == "" || zs.utils.isToday(Number(timestamp)) == false) {
                 zs.utils.setItem(EggKnock.key_ready_num_time_stamp, Date.now().toString());
-                zs.utils.setItem(EggKnock.key_ready_num, "0");
+                zs.utils.setItem(EggKnock.key_ready_num, "1");
             }
-            EggKnock.open_ready_num = zs.utils.getItem(EggKnock.key_ready_num) || 0;
+            EggKnock.open_ready_num = zs.utils.getItem(EggKnock.key_ready_num) || 1;
             if (autoPlus) {
                 EggKnock.open_ready_num = Number(EggKnock.open_ready_num) + 1;
             } else {
@@ -60,7 +60,7 @@ window.zs = window.zs || {};
                 }
             }
             let numClick = isCommon ? zs.product.get("zs_ready_click_num") : zs.product.get("zs_click_award_num");
-            if (numClick == null || numClick.trim() == "") { numClick = "0"; }
+            if (numClick == null || numClick.trim() == "") { numClick = "1"; }
             numClick = JSON.parse(numClick);
             if (Array.isArray(numClick)) {
                 if (numClick.length <= 0) { return false; }

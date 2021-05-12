@@ -39,4 +39,9 @@ export default class ProductKey {
     static readonly zs_game_start_jump_switch = 0; // 首页导出位开关
     static readonly zs_full_screen_button_switch = 0; //全屏界面误触开关
     static readonly zs_game_banner_show_switch = 1;//游戏界面banner展示开关
+    static readonly zs_box_switch = 0;
+    static readonly zs_blockAdUnit_id = "";
+    static readonly zs_start_video_switch = 0;
+    static readonly zs_click_video_time = "0";
+    static readonly zs_click_video_switch = 0;
 }

@@ -17,16 +17,6 @@ export default class GameLogic extends Laya.Script {
         // 新建工作流
         zs.core.workflow = new workflow();
 
-        // 在GAME_PLAY中设置子状态机
-        zs.core.workflow.setFSM(workflow.GAME_PLAY,
-            new zs.fsm()
-                .registe("START", "READY")
-                .registe("READY", "PLAY")
-                .registe("PLAY", "SETTLE")
-                .registe("SETTLE", "END")
-                .setDefault("START")
-        );
-
         // 绑定示例FGUI资源
         zs.core.onFGUIBind = Laya.Handler.create(this, () => {
             zs_exampleBinder.bindAll();
@@ -69,32 +59,42 @@ export default class GameLogic extends Laya.Script {
             console.log("Workflow ===== GAME_PLAY");
             this.examplePage.setWorkflowState(workflow.GAME_PLAY).show();
         }));
-        zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_PLAY START");
-            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.START')
-                .setBtnText("继续（子状态）")
+        // zs.core.onWorkflow(workflow.GAME_PLAY + '.START', Laya.Handler.create(this, () => {
+        //     console.log("Workflow ===== GAME_PLAY START");
+        //     this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.START')
+        //         .setBtnText("继续（子状态）")
+        //         .setBtnClickEvent(this, this.workflowChildNext)
+        //         .show();
+        // }));
+        // zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
+        //     console.log("Workflow ===== GAME_PLAY READY");
+        //     this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.READY').show();
+        // }));
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY PLAY");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.PLAY')
                 .setBtnClickEvent(this, this.workflowChildNext)
                 .show();
         }));
-        zs.core.onWorkflow(workflow.GAME_PLAY + '.READY', Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_PLAY READY");
-            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.READY').show();
-        }));
-        zs.core.onWorkflow(workflow.GAME_PLAY + '.PLAY', Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_PLAY PLAY");
-            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.PLAY').show();
-        }));
-        zs.core.onWorkflow(workflow.GAME_PLAY + '.SETTLE', Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_PLAY SETTLE");
-            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.SETTLE').show();
-        }));
-        zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
-            console.log("Workflow ===== GAME_PLAY END");
-            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.END')
-                .setBtnText("继续（主状态）")
-                .setBtnClickEvent(this, this.workflowNext)
+        zs.core.onWorkflow(workflow.GAME_PLAY + '.BOX_EGG', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== GAME_PLAY BOX_EGG");
+            this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.BOX_EGG')
+                .setBtnClickEvent(this, this.workflowChildNext)
                 .show();
         }));
+        zs.core.onWorkflow(workflow.PRODUCT_PLAY_END + '.SETTLE', Laya.Handler.create(this, () => {
+            console.log("Workflow ===== PRODUCT_PLAY_END SETTLE");
+            this.examplePage.setWorkflowState(workflow.PRODUCT_PLAY_END + '.SETTLE')
+                .setBtnClickEvent(this, this.workflowChildNext)
+                .show();
+        }));
+        // zs.core.onWorkflow(workflow.GAME_PLAY + '.END', Laya.Handler.create(this, () => {
+        //     console.log("Workflow ===== GAME_PLAY END");
+        //     this.examplePage.setWorkflowState(workflow.GAME_PLAY + '.END')
+        //         .setBtnText("继续（主状态）")
+        //         .setBtnClickEvent(this, this.workflowNext)
+        //         .show();
+        // }));
         zs.core.onWorkflow(workflow.GAME_END, Laya.Handler.create(this, () => {
             console.log("Workflow ====== GAME_END");
             this.examplePage.setWorkflowState(workflow.GAME_END).show();

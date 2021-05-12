@@ -104,23 +104,44 @@ window.zs = window.zs || {};
         callEventReturn(key, ...args) {
             return this.applyEventReturn(key, args);
         }
-        runEventConfig(event) {
-            if (Array.isArray(event)) {
-                for (let i = 0, n = event.length; i < n; i++) {
-                    let evt = event[i];
-                    if (Array.isArray(evt)) {
-                        let lenEvt = evt.length;
-                        if (lenEvt > 1) {
-                            this.applyEvent(evt[0], evt.slice(1, lenEvt));
-                        } else if (lenEvt > 0) {
-                            this.callEvent(evt[0]);
-                        }
-                    } else {
-                        this.callEvent(evt);
+        readConfigReturn(config) {
+            if (config == null || config == undefined) { return null; }
+            let result = null;
+            let configType = typeof config;
+            if (configType === 'number' || configType === 'boolean' || Array.isArray(config)) {
+                result = config;
+            } else if (configType === 'object') {
+                for (let evt in config) {
+                    let args = config[evt];
+                    if (!Array.isArray(args) && args != null && args != undefined) {
+                        args = [args];
                     }
+                    result = this.applyEventReturn(evt, args);
+                    break;
                 }
-            } else {
+            } else if (configType === 'string') {
+                result = this.applyEventReturn(config);
+            }
+            return result;
+        }
+        runEventConfig(event) {
+            if (event == null || event == undefined) { return; }
+            let eventType = typeof event;
+            console.log(eventType);
+            if (eventType === 'string') {
                 this.callEvent(event);
+            } else if (Array.isArray(event)) {
+                for (let i = 0, n = event.length; i < n; i++) {
+                    this.runEventConfig(event[i]);
+                }
+            } else if (eventType == 'object') {
+                for (let evt in event) {
+                    let args = event[evt];
+                    if (!Array.isArray(args) && args != null && args != undefined) {
+                        args = [args];
+                    }
+                    this.applyEvent(evt, args);
+                }
             }
         }
         registeChildFSM() {
@@ -487,8 +508,12 @@ window.zs = window.zs || {};
                 case 2:
                     if (this.fsm != null) {
                         let childFSM = this.fsmList[this.fsm.current];
+                        let isRunNext = false;
                         if (childFSM && ((target && !childFSM.runTransition(target)) || !childFSM.runNext())) {
                             this.onChildFSMBeforeChanged(null, childFSM.current);
+                            isRunNext = true;
+                        }
+                        if (!childFSM || isRunNext) {
                             let lastState = this.fsm.current;
                             if (!this.fsm.runNext()) {
                                 zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
@@ -573,25 +598,7 @@ window.zs = window.zs || {};
             }
             if (!isPassed) { return false; }
             if (check) {
-                if (Array.isArray(check)) {
-                    for (let i = 0, n = check.length; i < n; i++) {
-                        let c = check[i];
-                        let evt = null;
-                        let args = null;
-                        if (Array.isArray(c)) {
-                            let lenC = c.length;
-                            if (lenC <= 0) { continue; }
-                            evt = c[0];
-                            lenC > 1 && (args = c.slice(1, lenC));
-                        } else {
-                            evt = c;
-                        }
-                        isPassed = this.applyEventReturn(evt, args);
-                        if (!isPassed) { break; }
-                    }
-                } else {
-                    isPassed = this.applyEventReturn(check);
-                }
+                isPassed = this.readConfigReturn(check);
             }
             return isPassed;
         }
@@ -604,7 +611,7 @@ window.zs = window.zs || {};
                 isSkip = !this.checkSwitch(productData.switch, productData.check);
             }
             let childFSM = this.fsmList[current];
-            if (isSkip && !childFSM) {
+            if (isSkip) {
                 this.next();
             } else {
                 if (this.listeners != null && this.listeners[current] != null) {
@@ -734,19 +741,19 @@ window.zs = window.zs || {};
         }
         checkEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.event && data.event.length > 0) {
+            if (data && data.event) {
                 this.runEventConfig(data.event);
             }
         }
         checkLaterEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.laterevent && data.laterevent.length > 0) {
+            if (data && data.laterevent) {
                 this.runEventConfig(data.laterevent);
             }
         }
         checkExitEvent(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.exitevent && data.exitevent.length > 0) {
+            if (data && data.exitevent) {
                 this.runEventConfig(data.exitevent);
             }
         }
@@ -771,8 +778,9 @@ window.zs = window.zs || {};
             if (data && data.exporter && data.exporter.length > 0) {
                 for (let i = 0, n = data.exporter.length; i < n; i++) {
                     let config = data.exporter[i];
-                    if (config.switch) {
-                        if (!this.checkSwitch(config.switch)) { continue; }
+                    if (!config) { continue; }
+                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
+                        continue;
                     }
                     this.exportWindow
                         .applyConfig(config)
@@ -785,8 +793,9 @@ window.zs = window.zs || {};
             if (data && data.base && data.base.length > 0) {
                 for (let i = 0, n = data.base.length; i < n; i++) {
                     let config = data.base[i];
-                    if (config.switch) {
-                        if (!this.checkSwitch(config.switch)) { continue; }
+                    if (!config) { continue; }
+                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
+                        continue;
                     }
                     this.exportWindow
                         .applyConfig(config)
@@ -872,29 +881,35 @@ window.zs = window.zs || {};
             return this.entryInst && this.entryInst.progress >= 100 && this._readyStart;
         }
         static async ready() {
+            zs.log.debug("web 设置", 'Core');
+            core.userInfo = await zs.network.init();
+            core.userId = core.userInfo.user_id;
+            zs.exporter.dataMgr.collectSource();
+            this.progress = 10;
             zs.log.debug("初始化数据统计", 'Core');
             await zs.td.registeConfig(zs.configs.gameCfg.tdConfig);
-            this.progress = 15;
+            this.progress = 20;
             zs.log.debug("初始化广告与导出组件", 'Core');
             let basicExportPack = await zs.fgui.loadPack(zs.fgui.configs.pack_basic);
             zs.ui.FGUI_msgbox.bind(basicExportPack);
             zs.ui.FGUI_list.bind(basicExportPack);
-            zs.ui.FGUI_card.bind(basicExportPack);
-            this.progress = 20;
+            this.progress = 30;
             zs.log.debug("加载必要分包", 'Core');
             await zs.resource.preload();
-            this.progress = 30;
+            this.progress = 40;
             zs.log.debug("加载 main", 'Core');
             await zs.fgui.loadPacks(zs.configs.gameCfg.fguiPacks, true);
             this.onFGUIBind && this.onFGUIBind.run();
-            this.progress = 40;
-            zs.log.debug("web 设置", 'Core');
-            core.userInfo = await zs.network.init();
-            core.userId = core.userInfo.user_id;
             this.progress = 50;
             zs.log.debug("运营设置", 'Core');
             let switchs = await zs.network.config(true);
             zs.product.sync(switchs);
+            if (zs.EggKnock) {
+                zs.EggKnock.init();
+                zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
+                    zs.EggKnock.markGameNum(true);
+                }), true);
+            }
             this.progress = 60;
             zs.log.debug("加载基础配置", 'Core');
             if (zs.configs.gameCfg && zs.configs.gameCfg.resources && zs.configs.gameCfg.resources.configs) {
