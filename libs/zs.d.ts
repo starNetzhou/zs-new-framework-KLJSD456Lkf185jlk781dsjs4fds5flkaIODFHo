@@ -144,6 +144,36 @@ declare module zs {
     }
 
     /**
+     * 状态机状态
+     */
+    interface fsmState {
+        /**
+         * 优先级
+         */
+        priority: number,
+        /**
+         * 监听调用者
+         */
+        thisObj: any,
+        /**
+         * 转换事件
+         */
+        transition: Function,
+        /**
+         * 转换条件
+         */
+        condition: Function,
+        /**
+         * 自动跳转
+         */
+        auto: boolean,
+        /**
+         * 状态打断
+         */
+        canBreak: boolean
+    }
+
+    /**
      * 资源包状态
      */
     enum PackageState {
@@ -336,6 +366,11 @@ declare module zs {
          * @param args 调用参数列表（将覆盖默认参数）
          */
         callEventReturn(key: string, args?: any[]): any;
+        /**
+         * 按配置执行事件，获取返回值
+         * @param config 配置
+         */
+        readConfigReturn(config: any): any;
         /**
          * 按配置执行事件
          * @param config 配置
@@ -591,6 +626,12 @@ declare module zs {
          * @param auto 自动状态，开启后将自动转换状态
          */
         init(state: string, auto?: boolean);
+        /**
+         * 获取状态机状态
+         * @param from 起始状态名
+         * @param to 目标状态名
+         */
+        getState(from: string, to: string): fsmState;
         /**
          * 注册状态
          * @param from 开始状态名
@@ -1281,13 +1322,17 @@ declare module zs.ui {
          */
         static make(): LayaLoading;
         /**
+         * （虚方法）预加载方法，主要用于预加载loading资源包
+         */
+        static preload(): Promise<void>;
+        /**
          * 加载进度
          */
         progress: number;
         /**
-         * （虚方法）预加载方法，主要用于预加载loading资源包
+         * 初始化方法
          */
-        preload(): Promise<void>;
+        init();
         /**
          * 更新进度
          * @param value 

@@ -245,6 +245,21 @@ window.zs = window.zs || {};
         static async init() {
             let gameCfg = zs.configs.gameCfg;
             network.defaultData = gameCfg.network;
+            let webSetting = await zs.resource.nativeLoad(gameCfg.remoteWebSettingURL || network.remoteWebSettingURL);
+            if (webSetting) {
+                webSetting.webDomains && (network.listDomain = webSetting.webDomains);
+                if (webSetting.webApis) {
+                    webSetting.webApis.ping && (network.mapWebApi.ping = webSetting.webApis.ping);
+                    webSetting.webApis.login && (network.mapWebApi.login = webSetting.webApis.login);
+                    webSetting.webApis.config && (network.mapWebApi.config = webSetting.webApis.config);
+                    webSetting.webApis.update && (network.mapWebApi.update = webSetting.webApis.update);
+                    webSetting.webApis.download && (network.mapWebApi.download = webSetting.webApis.download);
+                }
+                webSetting.exportDomainOld && (zs.exporter.dataMgr.URL = webSetting.exportDomainOld);
+                webSetting.exportDomainNew && (zs.exporter.dataMgr.NEWURL = webSetting.exportDomainNew);
+            }
+
+            zs.log.debug("remote webSetting", "Network", webSetting);
 
             await network.ping();
             let loginInfo = {
@@ -344,12 +359,12 @@ window.zs = window.zs || {};
             });
         }
         static nativeRequest(url, data, method, needSign, ignoreSecret) {
+            let currentTime = Math.round(new Date().getTime() / 1000).toString();
+            data = Object.assign(data, { timestamp: currentTime })
             if (needSign) {
                 let sign = MD5.buildSign(data, !ignoreSecret);
                 data = Object.assign(data, { sign: sign });
             }
-            let currentTime = Math.round(new Date().getTime() / 1000).toString();
-            data = Object.assign(data, { timestamp: currentTime });
             return new Promise((resolve, reject) => {
                 zs.platform.async.request(
                     {
@@ -597,6 +612,7 @@ window.zs = window.zs || {};
     network.city = null;
     network.timestamp = null;
     network.defaultData = {};
+    network.remoteWebSettingURL = "https://changshazhise01-1254961065.cos.ap-guangzhou.myqcloud.com/zhise/new_framework/web.json";
     network.listDomain = [
         // "http://test-gamesapi.zxmn2018.com",
         "https://gamesapi.zxmn2018.com",
