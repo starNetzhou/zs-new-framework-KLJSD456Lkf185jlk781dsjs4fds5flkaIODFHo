@@ -342,11 +342,11 @@ window.platform = (function () {
                 zs.log.debug("原生广告ID未配置");
                 return;
             }
-            if (platform.nativeLastLoadTime > 0 && Date.now() - platform.nativeLastLoadTime < platform.nativeLoadInterval) {
-                console.log('原生广告加载冷却中');
-                reject();
-                return;
-            }
+            // if (platform.nativeLastLoadTime > 0 && Date.now() - platform.nativeLastLoadTime < platform.nativeLoadInterval) {
+            //     console.log('原生广告加载冷却中');
+            //     reject();
+            //     return;
+            // }
             if (platform.nativeAd) {
                 // platform.nativeAd.destroy();
                 platform.nativeAd = null;

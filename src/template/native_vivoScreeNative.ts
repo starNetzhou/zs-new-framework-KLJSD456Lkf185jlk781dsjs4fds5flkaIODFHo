@@ -76,7 +76,7 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         config.closeevent && (this.closeEvent = config.closeevent);
         if (!zs.platform.proxy) {
             let btnText;
-            if (this.confirmText != null && (this.confirmSwitch == null || ProductKey[this.confirmSwitch])) {
+            if (this.confirmText != null && (this.confirmSwitch == null || !ProductKey[this.confirmSwitch])) {
                 btnText = this.confirmText;
             } else {
                 btnText = ProductKey.zs_native_btn_text;
