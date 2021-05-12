@@ -1,6 +1,5 @@
 {
     "PRODUCT_START": {
-        "switch": "!",
         "states": [
             "FULL_1",
             "FULL_2"
