@@ -198,14 +198,15 @@ window.zs.fgui = window.zs.fgui || {};
                 let binder = zs.configs.uiCfg.binder[key];
                 if (Array.isArray(binder)) {
                     for (let i = 0, n = binder.length; i < n; i++) {
-                        let base = zs.configs.uiCfg.base[binder];
+                        if (typeof binder[i] !== 'string') { continue; }
+                        let base = zs.configs.uiCfg.base[binder[i]];
                         if (!base) { continue; }
                         if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
                             continue;
                         }
                         this.applyConfig(base);
                     }
-                } else {
+                } else if (typeof binder === 'string') {
                     let base = zs.configs.uiCfg.base[binder];
                     if (base) {
                         if ((!base.switch && !base.check) || !zs.core.workflow || !zs.core.workflow.checkSwitch(base.switch, base.check)) {
