@@ -94,7 +94,6 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
     * @param data 加载广告完成返回的 广告数据
     */
     onAdLoaded(data) {
-        let view = this.view as (FGUI_ScreeNative | FGUI_InsertNative);
         var adData = data.adList[0];
         var url = adData.imgUrlList[0];
         console.log("🐑 : --- >>> ", data);
@@ -103,9 +102,8 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         let zs_jump_time = ProductKey.zs_jump_time;
         let zs_native_adunit = ProductKey.zs_native_adunit;
         let zs_native_touch_switch = ProductKey.zs_native_touch_switch;
-        //icon
-        view.btnAdImg.icon = url;
-        view.lab_desc.text = adData.desc;
+        this.view.btnAdImg.icon = url;
+        this.view.lab_desc.text = adData.desc;
         let btnText;
         if (this.confirmText != null && (this.confirmSwitch == null || !ProductKey[this.confirmSwitch])) {
             btnText = this.confirmText;
@@ -118,7 +116,7 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         zs.platform.sync.sendReqAdShowReport(this.adUnit, this.adId);
         zs.platform.sync.setNativeLastShowTime(Laya.Browser.now());
         zs.platform.sync.updateReviveTypeInfo(zs_native_adunit + "open_native_num");
-        view.visible = true;
+        this.view.visible = true;
         if (zs_native_touch_switch) {
             this.view.btnClose.visible = true;
         }
@@ -145,6 +143,7 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
     openAdAndCloseView() {
         let zs_native_click_switch = ProductKey.zs_native_click_switch;
         if (zs_native_click_switch) {
+            // Laya.SoundManager.playSound(PlatformMgr.clickSound);
             zs.platform.sync.sendReqAdClickReport(this.adUnit, this.adId);
             zs.core.addAppShow(Laya.Handler.create(this, this.closeView));
         } else {
