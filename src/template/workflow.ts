@@ -1,8 +1,6 @@
 import exportBinder from "./export/exportBinder";
 import native_vivoScreeNative from "./native_vivoScreeNative";
 import native_BtnAddDesk from "./native_BtnAddDesk";
-import ProductKey from "./ProductKey";
-import exporter_btn_confirm from "./exporter_btn_confirm";
 import native_vivoInsertNative from "./native_vivoInsertNative";
 
 export default class workflow extends zs.workflow {
@@ -42,8 +40,6 @@ export default class workflow extends zs.workflow {
     static readonly event_finish_screen_native = "event_finish_screen_native";
     static readonly event_show_banner = "event_show_banner";
     static readonly event_hide_banner = "event_hide_banner";
-
-    _settleBtn: exporter_btn_confirm;
 
     registe() {
         super.registe();

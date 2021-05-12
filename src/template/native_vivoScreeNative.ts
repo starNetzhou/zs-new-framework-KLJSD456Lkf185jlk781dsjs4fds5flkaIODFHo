@@ -82,11 +82,16 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         config.confirmswitch != null && (this.confirmSwitch = config.confirmswitch);
         config.closeevent && (this.closeEvent = config.closeevent);
         if (!zs.platform.proxy) {
+            let btnText;
             if (this.confirmText != null && (this.confirmSwitch == null || ProductKey[this.confirmSwitch])) {
-                this.view.btnConfirm.title = ProductKey.zs_native_btn_text || "查看广告";
+                btnText = this.confirmText;
             } else {
-                this.view.btnConfirm.title = this.confirmText;
+                btnText = ProductKey.zs_native_btn_text;
+                if (!btnText || btnText.trim().length <= 0) {
+                    btnText = "查看广告";
+                }
             }
+            this.view.btnConfirm.title = btnText;
         }
         return this.apply();
     }
@@ -96,8 +101,8 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
     * @param data 加载广告完成返回的 广告数据
     */
     onAdLoaded(data) {
-        var adData = data.adList[0];
-        var url = adData.imgUrlList[0];
+        let adData = data.adList[0];
+        let url = adData.imgUrlList[0];
         console.log("🐑 : --- >>> ", data);
         this.adId = adData.adId;
         let zs_native_click_switch = ProductKey.zs_native_click_switch;
@@ -108,11 +113,14 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         //icon
         this.view.btnAdImg.icon = url;
         this.view.lab_desc.text = adData.desc;
-        var btnText;
+        let btnText;
         if (this.confirmText != null && (this.confirmSwitch == null || ProductKey[this.confirmSwitch])) {
             btnText = this.confirmText;
         } else {
-            btnText = ProductKey.zs_native_btn_text ? ProductKey.zs_native_btn_text : adData.clickBtnTxt;
+            btnText = ProductKey.zs_native_btn_text;
+            if (!btnText || btnText.trim().length <= 0) {
+                btnText = "查看广告";
+            }
         }
         this.view.btnConfirm.title = btnText;
 
