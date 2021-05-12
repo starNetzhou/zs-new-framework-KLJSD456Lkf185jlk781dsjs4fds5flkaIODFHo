@@ -58,24 +58,26 @@ window.zs = window.zs || {};
                     let sceneInfo = this.keys[sceneKey];
                     if (this.scene && sceneInfo && sceneInfo.length > 0) {
                         let sceneValue = this.sceneCheck(sceneInfo);
-                        this.keys[key] = sceneValue;
-                        if (this._defines) {
-                            this._defines[key] = sceneValue;
+                        if (!sceneValue) {
+                            this.keys[key] = sceneValue;
+                            if (this._defines) {
+                                this._defines[key] = sceneValue;
+                            }
+                            continue;
                         }
-
-                        if (!sceneValue) { continue; }
                     }
 
                     let cityKey = key + '(' + this.cityMark + ')';
                     let cityInfo = this.keys[cityKey];
                     if (this.city && cityInfo && cityInfo.length > 0) {
                         let cityValue = this.cityCheck(cityInfo);
-                        this.keys[key] = cityValue;
-                        if (this._defines) {
-                            this._defines[key] = cityValue;
+                        if (!cityValue) {
+                            this.keys[key] = cityValue;
+                            if (this._defines) {
+                                this._defines[key] = cityValue;
+                            }
+                            continue;
                         }
-
-                        if (!cityValue) { continue; }
                     }
 
                     let timeKey = key + '(' + this.timeMark + ')';
@@ -94,10 +96,11 @@ window.zs = window.zs || {};
                         } else {
                             timeValue = this.timeCheck(timeInfo);
                         }
-
-                        this.keys[key] = timeValue;
-                        if (this._defines) {
-                            this._defines[key] = timeValue;
+                        if (!timeValue) {
+                            this.keys[key] = timeValue;
+                            if (this._defines) {
+                                this._defines[key] = timeValue;
+                            }
                         }
                     }
                 }
@@ -106,12 +109,12 @@ window.zs = window.zs || {};
         static cityCheck(cities) {
             if (!this.city || !cities || cities === "") { return 1; }
             if (cities.replace(/\s/g, "").split(/[|｜]/).indexOf(this.city) < 0) { return 1; }
-            return 0;
+            return null;
         }
         static sceneCheck(sceneVal) {
             if (!this.scene || !sceneVal || sceneVal === "") { return 1; }
             if (sceneVal.replace(/\s/g, "").split(/[|｜]/).indexOf(this.scene) < 0) { return 1; }
-            return 0;
+            return null;
         }
         static timeCheck(times) {
             if (!this.timestamp || !times || times === "") { return 1; }
@@ -155,7 +158,7 @@ window.zs = window.zs || {};
                 }
             }
 
-            return 0;
+            return null;
         }
         static registe(key, define) {
             if (define == null) { return; }

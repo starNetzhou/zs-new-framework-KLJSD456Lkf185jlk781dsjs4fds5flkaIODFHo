@@ -17,6 +17,10 @@ window.zs = window.zs || {};
                 if (auto || this.defaultAuto) { this.runNext(); }
             }
         }
+        getState(from, to) {
+            if (this.list[from] == null) { return null; }
+            return this.list[from][to];
+        }
         registe(from, to, priority, auto, thisObj, transition, condition, canBreak) {
             if (this.list[from] == null) {
                 this.list[from] = {};

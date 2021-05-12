@@ -8,6 +8,7 @@ window.zs.base = window.zs.base || {};
             this.thisArg = thisArg;
             if (type.prototype instanceof zs.ui.LayaLoading) {
                 this.loading = type.make();
+                this.loading.init();
                 event.call(thisArg);
                 Laya.timer.frameLoop(1, this, this.onProgress);
             } else {
