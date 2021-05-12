@@ -46,8 +46,6 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
     }
 
     apply() {
-        // console.log("🐑 : --- >>> 手动隐藏 ", "bottonNativeUI");
-        console.log("apply screen native");
         this.closed = false;
         if (zs.platform.proxy) {
             this.view.visible = false;
@@ -132,7 +130,6 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
                 this.view.visible = true;
                 if (zs_native_touch_switch) {
                     this.view.btnClose.visible = true;
-                    // this.view.btnClose.width = this.view.btnClose.height = 32;
                 }
                 if (zs_native_click_switch && zs_jump_time > 0) {
                     this.view.btnClose.visible = false;
