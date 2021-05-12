@@ -97,6 +97,9 @@ window.zs.fgui = window.zs.fgui || {};
         get id() {
             return this._id;
         }
+        get window() {
+            return this._window;
+        }
         static make(type) {
             if (type && type.prototype instanceof fairygui.GComponent) {
                 return type.createInstance();
@@ -190,6 +193,7 @@ window.zs.fgui = window.zs.fgui || {};
                 view.opaque = false;
             }
             let newBase = new ctr(view);
+            newBase._window = this;
             this.lastBase = newBase;
             key && (this.listByKeys[key] = newBase);
             this.list[key] = newBase;
