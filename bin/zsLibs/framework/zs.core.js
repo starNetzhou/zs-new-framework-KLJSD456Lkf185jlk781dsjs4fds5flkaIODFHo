@@ -58,6 +58,50 @@ window.zs = window.zs || {};
         setFSM(key, fsm) {
             this.fsmList[key] = fsm;
         }
+        registeChildFSM() {
+            let config = zs.configs.productCfg;
+            console.log("config", config);
+            for (let key in config) {
+                if (this.fsmList[key]) { continue; }
+                let info = config[key].states;
+                if (!info || info.length <= 0) { continue; }
+                let defaultState = null;
+                let lastState = null;
+                let fsm = new zs.fsm();
+                for (let i = 0, n = info.length; i < n; i++) {
+                    let state = info[i];
+                    if (state == null || state.length <= 0) { continue; }
+                    if (!defaultState) {
+                        if (Array.isArray(state)) {
+                            lastState = state[0];
+                            defaultState = state[0];
+                        } else {
+                            lastState = state;
+                            defaultState = state;
+                        }
+                        continue;
+                    }
+                    if (Array.isArray(state)) {
+                        for (let k = 0, kn = state.length; k < kn; k++) {
+                            if (k == 0) {
+                                fsm.registe(lastState, state[k]);
+                            } else {
+                                fsm.registe(lastState, state[k], -1);
+                            }
+                        }
+                        lastState = state[0];
+                    } else {
+                        fsm.registe(lastState, state);
+                        lastState = state;
+                    }
+                }
+                if (defaultState) {
+                    fsm.setDefault(defaultState);
+                    this.fsmList[key] = fsm;
+                }
+            }
+            console.log(this.fsmList);
+        }
         on(key, handler, isBefore) {
             if (key == null || key.length <= 0 || handler == null) { return; }
             handler.once = false;
@@ -188,20 +232,30 @@ window.zs = window.zs || {};
         }
         next(target) {
             if (this.fsm == null) { return; }
+            let lastState = this.fsm.current;
             if (target) {
-                this.fsm.runTransition(target);
+                if (!this.fsm.runTransition(target)) {
+                    zs.log.error("无法执行从 " + lastState + " 到 " + target + " 的工作流，请检查是否完整注册流程!", "Core");
+                }
             } else {
-                this.fsm.runNext();
+                if (!this.fsm.runNext()) {
+                    zs.log.error("无法执行 " + lastState + " 的后续工作流，请检查是否完整注册流程!", "Core");
+                }
             }
         }
         childNext(target) {
             if (this.fsm == null) { return; }
             let childFSM = this.fsmList[this.fsm.current];
             if (childFSM) {
+                let lastState = childFSM.current;
                 if (target) {
-                    childFSM.runTransition(target);
+                    if (!childFSM.runTransition(target)) {
+                        zs.log.error("无法执行从 " + lastState + " 到 " + target + " 的子工作流（" + this.fsm.current + "），请检查是否完整注册流程!", "Core");
+                    }
                 } else {
-                    childFSM.runNext();
+                    if (!childFSM.runNext()) {
+                        zs.log.error("无法执行 " + lastState + " 的后续子工作流（" + this.fsm.current + "），请检查是否完整注册流程!", "Core");
+                    }
                 }
             }
         }
@@ -488,6 +542,7 @@ window.zs = window.zs || {};
                 await zs.fgui.loadPack(this.workflow.exporterPack);
             }
             this.workflow.registe();
+            this.workflow.registeChildFSM();
 
             if (this.workListeners) {
                 for (let i = 0, n = this.workListeners.length; i < n; i++) {
