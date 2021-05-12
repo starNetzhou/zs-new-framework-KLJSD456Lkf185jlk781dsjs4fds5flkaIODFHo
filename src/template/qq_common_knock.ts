@@ -28,12 +28,7 @@ export default class qq_common_knock extends zs.ui.EggKnock {
         let clickVideoTime = ProductKey.zs_click_video_time;
         let str = clickVideoTime.split("|");
         if (ProductKey.zs_click_video_switch) {
-            for (let i = 0; i < str.length; i++) {
-                if (str[i] && !zs.product.timeCheck(str[i])) {
-                    this._isPlayVideo = false;
-                    break;
-                }
-            }
+            this._isPlayVideo = true;
         } else {
             this._isPlayVideo = false;
         }
