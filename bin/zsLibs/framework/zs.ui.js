@@ -128,16 +128,6 @@ window.zs.ui = window.zs.ui || {};
             this.btnOffsetDelay = 800;
             this.btnOffsetTime = 500;
             this.btnIgnoreOffset = false;
-            // if (!EggKnock.inited) {
-            //     EggKnock.inited = true;
-                // if (zs.EggKnock) {
-                //     zs.EggKnock.init();
-                //     zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
-                //         console.error("???")
-                //         zs.EggKnock.markGameNum(true);
-                //     }), true);
-                // }
-            // }
         }
         dispose() {
             Laya.timer.clear(this, this.tick);
@@ -261,6 +251,9 @@ window.zs.ui = window.zs.ui || {};
         static preload() {
             return Promise((resolve, reject) => { resolve(); });
         }
+        init() {
+            this.updateProgress(0);
+        }
         updateProgress(value) {
             if (this.view) {
                 this.view.loadingValue.text = value + '%';
@@ -300,6 +293,9 @@ window.zs.ui = window.zs.ui || {};
         }
         static make() {
             return null;
+        }
+        init() {
+            this.updateProgress(0);
         }
         updateProgress(value) {
         }
