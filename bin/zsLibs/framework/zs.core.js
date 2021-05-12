@@ -760,13 +760,14 @@ window.zs = window.zs || {};
         }
         checkBanner(current) {
             let data = zs.configs.productCfg[current];
-            if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
-                if (data && data.banner) {
+            if (data && data.banner) {
+                if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
                     zs.log.info("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
+                    return;
                 }
-                return;
+                if ((data.banner.switch || data.banner.check) && !this.checkSwitch(data.banner.switch, data.banner.check)) { return; }
+                data && (zs.platform.sync.checkBanner({ data: data }));
             }
-            data && (zs.platform.sync.checkBanner({ data: data }));
         }
         checkExporter(current) {
             let data = zs.configs.productCfg[current];
@@ -776,31 +777,37 @@ window.zs = window.zs || {};
                 }
                 return;
             }
-            if (data && data.exporter && data.exporter.length > 0) {
-                for (let i = 0, n = data.exporter.length; i < n; i++) {
-                    let config = data.exporter[i];
-                    if (!config) { continue; }
-                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
-                        continue;
+            if (data && data.exporter) {
+                let exporter = data.exporter;
+                if (Array.isArray(exporter) && exporter.length > 0) {
+                    for (let i = 0, n = data.exporter.length; i < n; i++) {
+                        let config = data.exporter[i];
+                        if (!config) { continue; }
+                        if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) { continue; }
+                        this.exportWindow.applyConfig(config).front();
                     }
-                    this.exportWindow
-                        .applyConfig(config)
-                        .front();
+                } else if (typeof exporter === 'object') {
+                    if ((!exporter.switch && !exporter.check) || !this.checkSwitch(exporter.switch, exporter.check)) {
+                        this.exportWindow.applyConfig(exporter).front();
+                    }
                 }
             }
         }
         checkBase(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.base && data.base.length > 0) {
-                for (let i = 0, n = data.base.length; i < n; i++) {
-                    let config = data.base[i];
-                    if (!config) { continue; }
-                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
-                        continue;
+            if (data && data.base) {
+                let base = data.base;
+                if (Array.isArray(base) && base.length > 0) {
+                    for (let i = 0, n = data.base.length; i < n; i++) {
+                        let config = data.base[i];
+                        if (!config) { continue; }
+                        if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) { continue; }
+                        this.exportWindow.applyConfig(config).front();
                     }
-                    this.exportWindow
-                        .applyConfig(config)
-                        .front();
+                } else if (typeof base === 'object') {
+                    if ((!base.switch && !base.check) || !this.checkSwitch(base.switch, base.check)) {
+                        this.exportWindow.applyConfig(base).front();
+                    }
                 }
             }
         }
