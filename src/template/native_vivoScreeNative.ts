@@ -49,19 +49,14 @@ export default class native_vivoScreeNative extends zs.fgui.baseGeneric<FGUI_Scr
         this.closed = false;
         if (zs.platform.proxy) {
             this.view.visible = false;
-            zs.platform.async.isBeforeGameAccount().then(() => {
-                this.adUnit = ProductKey.zs_native_adunit;
-                //初始化原生
-                zs.platform.sync.initNativeAd({ id: this.adUnit });
-                //加载原生
-                zs.platform.async.loadNativeAd().then((data) => {
-                    this.onAdLoaded(data);
-                }).catch((err) => {
-                    this.onAdError(err);
-                })
-            }).catch(() => {
-                this.closeView();
+            zs.platform.async.loadNativeAd().then((data) => {
+                this.onAdLoaded(data);
+                Laya.timer.clear(this, this.onAdError);
+            }).catch((err) => {
+                this.onAdError(err);
+                Laya.timer.clear(this, this.onAdError);
             })
+            Laya.timer.once(6000, this, this.onAdError);
         } else {
             this.view.visible = true;
         }
