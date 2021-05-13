@@ -229,8 +229,7 @@ export default class workflow extends zs.workflow {
                         if (ProductKey.zs_reminder_switch) {
                             this.challengeExport();
                         }
-                    }))
-                        .apply();
+                    })).apply();
                 })
                 .align(zs.fgui.AlignType.Top);
         }
@@ -254,8 +253,7 @@ export default class workflow extends zs.workflow {
                     this._challengeExport = unit;
                     unit.setCloseCallback(Laya.Handler.create(this, () => {
                         this.hideChallenge();
-                    }))
-                        .apply()
+                    })).apply()
                 })
                 .show()
         }
@@ -267,7 +265,7 @@ export default class workflow extends zs.workflow {
         this._challengeExport = null;
     }
 
-    fakeExit(event: string | string[], isHome?) {
+    fakeExit(event: string | string[], isHome?: boolean) {
         if (!ProductKey.zs_jump_switch) { return; }
         if (!ProductKey.zs_history_list_jump && isHome && ProductKey.zs_start_game_video_switch) { return; }
         if (this._fakeExit) {
