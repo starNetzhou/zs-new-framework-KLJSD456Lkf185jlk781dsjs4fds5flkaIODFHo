@@ -27,7 +27,7 @@
         ],
         "event": {
             "event_add_block_ad": {
-                "Num": 5,
+                "num": 5,
                 "pos": {
                     "top": 150,
                     "centerX": 0
@@ -46,12 +46,34 @@
         "check": {
             "event_check_egg": true
         },
-        "event": "event_common_egg",
-        "exitevent": "event_hide_common_egg"
+        "base": {
+            "type": "qq_common_egg",
+            "window": {
+                "align": "center",
+                "fit": true,
+                "block": true
+            },
+            "base": {
+                "awardevent": "event_common_egg",
+                "closeevent": "event_childnext"
+            }
+        }
     },
     "PRODUCT_HOME_PLAY.TRY_SKIN": {
+        "switch": "zs_switch",
         "check": "event_check_skin",
-        "event": "event_try_skin"
+        "base": {
+            "type": "qq_try_skin",
+            "window": {
+                "align": "center",
+                "fit": true,
+                "block": true
+            },
+            "base": {
+                "closeevent": "event_childnext",
+                "videoevent": "event_try_skin"
+            }
+        }
     },
     "GAME_PLAY": {
         "states": [
@@ -66,7 +88,7 @@
         },
         "event": {
             "event_add_block_ad": {
-                "Num": 5,
+                "num": 5,
                 "pos": {
                     "top": 150,
                     "centerX": 0
@@ -79,8 +101,18 @@
         "check": {
             "event_check_egg": false
         },
-        "event": "event_box_egg",
-        "exitevent": "event_hide_box_egg"
+        "base": {
+            "type": "qq_box_egg",
+            "window": {
+                "align": "center",
+                "fit": true,
+                "block": true
+            },
+            "base": {
+                "closeevent": "event_childnext",
+                "awardevent": "event_box_egg"
+            }
+        }
     },
     "PRODUCT_PLAY_END": {
         "states": [
@@ -93,7 +125,7 @@
         },
         "event": {
             "event_add_block_ad": {
-                "Num": 5,
+                "num": 5,
                 "pos": {
                     "centerY": -120,
                     "centerX": 0

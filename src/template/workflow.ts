@@ -19,18 +19,25 @@ export default class workflow extends zs.workflow {
     static readonly PRODUCT_FINISH = "PRODUCT_FINISH";
 
     static readonly event_enter_game = "event_enter_game";
-    static readonly event_common_egg = "event_common_egg";
     static readonly event_check_egg = "event_check_egg";
+    static readonly event_common_egg = "event_common_egg";
+    static readonly event_show_common_egg = "event_show_common_egg";
     static readonly event_hide_common_egg = "event_hide_common_egg";
     static readonly event_check_skin = "event_check_skin";
     static readonly event_try_skin = "event_try_skin";
+    static readonly event_show_try_skin = "event_show_try_skin";
+    static readonly event_hide_try_skin = "event_hide_try_skin";
     static readonly event_box_egg = "event_box_egg";
+    static readonly event_show_box_egg = "event_show_box_egg";
     static readonly event_hide_box_egg = "event_hide_box_egg";
     static readonly event_add_block_ad = "event_add_block_ad";
     static readonly event_clear_block_ad = "event_clear_block_ad";
 
     static readonly qq_btn_more_game = "qq_btn_more_game";
     static readonly qq_btn_invite = "qq_btn_invite";
+    static readonly qq_try_skin = "qq_try_skin";
+    static readonly qq_common_egg = "qq_common_egg";
+    static readonly qq_box_egg = "qq_box_egg";
 
     exporterPack = "qqPackage/qqPackage";
     bannerIgnoreList = [];
@@ -44,6 +51,7 @@ export default class workflow extends zs.workflow {
     _commonEggHanlder: Laya.Handler;
     _boxEggHanlder: Laya.Handler;
     _trySkinHanlder: Laya.Handler;
+    _checkSkinHanlder: Laya.Handler;
 
     _trySkinIndex = 0;
     _trySkinUrl = "";
@@ -61,24 +69,30 @@ export default class workflow extends zs.workflow {
 
         // 绑定工作流FGUI组件
         qqPackageBinder.bindAll();
-        // 注册模块
 
         // 注册控件
         zs.fgui.configs.registeBase(workflow.qq_btn_more_game, qq_btn_more_game);
         zs.fgui.configs.registeBase(workflow.qq_btn_invite, qq_btn_invite);
+        zs.fgui.configs.registeBase(workflow.qq_try_skin, qq_try_skin);
+        zs.fgui.configs.registeBase(workflow.qq_common_egg, qq_common_knock);
+        zs.fgui.configs.registeBase(workflow.qq_box_egg, qq_box_knock);
 
         // 注册事件
         zs.core.workflow.registeEvent(workflow.event_enter_game, this, this.onEnterGame);
-        // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
-        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return true; }, false);
-        zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.commonEgg);
+        zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return zs.ui.EggKnock.checkEggOpen(value); }, false);
+        // zs.core.workflow.registeEvent(workflow.event_check_egg, this, (value) => { return true; }, false);
+        zs.core.workflow.registeEvent(workflow.event_common_egg, this, this.handleCommonEgg);
+        zs.core.workflow.registeEvent(workflow.event_show_common_egg, this, this.commonEgg);
         zs.core.workflow.registeEvent(workflow.event_hide_common_egg, this, this.hideCommonEgg);
         zs.core.workflow.registeEvent(workflow.event_check_skin, this, this.checkSkin);
-        zs.core.workflow.registeEvent(workflow.event_try_skin, this, this.showTrySkin);
+        zs.core.workflow.registeEvent(workflow.event_try_skin, this, this.handleTrySkin);
+        zs.core.workflow.registeEvent(workflow.event_show_try_skin, this, this.showTrySkin);
+        zs.core.workflow.registeEvent(workflow.event_hide_try_skin, this, this.hideTrySkin);
+        zs.core.workflow.registeEvent(workflow.event_box_egg, this, this.hanldeBoxEgg);
+        zs.core.workflow.registeEvent(workflow.event_show_box_egg, this, this.boxEgg);
+        zs.core.workflow.registeEvent(workflow.event_hide_box_egg, this, this.hideBoxEgg);
         zs.core.workflow.registeEvent(workflow.event_add_block_ad, this, this.addBlockAd);
         zs.core.workflow.registeEvent(workflow.event_clear_block_ad, this, this.clearBlockAd);
-        zs.core.workflow.registeEvent(workflow.event_box_egg, this, this.boxEgg);
-        zs.core.workflow.registeEvent(workflow.event_hide_box_egg, this, this.hideBoxEgg);
     }
 
 
@@ -100,6 +114,10 @@ export default class workflow extends zs.workflow {
         this._boxEggHanlder = Laya.Handler.create(this, () => {
             console.log("发放砸盒子奖励");
         })
+        this._checkSkinHanlder = Laya.Handler.create(this, () => {
+            console.log("判断是否存在皮肤可以试用");
+            return true;
+        })
         zs.core.workflow.next();
     }
 
@@ -108,7 +126,17 @@ export default class workflow extends zs.workflow {
      * 判断是否存在皮肤可以试用
      */
     checkSkin() {
+        if (this._checkSkinHanlder) {
+            return this._checkSkinHanlder.run();
+        }
         return true;
+    }
+
+    /**
+     * 处理皮肤试用
+     */
+    handleTrySkin() {
+        this._trySkinHanlder && this._trySkinHanlder.run();
     }
 
     /**
@@ -116,30 +144,18 @@ export default class workflow extends zs.workflow {
      * @returns 
      */
     showTrySkin() {
-        if (ProductKey.zs_switch) {
-            //显示皮肤试用界面
-            if (this._trySkin) { return; }
-            return workflow.showPanel(qq_try_skin)
-                .block(true)
-                .update<qq_try_skin>(qq_try_skin, (unit) => {
-                    this._trySkin = unit;
-                    unit.setFinishHandler(
-                        Laya.Handler.create(this, () => {
-                            this.hideTrySkin();
-                            zs.core.workflow.childNext();
-                        }),
-                        Laya.Handler.create(this, () => {
-                            //获取皮肤奖励
-                            console.log("Get Skin Award");
-                            if (this._trySkinHanlder) this._trySkinHanlder.run();
-                        })
-                    );
-                    //刷新皮肤icon
-                    unit.refreshIcon(this._trySkinUrl);
-                }).front();
-        } else {
-            zs.core.workflow.childNext();
-        }
+        if (this._trySkin) { return; }
+        return workflow.showPanel(qq_try_skin)
+            .block(true)
+            .update<qq_try_skin>(qq_try_skin, (unit) => {
+                this._trySkin = unit;
+                unit.setFinishHandler(
+                    Laya.Handler.create(this, () => {
+                        zs.core.workflow.childNext();
+                    }),
+                    Laya.Handler.create(this, this.handleTrySkin)
+                ).setIcon(this._trySkinUrl);
+            }).front();
     }
 
     /**
@@ -148,6 +164,10 @@ export default class workflow extends zs.workflow {
     hideTrySkin() {
         this._trySkin && (workflow.getPanel().detach(this._trySkin));
         this._trySkin = null;
+    }
+
+    handleCommonEgg() {
+        this._commonEggHanlder && this._commonEggHanlder.run();
     }
 
     /**
@@ -161,9 +181,7 @@ export default class workflow extends zs.workflow {
             .update<qq_common_knock>(qq_common_knock, (unit) => {
                 this._commonEgg = unit;
                 unit.setEventHandler(
-                    Laya.Handler.create(this, () => {
-                        if (this._commonEggHanlder) this._commonEggHanlder.run();
-                    }),
+                    Laya.Handler.create(this, this.handleCommonEgg),
                     Laya.Handler.create(this, () => {
                         this.hideCommonEgg();
                         zs.core.workflow.childNext();
@@ -180,6 +198,9 @@ export default class workflow extends zs.workflow {
         this._commonEgg = null;
     }
 
+    hanldeBoxEgg() {
+        this._boxEggHanlder && this._boxEggHanlder.run();
+    }
 
     /**
      * 显示砸盒子
@@ -192,10 +213,7 @@ export default class workflow extends zs.workflow {
             .update<qq_box_knock>(qq_box_knock, (unit) => {
                 this._boxEgg = unit;
                 unit.setEventHandler(
-                    Laya.Handler.create(this, () => {
-                        console.log("Get Award");
-                        if (this._boxEggHanlder) this._boxEggHanlder.run();
-                    }),
+                    Laya.Handler.create(this, this.hanldeBoxEgg),
                     Laya.Handler.create(this, () => {
                         this.hideBoxEgg();
                         zs.core.workflow.childNext();
@@ -212,14 +230,13 @@ export default class workflow extends zs.workflow {
         this._boxEgg = null;
     }
 
-
     /**
      * 添加积木广告
      * @param config 积木广告配置
      */
     addBlockAd(config) {
         if (config) {
-            zs.platform.sync.checkBlockAd(ProductKey.zs_blockAdUnit_id, config.orient, config.Num, config.pos, Laya.Handler.create(this, () => {
+            zs.platform.sync.checkBlockAd(ProductKey.zs_blockAdUnit_id, config.orient, config.num, config.pos, Laya.Handler.create(this, () => {
                 zs.platform.sync.showBlockAd(config.pos);
             }));
         }

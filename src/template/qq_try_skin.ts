@@ -11,7 +11,9 @@ export default class qq_try_skin extends zs.fgui.baseGeneric<FGUI_video_get> {
     static typeDefine = FGUI_video_get;
 
     closeHandler: Laya.Handler;
+    closeEvent: any;
     videoHandler: Laya.Handler;
+    videoEvent: any;
     btn_video: fgui.GButton;
     btn_close: fgui.GButton;
 
@@ -26,25 +28,35 @@ export default class qq_try_skin extends zs.fgui.baseGeneric<FGUI_video_get> {
         }
     }
 
-    setFinishHandler(closeFunc: Laya.Handler, videoFunc?: Laya.Handler) {
+    applyConfig(config) {
+        if (config) {
+            config.icon != null && this.setIcon(config.icon);
+            config.closeevent != null && (this.closeEvent = config.closeevent);
+            config.videoevent != null && (this.videoEvent = config.videoevent);
+        }
+        return this.apply();
+    }
+
+    setFinishHandler(closeFunc: Laya.Handler, videoFunc?: Laya.Handler): qq_try_skin {
         this.closeHandler = closeFunc;
         this.videoHandler = videoFunc;
+        return this;
     }
 
     playVideo(autoClose?: boolean) {
         this.btn_video.touchable = false;
         zs.platform.async.playVideo().then((finish) => {
             if (finish) {
-                this.videoHandler && this.videoHandler.run();
-                this.closeHandler && this.closeHandler.run();
+                this.videoReward();
+                this.closeView();
             } else {
                 this.btn_video.touchable = true;
-                autoClose && this.closeHandler && this.closeHandler.run();
+                autoClose && this.closeView();
             }
         }).catch(() => {
             zs.platform.sync.showToast("暂时没有视频资源！");
             this.btn_video.touchable = true;
-            autoClose && this.closeHandler && this.closeHandler.run();
+            autoClose && this.closeView();
         })
     }
 
@@ -57,11 +69,26 @@ export default class qq_try_skin extends zs.fgui.baseGeneric<FGUI_video_get> {
         }
     }
 
+    videoReward() {
+        this.videoEvent && zs.core.workflow.runEventConfig(this.videoEvent);
+        this.videoHandler && this.videoHandler.run();
+    }
+
     closeView() {
+        this.closeEvent && zs.core.workflow.runEventConfig(this.closeEvent);
         this.closeHandler && this.closeHandler.run();
     }
 
-    refreshIcon(url) {
-        this.view.icon = url;
+    setIcon(value): qq_try_skin {
+        if (this.view.icon) {
+            if (Array.isArray(value) && value.length > 1) {
+                zs.fgui.loadPack(value[0]).then((res) => {
+                    this.view.icon = zs.ui.readURL(res, value[1]);
+                });
+            } else {
+                this.view.icon = value;
+            }
+        }
+        return this;
     }
 }

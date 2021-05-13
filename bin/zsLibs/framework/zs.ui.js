@@ -161,6 +161,13 @@ window.zs.ui = window.zs.ui || {};
             zs.EggKnock && zs.EggKnock.markReadyNum(true);
             return this;
         }
+        applyConfig(config) {
+            if (config) {
+                config.awardevent && (this.awardEvent = config.awardevent);
+                config.closeevent && (this.closeEvent = config.closeevent);
+            }
+            return this.apply();
+        }
         tick() {
             let delta = Laya.timer.delta;
             if (this.btnOffsetCount && this.btnOffsetCount > 0) {
@@ -192,6 +199,7 @@ window.zs.ui = window.zs.ui || {};
                 if (this.awardCount != null && this.awardCount > 0) {
                     this.awardCount -= delta;
                     if (this.awardCount <= 0) {
+                        this.awardEvent && zs.core.workflow.runEventConfig(this.awardEvent);
                         this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
                     }
@@ -201,6 +209,7 @@ window.zs.ui = window.zs.ui || {};
                     if (this.closeCount <= 0) {
                         this.awardCount && this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
+                        this.closeEvent && zs.core.workflow.runEventConfig(this.closeEvent);
                         this.closeHandler && this.closeHandler.run();
                         this.closeCount = null;
                     }
