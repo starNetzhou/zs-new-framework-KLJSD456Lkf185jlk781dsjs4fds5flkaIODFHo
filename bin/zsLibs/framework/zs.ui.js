@@ -130,7 +130,7 @@ window.zs.ui = window.zs.ui || {};
             this.btnIgnoreOffset = false;
         }
         dispose() {
-            Laya.timer.clear(this, this.tick);
+            Laya.timer.clearAll(this);
             Laya.Tween.clearAll(this.btnKnock);
             zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
             zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
@@ -152,7 +152,6 @@ window.zs.ui = window.zs.ui || {};
             this.isOpenAd = false;
             this.isGetAward = false;
             this.bannerPoint = zs.utils.randInt(this.bannerRange[0] * 100, this.bannerRange[1] * 100) * 0.01;
-            console.error(this.bannerPoint)
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
             this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
@@ -161,6 +160,13 @@ window.zs.ui = window.zs.ui || {};
             this.updateProgress(this.progress);
             zs.EggKnock && zs.EggKnock.markReadyNum(true);
             return this;
+        }
+        applyConfig(config) {
+            if (config) {
+                config.awardevent && (this.awardEvent = config.awardevent);
+                config.closeevent && (this.closeEvent = config.closeevent);
+            }
+            return this.apply();
         }
         tick() {
             let delta = Laya.timer.delta;
@@ -193,6 +199,7 @@ window.zs.ui = window.zs.ui || {};
                 if (this.awardCount != null && this.awardCount > 0) {
                     this.awardCount -= delta;
                     if (this.awardCount <= 0) {
+                        this.awardEvent && zs.core.workflow.runEventConfig(this.awardEvent);
                         this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
                     }
@@ -202,6 +209,7 @@ window.zs.ui = window.zs.ui || {};
                     if (this.closeCount <= 0) {
                         this.awardCount && this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
+                        this.closeEvent && zs.core.workflow.runEventConfig(this.closeEvent);
                         this.closeHandler && this.closeHandler.run();
                         this.closeCount = null;
                     }
