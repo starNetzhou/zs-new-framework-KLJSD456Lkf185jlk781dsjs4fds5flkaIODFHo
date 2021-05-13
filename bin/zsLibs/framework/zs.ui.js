@@ -128,19 +128,9 @@ window.zs.ui = window.zs.ui || {};
             this.btnOffsetDelay = 800;
             this.btnOffsetTime = 500;
             this.btnIgnoreOffset = false;
-            // if (!EggKnock.inited) {
-            //     EggKnock.inited = true;
-                // if (zs.EggKnock) {
-                //     zs.EggKnock.init();
-                //     zs.core.onWorkflow(zs.workflow.PRODUCT_PLAY_END, Laya.Handler.create(this, () => {
-                //         console.error("???")
-                //         zs.EggKnock.markGameNum(true);
-                //     }), true);
-                // }
-            // }
         }
         dispose() {
-            Laya.timer.clear(this, this.tick);
+            Laya.timer.clearAll(this);
             Laya.Tween.clearAll(this.btnKnock);
             zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
             zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
@@ -162,7 +152,6 @@ window.zs.ui = window.zs.ui || {};
             this.isOpenAd = false;
             this.isGetAward = false;
             this.bannerPoint = zs.utils.randInt(this.bannerRange[0] * 100, this.bannerRange[1] * 100) * 0.01;
-            console.error(this.bannerPoint)
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
             this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
@@ -261,6 +250,9 @@ window.zs.ui = window.zs.ui || {};
         static preload() {
             return Promise((resolve, reject) => { resolve(); });
         }
+        init() {
+            this.updateProgress(0);
+        }
         updateProgress(value) {
             if (this.view) {
                 this.view.loadingValue.text = value + '%';
@@ -300,6 +292,9 @@ window.zs.ui = window.zs.ui || {};
         }
         static make() {
             return null;
+        }
+        init() {
+            this.updateProgress(0);
         }
         updateProgress(value) {
         }

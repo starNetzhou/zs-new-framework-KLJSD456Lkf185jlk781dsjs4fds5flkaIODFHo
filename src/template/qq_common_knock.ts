@@ -16,6 +16,7 @@ export default class qq_common_knock extends zs.ui.EggKnock {
             this._btnKnock = component.btn_click;
         }
     }
+
     get btnKnock(): fairygui.GButton {
         return this._btnKnock;
     }
@@ -39,18 +40,18 @@ export default class qq_common_knock extends zs.ui.EggKnock {
     }
 
     handleClick(progress) {
-        if (progress >= this["bannerPoint"] && !this["isOpenAd"]) {
-            this["isOpenAd"] = true;
+        if (progress >= this.bannerPoint && !this.isOpenAd) {
+            this.isOpenAd = true;
             if (this._isPlayVideo) {
                 zs.platform.async.playVideo().then(() => {
-                    this["onFinish"]();
+                    this.onFinish();
                 }).catch(() => {
-                    this["onFinish"]();
+                    this.onFinish();
                 })
             } else {
                 zs.platform.sync.showBanner();
                 Laya.timer.once(800, this, () => {
-                    this["onFinish"]();
+                    this.onFinish();
                 });
             }
         }

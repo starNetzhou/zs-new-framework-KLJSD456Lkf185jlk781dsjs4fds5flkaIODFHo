@@ -128,11 +128,11 @@ declare module zs {
     }
 
     interface productCfg {
-        switch?: string | string[],
-        check?: string | any[],
-        event?: string | any[],
-        laterevent?: string | any[],
-        exitevent?: string | any[],
+        switch?: any,
+        check?: any,
+        event?: any,
+        laterevent?: any,
+        exitevent?: any,
         banner?: bannerCfg,
         exporter?: exporterCfg[],
         base?: exporterCfg[]
@@ -141,6 +141,36 @@ declare module zs {
     interface uiCfg {
         base?: { [key: string]: any },
         binder?: { [key: string]: string | string[] }
+    }
+
+    /**
+     * 状态机状态
+     */
+    interface fsmState {
+        /**
+         * 优先级
+         */
+        priority: number,
+        /**
+         * 监听调用者
+         */
+        thisObj: any,
+        /**
+         * 转换事件
+         */
+        transition: Function,
+        /**
+         * 转换条件
+         */
+        condition: Function,
+        /**
+         * 自动跳转
+         */
+        auto: boolean,
+        /**
+         * 状态打断
+         */
+        canBreak: boolean
     }
 
     /**
@@ -336,6 +366,11 @@ declare module zs {
          * @param args 调用参数列表（将覆盖默认参数）
          */
         callEventReturn(key: string, args?: any[]): any;
+        /**
+         * 按配置执行事件，获取返回值
+         * @param config 配置
+         */
+        readConfigReturn(config: any): any;
         /**
          * 按配置执行事件
          * @param config 配置
@@ -591,6 +626,12 @@ declare module zs {
          * @param auto 自动状态，开启后将自动转换状态
          */
         init(state: string, auto?: boolean);
+        /**
+         * 获取状态机状态
+         * @param from 起始状态名
+         * @param to 目标状态名
+         */
+        getState(from: string, to: string): fsmState;
         /**
          * 注册状态
          * @param from 开始状态名
@@ -1211,6 +1252,18 @@ declare module zs.ui {
          */
         btnIgnoreOffset: boolean;
         /**
+         * Banner展示进度点
+         */
+        bannerPoint: number;
+        /**
+         * 是否已经获取奖励
+         */
+        isGetAward: boolean;
+        /**
+         * 是否已展示广告
+         */
+        isOpenAd: boolean;
+        /**
          * 检查是否咋金蛋
          */
         static checkEggOpen(isCommon): boolean;
@@ -1243,6 +1296,10 @@ declare module zs.ui {
          * 获取奖励监听
          */
         onGetAward();
+        /**
+         * 结束砸金蛋监听
+         */
+        onFinish();
         /**
          * 销毁检查监听
          */
@@ -1281,13 +1338,17 @@ declare module zs.ui {
          */
         static make(): LayaLoading;
         /**
+         * （虚方法）预加载方法，主要用于预加载loading资源包
+         */
+        static preload(): Promise<void>;
+        /**
          * 加载进度
          */
         progress: number;
         /**
-         * （虚方法）预加载方法，主要用于预加载loading资源包
+         * 初始化方法
          */
-        preload(): Promise<void>;
+        init();
         /**
          * 更新进度
          * @param value 
@@ -1529,6 +1590,10 @@ declare module zs.fgui {
          * 控件ID
          */
         get id(): number;
+        /**
+         * 父级窗口
+         */
+        get window(): window;
         /**
          * 控件是否被销毁
          */
@@ -1834,6 +1899,10 @@ interface exportInfo {
  * 平台模块
  */
 declare module zs.platform {
+    /**
+     * 平台实例
+     */
+    const proxy: any;
     /**
      * 初始化方法（无需主动调用）
      */
@@ -3230,7 +3299,7 @@ declare module zs.exporter {
          * 设置延迟出现时间
          * @param value 时间值
          */
-        setAutoFade(value: number | string | string[]): button;
+        setAutoFade(value: any): button;
         /**
          * 设置延迟出现过渡事件
          * @param value 时间值
@@ -3240,7 +3309,7 @@ declare module zs.exporter {
          * 设置自动偏移时间
          * @param value 时间值
          */
-        setAutoOffset(value: number | string | string[]): button;
+        setAutoOffset(value: any): button;
         /**
          * 设置按钮X偏移
          * @param value 偏移值
@@ -3270,17 +3339,17 @@ declare module zs.exporter {
          * 设置假事件延迟
          * @param value 时间值
          */
-        setFakeDelay(value: number | string | string[]): button;
+        setFakeDelay(value: any): button;
         /**
          * 设置假事件
          * @param value 事件名
          */
-        setFakeEvent(value: string | string[]): button;
+        setFakeEvent(value: any): button;
         /**
          * 设置点击事件
          * @param value 事件名
          */
-        setEvent(value: string | string[]): button;
+        setEvent(value: any): button;
     }
     /**
      * 全屏导出基类

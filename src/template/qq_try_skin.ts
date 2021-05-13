@@ -6,9 +6,10 @@ import FGUI_video_get from "./qqPackage/FGUI_video_get";
 * @ Author: jiangdiwei
 * @ Data: 2021-05-08 09:47
 */
-export default class qq_try_skin extends zs.fgui.base {
+export default class qq_try_skin extends zs.fgui.baseGeneric<FGUI_video_get> {
 
-    owner: FGUI_video_get;
+    static typeDefine = FGUI_video_get;
+
     closeHandler: Laya.Handler;
     videoHandler: Laya.Handler;
     btn_video: fgui.GButton;
@@ -22,27 +23,7 @@ export default class qq_try_skin extends zs.fgui.base {
             this.btn_video.onClick(this, this.playVideo);
             this.btn_close.onClick(this, this.closeView);
             zs.platform.sync.updateBanner();
-            this.owner = component;
         }
-    }
-    static make() {
-        let view = FGUI_video_get.createInstance();
-        return view;
-    }
-    static type() {
-        return FGUI_video_get;
-    }
-    init() {
-        super.init();
-    }
-    dispose() {
-        super.dispose();
-    }
-    check(component) {
-        if (component instanceof FGUI_video_get) {
-            return true;
-        }
-        return false;
     }
 
     setFinishHandler(closeFunc: Laya.Handler, videoFunc?: Laya.Handler) {
@@ -50,14 +31,13 @@ export default class qq_try_skin extends zs.fgui.base {
         this.videoHandler = videoFunc;
     }
 
-    playVideo(autoClose?) {
+    playVideo(autoClose?: boolean) {
         this.btn_video.touchable = false;
         zs.platform.async.playVideo().then((finish) => {
             if (finish) {
                 this.videoHandler && this.videoHandler.run();
                 this.closeHandler && this.closeHandler.run();
             } else {
-                console.log("用户取消")
                 this.btn_video.touchable = true;
                 autoClose && this.closeHandler && this.closeHandler.run();
             }
@@ -81,11 +61,7 @@ export default class qq_try_skin extends zs.fgui.base {
         this.closeHandler && this.closeHandler.run();
     }
 
-    apply() {
-        return this;
-    }
-
-    refreshIcon(url){
-        this.owner.icon = url;
+    refreshIcon(url) {
+        this.view.icon = url;
     }
 }

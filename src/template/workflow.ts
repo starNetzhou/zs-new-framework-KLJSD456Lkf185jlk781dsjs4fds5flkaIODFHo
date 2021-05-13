@@ -83,7 +83,7 @@ export default class workflow extends zs.workflow {
 
 
     onEnterGame() {
-        if (window["qq"] && ProductKey.zs_box_switch && ProductKey.zs_click_award_num != "0" && ProductKey.zs_switch) {
+        if (zs.platform.proxy && ProductKey.zs_box_switch && ProductKey.zs_click_award_num != "0" && ProductKey.zs_switch) {
             Laya.timer.once(1500, this, () => {
                 zs.platform.sync.showAppBox();
             });
@@ -107,7 +107,7 @@ export default class workflow extends zs.workflow {
     /**
      * 判断是否存在皮肤可以试用
      */
-     checkSkin() {
+    checkSkin() {
         return true;
     }
 

@@ -20,4 +20,4 @@ export module ui.test {
         }
     }
     REG("ui.test.MainEntryUI",MainEntryUI);
-}
+}

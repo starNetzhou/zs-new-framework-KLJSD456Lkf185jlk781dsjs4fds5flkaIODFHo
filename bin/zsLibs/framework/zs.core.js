@@ -113,7 +113,7 @@ window.zs = window.zs || {};
             } else if (configType === 'object') {
                 for (let evt in config) {
                     let args = config[evt];
-                    if (!Array.isArray(args) && args != null && args != undefined) {
+                    if (args != null && args != undefined && !Array.isArray(args)) {
                         args = [args];
                     }
                     result = this.applyEventReturn(evt, args);
@@ -127,7 +127,6 @@ window.zs = window.zs || {};
         runEventConfig(event) {
             if (event == null || event == undefined) { return; }
             let eventType = typeof event;
-            console.log(eventType);
             if (eventType === 'string') {
                 this.callEvent(event);
             } else if (Array.isArray(event)) {
@@ -149,40 +148,42 @@ window.zs = window.zs || {};
             for (let key in config) {
                 key = key.trim();
                 if (this.fsmList[key]) { continue; }
-                let info = config[key].states;
-                if (!info || info.length <= 0) { continue; }
+                let states = config[key].states;
+                if (!states || states.length <= 0) { continue; }
                 let defaultState = null;
                 let lastState = null;
                 let fsm = new zs.fsm();
-                for (let i = 0, n = info.length; i < n; i++) {
-                    let state = info[i];
-                    if (state == null || state.length <= 0) { continue; }
+                for (let i = 0, n = states.length; i < n; i++) {
+                    let state = states[i];
+                    if (state == null || typeof state !== 'string') { continue; }
+                    state = state.trim();
+                    if (state.length <= 0) { continue; }
                     if (!defaultState) {
-                        if (Array.isArray(state)) {
-                            lastState = state[0];
-                            defaultState = state[0];
-                        } else {
-                            lastState = state;
-                            defaultState = state;
-                        }
+                        defaultState = state;
+                        lastState = state;
                         continue;
                     }
-                    if (Array.isArray(state)) {
-                        for (let k = 0, kn = state.length; k < kn; k++) {
-                            if (k == 0) {
-                                fsm.registe(lastState, state[k]);
-                            } else {
-                                fsm.registe(lastState, state[k], -1);
-                            }
-                        }
-                        lastState = state[0];
-                    } else {
-                        fsm.registe(lastState, state);
-                        lastState = state;
-                    }
+                    fsm.registe(lastState, state);
+                    lastState = state;
                 }
                 if (defaultState) {
                     fsm.setDefault(defaultState);
+                    let substates = config[key].substates;
+                    if (substates && Array.isArray(substates)) {
+                        for (let i = 0, n = substates.length; i < n; i++) {
+                            let list = substates[i];
+                            if (list == null || !Array.isArray(list) || list.length <= 1) { continue; }
+                            let lastState = null;
+                            for (let j = 0, m = list.length; j < m; j++) {
+                                let state = list[j];
+                                if (state == null || typeof state !== 'string') { continue; }
+                                state = state.trim();
+                                if (state.length <= 0 || fsm.getState(lastState, state)) { continue; }
+                                lastState && fsm.registe(lastState, state, fsm.list[lastState] != null ? -1 : 0);
+                                lastState = state;
+                            }
+                        }
+                    }
                     this.fsmList[key] = fsm;
                 }
             }
@@ -759,13 +760,14 @@ window.zs = window.zs || {};
         }
         checkBanner(current) {
             let data = zs.configs.productCfg[current];
-            if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
-                if (data && data.banner) {
+            if (data && data.banner) {
+                if (this.bannerIgnoreList && this.bannerIgnoreList.indexOf(current) >= 0) {
                     zs.log.info("状态 " + current + " 在横幅广告忽略列表中，无法自动生成，请自主管理横幅广告展示或将该状态移出忽略列表", "Workflow");
+                    return;
                 }
-                return;
+                if ((data.banner.switch || data.banner.check) && !this.checkSwitch(data.banner.switch, data.banner.check)) { return; }
+                data && (zs.platform.sync.checkBanner({ data: data }));
             }
-            data && (zs.platform.sync.checkBanner({ data: data }));
         }
         checkExporter(current) {
             let data = zs.configs.productCfg[current];
@@ -775,31 +777,37 @@ window.zs = window.zs || {};
                 }
                 return;
             }
-            if (data && data.exporter && data.exporter.length > 0) {
-                for (let i = 0, n = data.exporter.length; i < n; i++) {
-                    let config = data.exporter[i];
-                    if (!config) { continue; }
-                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
-                        continue;
+            if (data && data.exporter) {
+                let exporter = data.exporter;
+                if (Array.isArray(exporter) && exporter.length > 0) {
+                    for (let i = 0, n = data.exporter.length; i < n; i++) {
+                        let config = data.exporter[i];
+                        if (!config) { continue; }
+                        if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) { continue; }
+                        this.exportWindow.applyConfig(config).front();
                     }
-                    this.exportWindow
-                        .applyConfig(config)
-                        .front();
+                } else if (typeof exporter === 'object') {
+                    if ((!exporter.switch && !exporter.check) || !this.checkSwitch(exporter.switch, exporter.check)) {
+                        this.exportWindow.applyConfig(exporter).front();
+                    }
                 }
             }
         }
         checkBase(current) {
             let data = zs.configs.productCfg[current];
-            if (data && data.base && data.base.length > 0) {
-                for (let i = 0, n = data.base.length; i < n; i++) {
-                    let config = data.base[i];
-                    if (!config) { continue; }
-                    if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) {
-                        continue;
+            if (data && data.base) {
+                let base = data.base;
+                if (Array.isArray(base) && base.length > 0) {
+                    for (let i = 0, n = data.base.length; i < n; i++) {
+                        let config = data.base[i];
+                        if (!config) { continue; }
+                        if ((config.switch || config.check) && !this.checkSwitch(config.switch, config.check)) { continue; }
+                        this.exportWindow.applyConfig(config).front();
                     }
-                    this.exportWindow
-                        .applyConfig(config)
-                        .front();
+                } else if (typeof base === 'object') {
+                    if ((!base.switch && !base.check) || !this.checkSwitch(base.switch, base.check)) {
+                        this.exportWindow.applyConfig(base).front();
+                    }
                 }
             }
         }
