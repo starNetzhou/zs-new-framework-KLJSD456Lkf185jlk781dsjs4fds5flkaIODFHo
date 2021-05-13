@@ -565,22 +565,23 @@ window.zs.fgui = window.zs.fgui || {};
             if (type == null) { return this; }
             this.attach(type, null, config.key);
             if (config.window) {
-                config.window.width != null && config.window.width != undefined && (this.setWidth(config.window.width));
-                config.window.height != null && config.window.height != undefined && (this.setHeight(config.window.height));
-                if (!config.window.ignoreAutoScaleFit) {
-                    if (zs.configs.gameCfg.autoScaleFit || (config.window.scalefit != null && config.window.scalefit != undefined)) {
-                        if (!config.window.scalefit || !Array.isArray(config.window.scalefit) || config.window.scalefit.length <= 1) {
+                config.window.width != null && (this.setWidth(config.window.width));
+                config.window.height != null && (this.setHeight(config.window.height));
+                if (!config.window.ignoreautoscale && !config.window.ignore_auto_scale) {
+                    if (zs.configs.gameCfg.autoScaleFit || config.window.scale_fit != null || config.window.scalefit != null) {
+                        let scaleFit = config.window.scale_fit || config.window.scalefit;
+                        if (scaleFit == null || !Array.isArray(scaleFit) || scaleFit.length <= 1) {
                             this.scaleFit(zs.configs.gameCfg.designWidth, zs.configs.gameCfg.designHeight);
                         } else {
-                            this.scaleFit(config.window.scalefit[0], config.window.scalefit[1]);
+                            this.scaleFit(scaleFit[0], scaleFit[1]);
                         }
                     }
                 }
                 if (config.window.scale && Array.isArray(config.window.scale) && config.window.scale.length > 1) {
                     this.scale(config.window.scale[0], config.window.scale[1]);
                 }
-                config.window.fitwidth && (this.fitWidth());
-                config.window.fitheight && (this.fitHeight());
+                (config.window.fit_width || config.window.fitwidth) && (this.fitWidth());
+                (config.window.fit_height || config.window.fitheight) && (this.fitHeight());
                 config.window.fit && (this.fit());
             }
             if (config.base) {
@@ -596,38 +597,38 @@ window.zs.fgui = window.zs.fgui || {};
                 if (config.window.align) {
                     switch (config.window.align) {
                         case "center":
-                            this.align(AlignType.Center, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.Center, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "top":
-                            this.align(AlignType.Top, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.Top, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "bottom":
-                            this.align(AlignType.Bottom, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.Bottom, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "left":
-                            this.align(AlignType.Left, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.Left, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "right":
-                            this.align(AlignType.Right, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.Right, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "topleft":
-                            this.align(AlignType.TopLeft, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.TopLeft, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "bottomleft":
-                            this.align(AlignType.BottomLeft, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.BottomLeft, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "topright":
-                            this.align(AlignType.TopRight, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.TopRight, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                         case "bottomright":
-                            this.align(AlignType.BottomRight, config.window.alignoffsetx || 0, config.window.alignoffsety || 0);
+                            this.align(AlignType.BottomRight, config.window.alignoffset_x || config.window.alignoffsetx || 0, config.window.alignoffset_y || config.window.alignoffsety || 0);
                             break;
                     }
                 }
-                config.window.x != null && config.window.x != undefined && (this.setX(config.window.x));
-                config.window.y != null && config.window.y != undefined && (this.setY(config.window.y));
-                config.window.block != null && config.window.block != undefined && (this.block(config.window.block));
-                config.window.autofront != null && config.window.autofront != undefined && (this.autoFront(config.window.autofront));
+                config.window.x != null && (this.setX(config.window.x));
+                config.window.y != null && (this.setY(config.window.y));
+                config.window.block != null && (this.block(config.window.block));
+                (config.window.auto_front != null || config.window.autofront != null) && (this.autoFront(config.window.auto_front || config.window.autofront));
                 config.window.front && (this.front());
                 config.window.top && (this.top());
             }
