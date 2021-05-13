@@ -123,14 +123,14 @@ window.zs.ui = window.zs.ui || {};
             this.bannerRange = [0.3, 0.7];
             this.awardDelay = [1000, 1000];
             this.closeDelay = [1000, 1040];
-            this.btnSrcOffset = 280;
+            this.btnSrcOffset = 0;
             this.btnDstOffset = 370;
             this.btnOffsetDelay = 800;
             this.btnOffsetTime = 500;
             this.btnIgnoreOffset = false;
         }
         dispose() {
-            Laya.timer.clear(this, this.tick);
+            Laya.timer.clearAll(this);
             Laya.Tween.clearAll(this.btnKnock);
             zs.core.removeAppShow(Laya.Handler.create(this, this.onAppShow));
             zs.core.removeAppHide(Laya.Handler.create(this, this.onAppHide));
@@ -152,15 +152,45 @@ window.zs.ui = window.zs.ui || {};
             this.isOpenAd = false;
             this.isGetAward = false;
             this.bannerPoint = zs.utils.randInt(this.bannerRange[0] * 100, this.bannerRange[1] * 100) * 0.01;
-            console.error(this.bannerPoint)
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
             this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
-            // this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
+            this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
             Laya.timer.loop(1, this, this.tick);
             this.updateProgress(this.progress);
             zs.EggKnock && zs.EggKnock.markReadyNum(true);
             return this;
+        }
+        applyConfig(config) {
+            if (config) {
+                config.clickpercent != null && (this.clickPercent = config.clickpercent);
+                config.click_percent != null && (this.clickPercent = config.click_percent);
+                config.rollbackpercent != null && (this.rollbackPercent = config.rollbackpercent);
+                config.rollback_percent != null && (this.rollbackPercent = config.rollback_percent);
+                config.rollbackinterval != null && (this.rollbackInterval = config.rollbackinterval);
+                config.rollback_interval != null && (this.rollbackInterval = config.rollback_interval);
+                config.bannerrange != null && Array.isArray(config.bannerrange) && config.bannerrange.length >= 2 && (this.bannerRange = config.bannerrange);
+                config.banner_range != null && Array.isArray(config.banner_range) && config.banner_range.length >= 2 && (this.bannerRange = config.banner_range);
+                config.awarddelay != null && Array.isArray(config.awarddelay) && config.awarddelay.length >= 2 && (this.awardDelay = config.awarddelay);
+                config.award_delay != null && Array.isArray(config.award_delay) && config.award_delay.length >= 2 && (this.awardDelay = config.award_delay);
+                config.closedelay != null && Array.isArray(config.closedelay) && config.closedelay.length >= 2 && (this.closeDelay = config.closedelay);
+                config.close_delay != null && Array.isArray(config.close_delay) && config.close_delay.length >= 2 && (this.closeDelay = config.close_delay);
+                config.btnsrcoffset != null && (this.btnSrcOffset = config.btnsrcoffset);
+                config.btn_src_offset != null && (this.btnSrcOffset = config.btn_src_offset);
+                config.btndstoffset != null && (this.btnDstOffset = config.btndstoffset);
+                config.btn_dst_offset != null && (this.btnDstOffset = config.btn_dst_offset);
+                config.btnoffsetdelay != null && (this.btnOffsetDelay = config.btnoffsetdelay);
+                config.btn_offset_delay != null && (this.btnOffsetDelay = config.btn_offset_delay);
+                config.btnoffsettime != null && (this.btnOffsetTime = config.btnoffsettime);
+                config.btn_offset_time != null && (this.btnOffsetTime = config.btn_offset_time);
+                config.btnignoreoffset != null && (this.btnIgnoreOffset = config.btnignoreoffset);
+                config.btn_ignore_offset != null && (this.btnIgnoreOffset = config.btn_ignore_offset);
+                config.awardevent && (this.awardEvent = config.awardevent);
+                config.award_event && (this.awardEvent = config.award_event);
+                config.closeevent && (this.closeEvent = config.closeevent);
+                config.close_event && (this.closeEvent = config.close_event);
+            }
+            return this.apply();
         }
         tick() {
             let delta = Laya.timer.delta;
@@ -193,6 +223,7 @@ window.zs.ui = window.zs.ui || {};
                 if (this.awardCount != null && this.awardCount > 0) {
                     this.awardCount -= delta;
                     if (this.awardCount <= 0) {
+                        this.awardEvent && zs.core.workflow.runEventConfig(this.awardEvent);
                         this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
                     }
@@ -202,6 +233,7 @@ window.zs.ui = window.zs.ui || {};
                     if (this.closeCount <= 0) {
                         this.awardCount && this.awardHandler && this.awardHandler.run();
                         this.awardCount = null;
+                        this.closeEvent && zs.core.workflow.runEventConfig(this.closeEvent);
                         this.closeHandler && this.closeHandler.run();
                         this.closeCount = null;
                     }

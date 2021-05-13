@@ -200,7 +200,7 @@ window.zs.exporter = window.zs.exporter || {};
 
         static collectExportOld(info) {
             if (zs.platform.config.platformMark == 'wx_' && typeof wx === 'undefined') { return; }
-            let url = dataMgr.URL + "/appad_new/collect";
+            let url = dataMgr.URL + "/api/appad_new/collect";
             let curTime = Math.round(new Date().getTime() / 1000).toString();
             let sysInfo = zs.platform.sync.getLaunchOptions();
             let signParams = {
@@ -1086,47 +1086,52 @@ window.zs.exporter = window.zs.exporter || {};
         }
         applyConfig(config) {
             if (config) {
-                config.scalex != null && config.scalex != undefined && (this.setScaleX(config.scalex));
-                config.scaley != null && config.scaley != undefined && (this.setScaleY(config.scaley));
+                config.scalex != null && (this.setScaleX(config.scalex));
+                config.scale_x != null && (this.setScaleX(config.scale_x));
+                config.scaley != null && (this.setScaleY(config.scaley));
+                config.scale_y != null && (this.setScaleY(config.scale_y));
                 let item = zs.fgui.configs.items[config.item];
                 if (config.mode && item != null) {
                     switch (config.mode) {
                         case "hlist":
-                            if (config.height) {
+                            if (config.height != null) {
                                 this.setHorizontalList(item, config.height, config.max || 0, false);
                                 item == null;
                             }
                             break;
                         case "vlist":
-                            if (config.width) {
+                            if (config.width != null) {
                                 this.setVerticalList(item, config.width, config.max || 0, false);
                                 item == null;
                             }
                             break;
                         case "hgrid":
-                            if (config.width && config.height && config.lineLimit) {
-                                this.setHorizontalGrid(item, config.width, config.height, config.lineLimit, config.max || 0, false);
+                            if (config.width != null && config.height != null && (config.linelimit != null || config.line_limit != null)) {
+                                this.setHorizontalGrid(item, config.width, config.height, config.line_limit != null ? config.line_limit : config.linelimit, config.max || 0, false);
                                 item == null;
                             }
                             break;
                         case "vgrid":
-                            if (config.width && config.height && config.columnLimit) {
-                                this.setVerticalGrid(item, config.width, config.height, config.columnLimit, config.max || 0, false);
+                            if (config.width != null && config.height != null && (config.columnlimit != null || config.column_limit != null)) {
+                                this.setVerticalGrid(item, config.width, config.height, config.column_limit != null ? config.column_limit : config.columnlimit, config.max || 0, false);
                                 item == null;
                             }
                             break;
                         case "side":
-                            if (config.width) {
+                            if (config.width != null) {
                                 this.setSideList(item, config.width, config.max || 0, false);
                                 item == null;
                             }
                             break;
                     }
                 }
-                config.adaptscale != null && config.adaptscale != undefined && (this.setAdaptScale(config.adaptscale));
-                config.listfit != null && config.listfit != undefined && (this.setListFit(config.listfit));
-                if (config.keepratio) {
-                    switch (config.keepratio) {
+                config.adaptscale != null && (this.setAdaptScale(config.adaptscale));
+                config.adapt_scale != null && (this.setAdaptScale(config.adapt_scale));
+                config.listfit != null && (this.setListFit(config.listfit));
+                config.list_fit != null && (this.setListFit(config.list_fit));
+                let keepRatio = config.keep_ratio || config.keepratio;
+                if (keepRatio) {
+                    switch (keepRatio) {
                         case "horizontal":
                             this.setKeepRatio(zs.AdaptType.Horizontal);
                             break;
@@ -1169,10 +1174,14 @@ window.zs.exporter = window.zs.exporter || {};
                             break;
                     }
                 }
-                config.linecount != null && config.linecount != undefined && (this.setLineCount(config.linecount));
-                config.linegap != null && config.linegap != undefined && (this.setLineGap(config.linegap));
-                config.columncount != null && config.columncount != undefined && (this.setColumnCount(config.columncount));
-                config.columngap != null && config.columngap != undefined && (this.setColumnGap(config.columngap));
+                config.linecount != null && (this.setLineCount(config.linecount));
+                config.line_count != null && (this.setLineCount(config.line_count));
+                config.linegap != null && (this.setLineGap(config.linegap));
+                config.line_gap != null && (this.setLineGap(config.line_gap));
+                config.columncount != null && (this.setColumnCount(config.columncount));
+                config.column_count != null && (this.setColumnCount(config.column_count));
+                config.columngap != null && (this.setColumnGap(config.columngap));
+                config.column_gap != null && (this.setColumnGap(config.column_gap));
                 if (config.layout) {
                     switch (config.layout) {
                         case "singlecolumn":
@@ -1192,24 +1201,34 @@ window.zs.exporter = window.zs.exporter || {};
                             break;
                     }
                 }
-                config.cellwidth != null && config.cellwidth != undefined && (this.setCellWidth(config.cellwidth));
-                config.cellheight != null && config.cellheight != undefined && (this.setCellHeight(config.cellheight));
-                config.x != null && config.x != undefined && (this.setX(x));
-                config.y != null && config.y != undefined && (this.setY(y));
-                config.gridwidth != null && config.gridwidth != undefined && (this.setGridWidth(config.gridWidth));
-                config.gridheight != null && config.gridheight != undefined && (this.setGridHeight(config.gridHeight));
-                config.snapwidth && (this.snapWidth());
-                config.snapheight && (this.snapheight());
-                config.marginleft != null && config.marginleft != undefined && (this.setMarginLeft(config.marginleft));
-                config.marginright != null && config.marginright != undefined && (this.setMarginRight(config.marginright));
-                config.margintop != null && config.margintop != undefined && (this.setMarginTop(config.margintop));
-                config.marginbottom != null && config.marginbottom != undefined && (this.setMarginBottom(config.marginbottom));
+                config.cellwidth != null && (this.setCellWidth(config.cellwidth));
+                config.cell_width != null && (this.setCellWidth(config.cell_width));
+                config.cellheight != null && (this.setCellHeight(config.cellheight));
+                config.cell_height != null && (this.setCellHeight(config.cell_height));
+                config.x != null && (this.setX(x));
+                config.y != null && (this.setY(y));
+                config.gridwidth != null && (this.setGridWidth(config.gridWidth));
+                config.grid_width != null && (this.setGridWidth(config.grid_width));
+                config.gridheight != null && (this.setGridHeight(config.gridHeight));
+                config.grid_height != null && (this.setGridHeight(config.grid_height));
+                (config.snap_width || config.snapwidth) && (this.snapWidth());
+                (config.snap_height || config.snapheight) && (this.snapheight());
+                config.marginleft != null && (this.setMarginLeft(config.marginleft));
+                config.margin_left != null && (this.setMarginLeft(config.margin_left));
+                config.marginright != null && (this.setMarginRight(config.marginright));
+                config.margin_right != null && (this.setMarginRight(config.margin_right));
+                config.margintop != null && (this.setMarginTop(config.margintop));
+                config.margin_top != null && (this.setMarginTop(config.margin_top));
+                config.marginbottom != null && (this.setMarginBottom(config.marginbottom));
+                config.margin_bottom != null && (this.setMarginBottom(config.margin_bottom));
                 config.background && (this.setBackground(config.background));
                 config.backgroundalpha != null && (this.setBackgroundAlpha(config.backgroundalpha));
+                config.background_alpha != null && (this.setBackgroundAlpha(config.background_alpha));
                 item && (this.setItem(item));
                 config.max && (this.setMaxItems(config.max));
-                if (config.scrolltype) {
-                    switch (config.scrolltype) {
+                let scrollType = config.scroll_type || config.scrolltype;
+                if (scrollType) {
+                    switch (scrollType) {
                         case "horizontal":
                             this.setScrollType(fairygui.ScrollType.Horizontal);
                             break;
@@ -1222,20 +1241,29 @@ window.zs.exporter = window.zs.exporter || {};
 
                     }
                 }
-                config.autoscrollspeed != null && config.autoscrollspeed != undefined && (this.setAutoScrollSpeed(config.autoscrollspeed));
-                config.dragrecovertime != null && config.dragrecovertime != undefined && (this.setDragRecoverTime(config.dragrecovertime));
+                config.autoscrollspeed != null && (this.setAutoScrollSpeed(config.autoscrollspeed));
+                config.auto_scroll_speed != null && (this.setAutoScrollSpeed(config.auto_scroll_speed));
+                config.dragrecovertime != null && (this.setDragRecoverTime(config.dragrecovertime));
+                config.drag_recover_time != null && (this.setDragRecoverTime(config.drag_recover_time));
                 config.transition && (this.setTransition(config.transition));
                 config.fit && (this.fit());
                 config.loop && (this.loop());
                 config.virtual && (this.virtual());
-                config.bounce != null && config.bounce != undefined && (this.bounce(config.bounce));
-                config.shaketime != null && config.shaketime != undefined && (this.setShakeTime(config.shaketime));
-                config.startoffsetx != null && config.startoffsetx != undefined && (this.setStartOffsetX(config.startoffsetx));
-                config.startoffsety != null && config.startoffsety != undefined && (this.setStartOffsetY(config.startoffsety));
-                config.startoffsettime != null && config.startoffsettime != undefined && (this.setStartOffsetTime(config.startoffsettime));
-                config.startoffsetdelay != null && config.startoffsetdelay != undefined && (this.setStartOffsetDelay(config.startoffsetdelay));
-                config.startfadedelay != null && config.startfadedelay != undefined && (this.setStartFadeDelay(config.startfadedelay));
-                config.startfadetime != null && config.startfadetime != undefined && (this.setStartFadeTime(config.startfadetime));
+                config.bounce != null && (this.bounce(config.bounce));
+                config.shaketime != null && (this.setShakeTime(config.shaketime));
+                config.shake_time != null && (this.setShakeTime(config.shake_time));
+                config.startoffsetx != null && (this.setStartOffsetX(config.startoffsetx));
+                config.start_offset_x != null && (this.setStartOffsetX(config.start_offset_x));
+                config.startoffsety != null && (this.setStartOffsetY(config.startoffsety));
+                config.start_offset_y != null && (this.setStartOffsetY(config.start_offset_y));
+                config.startoffsettime != null && (this.setStartOffsetTime(config.startoffsettime));
+                config.start_offset_time != null && (this.setStartOffsetTime(config.start_offset_time));
+                config.startoffsetdelay != null && (this.setStartOffsetDelay(config.startoffsetdelay));
+                config.start_offset_delay != null && (this.setStartOffsetDelay(config.start_offset_delay));
+                config.startfadedelay != null && (this.setStartFadeDelay(config.startfadedelay));
+                config.start_fade_delay != null && (this.setStartFadeDelay(config.start_fade_delay));
+                config.startfadetime != null && (this.setStartFadeTime(config.startfadetime));
+                config.start_fade_time != null && (this.setStartFadeTime(config.start_fade_time));
             }
             return this.apply();
         }
@@ -1908,18 +1936,30 @@ window.zs.exporter = window.zs.exporter || {};
                 config.height != null && (this.setHeight(config.height));
                 config.font && (this.setFont(config.font));
                 config.fontsize != null && (this.setFontSize(config.fontsize));
+                config.font_size != null && (this.setFontSize(config.font_size));
                 config.fontcolor && (this.setFontColor(config.fontcolor));
+                config.font_color && (this.setFontColor(config.font_color));
                 config.text && (this.setText(config.text));
                 config.autofade != null && (this.setAutoFade(config.autofade));
+                config.auto_fade != null && (this.setAutoFade(config.auto_fade));
                 config.autofadetime != null && (this.setAutoFadeTime(config.autofadetime));
+                config.auto_fade_time != null && (this.setAutoFadeTime(config.auto_fade_time));
                 config.autooffset != null && (this.setAutoOffset(config.autooffset));
+                config.auto_offset != null && (this.setAutoOffset(config.auto_offset));
                 config.offsetx != null && (this.setOffsetX(config.offsetx));
+                config.offset_x != null && (this.setOffsetX(config.offset_x));
                 config.offsety != null && (this.setOffsetY(config.offsety));
+                config.offset_y != null && (this.setOffsetY(config.offset_y));
                 config.offsettime != null && (this.setOffsetTime(config.offsettime));
+                config.offset_time != null && (this.setOffsetTime(config.offset_time));
                 config.clickignore && (this.setClickIgnore(config.clickignore));
+                config.click_ignore && (this.setClickIgnore(config.click_ignore));
                 config.clickalways && (this.setClickAlways(config.clickalways));
+                config.click_always && (this.setClickAlways(config.click_always));
                 config.fakedelay != null && (this.setFakeDelay(config.fakedelay));
+                config.fake_delay != null && (this.setFakeDelay(config.fake_delay));
                 config.fakeevent && (this.setFakeEvent(config.fakeevent));
+                config.fake_event && (this.setFakeEvent(config.fake_event));
                 config.event && (this.setEvent(config.event));
                 config.switch && (this.setSwitch(config.switch));
             }
