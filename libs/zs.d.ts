@@ -1252,6 +1252,18 @@ declare module zs.ui {
          */
         btnIgnoreOffset: boolean;
         /**
+         * Banner展示进度点
+         */
+        bannerPoint: number;
+        /**
+         * 是否已经获取奖励
+         */
+        isGetAward: boolean;
+        /**
+         * 是否已展示广告
+         */
+        isOpenAd: boolean;
+        /**
          * 检查是否咋金蛋
          */
         static checkEggOpen(isCommon): boolean;
@@ -1284,6 +1296,10 @@ declare module zs.ui {
          * 获取奖励监听
          */
         onGetAward();
+        /**
+         * 结束砸金蛋监听
+         */
+        onFinish();
         /**
          * 销毁检查监听
          */

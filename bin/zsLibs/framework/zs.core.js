@@ -561,7 +561,9 @@ window.zs = window.zs || {};
         checkSwitch(config, check) {
             let isPassed = true;
             if (config) {
-                if (Array.isArray(config)) {
+                if (typeof config === 'boolean') {
+                    isPassed = config;
+                } else if (Array.isArray(config)) {
                     for (let i = 0, n = config.length; i < n; i++) {
                         let sw = config[i];
                         if (!sw || sw.length <= 0) { continue; }
@@ -581,7 +583,7 @@ window.zs = window.zs || {};
                             break;
                         }
                     }
-                } else {
+                } else if (typeof typeof config === 'string') {
                     let sw = config;
                     if (sw && sw.length > 0) {
                         if (sw[0] == '!' || sw[0] == '！') {
