@@ -123,7 +123,7 @@ window.zs.ui = window.zs.ui || {};
             this.bannerRange = [0.3, 0.7];
             this.awardDelay = [1000, 1000];
             this.closeDelay = [1000, 1040];
-            this.btnSrcOffset = 280;
+            this.btnSrcOffset = 0;
             this.btnDstOffset = 370;
             this.btnOffsetDelay = 800;
             this.btnOffsetTime = 500;
@@ -155,7 +155,7 @@ window.zs.ui = window.zs.ui || {};
             zs.core.addAppShow(Laya.Handler.create(this, this.onAppShow, null, false));
             zs.core.addAppHide(Laya.Handler.create(this, this.onAppHide, null, false));
             this.btnKnock && this.btnKnock.onClick && this.btnKnock.onClick(this, this.onClick);
-            // this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
+            this.btnKnock && this.btnKnock.y && (this.btnKnock.y += this.btnSrcOffset);
             Laya.timer.loop(1, this, this.tick);
             this.updateProgress(this.progress);
             zs.EggKnock && zs.EggKnock.markReadyNum(true);
@@ -163,6 +163,17 @@ window.zs.ui = window.zs.ui || {};
         }
         applyConfig(config) {
             if (config) {
+                config.clickpercent != null && (this.clickPercent = config.clickpercent);
+                config.rollbackpercent != null && (this.rollbackPercent = config.rollbackpercent);
+                config.rollbackinterval != null && (this.rollbackInterval = config.rollbackinterval);
+                config.bannerrange != null && Array.isArray(config.bannerrange) && config.bannerrange.length >= 2 && (this.bannerRange = config.bannerrange);
+                config.awarddelay != null && Array.isArray(config.awarddelay) && config.awarddelay.length >= 2 && (this.awardDelay = config.awarddelay);
+                config.closedelay != null && Array.isArray(config.closedelay) && config.closedelay.length >= 2 && (this.closeDelay = config.closedelay);
+                config.btnsrcoffset != null && (this.btnSrcOffset = config.btnsrcoffset);
+                config.btndstoffset != null && (this.btnDstOffset = config.btndstoffset);
+                config.btnoffsetdelay != null && (this.btnOffsetDelay = config.btnoffsetdelay);
+                config.btnoffsettime != null && (this.btnOffsetTime = config.btnoffsettime);
+                config.btnignoreoffset != null && (this.btnIgnoreOffset = config.btnignoreoffset);
                 config.awardevent && (this.awardEvent = config.awardevent);
                 config.closeevent && (this.closeEvent = config.closeevent);
             }
