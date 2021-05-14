@@ -1,7 +1,6 @@
 {
     "PRODUCT_START": {
         "states": [
-            "READY",
             "FULL_1",
             "FULL_2"
         ]
